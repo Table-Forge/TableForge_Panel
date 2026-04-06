@@ -1,16 +1,12 @@
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { AdminLayout } from "@/src/components/layout/admin-layout";
+import { GlobalModal } from "@/src/components/global-modal/global-modal";
+import { ToastContainer } from "@/src/components/toast/toast-container";
 import { AuthProvider, useAuth } from "@/src/context/auth";
 import { CampaignsPage } from "@/src/pages/campaigns-page";
 import { DashboardPage } from "@/src/pages/dashboard-page";
 import { LoginPage } from "@/src/pages/login-page";
 import { UsersPage } from "@/src/pages/users-page";
-import {
-  BrowserRouter,
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from "react-router-dom";
 
 function App() {
   return (
@@ -29,6 +25,9 @@ function App() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+
+        <GlobalModal />
+        <ToastContainer />
       </BrowserRouter>
     </AuthProvider>
   );

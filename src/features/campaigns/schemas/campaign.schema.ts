@@ -1,30 +1,35 @@
 import { z } from "zod";
+import {
+  numberRequired,
+  stringOptional,
+  stringRequired,
+} from "@/src/utils/custom-schema-validations";
 
 export const CampaignPlayerSchema = z.object({
   id: z.union([z.string(), z.number()]),
-  name: z.string(),
-  avatar: z.string(),
+  name: stringRequired,
+  avatar: stringOptional,
 });
 
 export const SessionScheduleSchema = z.object({
-  day: z.string(),
-  time: z.string(),
+  day: stringRequired,
+  time: stringRequired,
 });
 
 export const CampaignSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  image: z.string(),
-  system: z.string(),
-  gameMaster: z.string(),
-  location: z.string(),
-  level: z.string(),
-  summary: z.string(),
-  fullDescription: z.string(),
-  currentPartySize: z.number(),
-  maxPartySize: z.number(),
+  id: numberRequired,
+  title: stringRequired,
+  image: stringOptional,
+  system: stringRequired,
+  gameMaster: stringRequired,
+  location: stringRequired,
+  level: stringOptional,
+  summary: stringOptional,
+  fullDescription: stringOptional,
+  currentPartySize: z.coerce.number().min(0),
+  maxPartySize: z.coerce.number().min(0),
   players: CampaignPlayerSchema.array().optional(),
-  frequency: z.string().optional(),
+  frequency: stringOptional,
   nextSession: SessionScheduleSchema.optional(),
 });
 

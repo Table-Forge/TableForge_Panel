@@ -1,78 +1,116 @@
-import { useQuery } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
-import { UserService } from "@/src/features/users/services/users.services";
+import { useMemo } from "react";
+import { Table } from "@/src/components/table/table";
+import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
+import { useUsers } from "@/src/features/users/hooks/use-users";
+import type { IUser } from "@/src/features/users/schemas/user.schema";
+
+interface IUserListItem extends Omit<IUser, "id"> {
+  id: string | number;
+}
+
+function formatDate(value?: Date) {
+  if (!value) return "-";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("pt-BR");
+}
 
 export function UsersPage() {
-  const usersQuery = useQuery({
-    queryKey: ["users"],
-    queryFn: () => UserService.getAll(),
-  });
+  const { data = [], isLoading, isError } = useUsers();
 
-  const errorDetail = (() => {
-    if (!usersQuery.error) return null;
+  const users = useMemo<IUserListItem[]>(
+    () =>
+      data.map((user, index) => ({
+        ...user,
+        id: user.id ?? user.email ?? `usuario-${index + 1}`,
+      })),
+    [data],
+  );
 
-    if (isAxiosError(usersQuery.error)) {
-      return usersQuery.error.response?.data?.Message ?? usersQuery.error.message;
-    }
+  const tableColumns: ITableColumn<IUserListItem>[] = [
+    {
+      title: "Código",
+      key: "id",
+      width: "120px",
+      render: (user) => <span className="font-bold">#{user.id}</span>,
+    },
+    {
+      title: "Usuário",
+      key: "username",
+      width: "220px",
+      normalCase: true,
+      render: (user) => user.username || "-",
+    },
+    {
+      title: "Nickname",
+      key: "nickname",
+      width: "220px",
+      normalCase: true,
+      render: (user) => user.nickname || "-",
+    },
+    {
+      title: "E-mail",
+      key: "email",
+      width: "260px",
+      normalCase: true,
+      render: (user) => user.email || "-",
+    },
+    {
+      title: "Status",
+      key: "status",
+      width: "140px",
+      align: "center",
+      render: (user) => {
+        const status = (user.status || "indefinido").toLowerCase();
+        const styles: Record<string, string> = {
+          ativo: "bg-green-500/10 text-green-400 border-green-500/30",
+          inativo: "bg-danger/10 text-danger border-danger/30",
+          indefinido: "bg-secondary/10 text-secondary border-secondary/30",
+        };
 
-    if (usersQuery.error instanceof Error) {
-      return usersQuery.error.message;
-    }
+        return (
+          <span
+            className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase ${
+              styles[status] ?? styles.indefinido
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
+    },
+    {
+      title: "Criado em",
+      key: "createdAt",
+      width: "140px",
+      align: "center",
+      render: (user) => formatDate(user.createdAt),
+    },
+  ];
 
-    return "Erro inesperado ao carregar usuários.";
-  })();
+  if (isLoading) return <SkeletonTable />;
+  if (isError) return <InfoNotFound />;
 
   return (
-    <div className="space-y-5">
-      <header className="rounded-3xl border border-secondary/20 bg-primary/70 p-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-tertiary">Gestão</p>
-        <h2 className="mt-2 text-2xl font-black uppercase tracking-tight text-white">Usuários</h2>
-        <p className="mt-2 text-sm text-grays-100">
-          Consulta rápida de usuários vindos da API para administração do app.
+    <section id="users" className="p-6">
+      <header>
+        <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
+          Usuários
+        </h1>
+        <p className="text-sm text-grays-100">
+          Seus usuários disponíveis para administração.
         </p>
       </header>
 
-      {usersQuery.isLoading ? (
-        <div className="rounded-2xl border border-white/10 bg-primary/55 p-6 text-sm text-grays-100">
-          Carregando usuários...
-        </div>
-      ) : null}
-
-      {usersQuery.isError ? (
-        <div className="rounded-2xl border border-danger/50 bg-danger/10 p-6 text-sm text-white">
-          Não foi possível carregar os usuários agora.
-          {errorDetail ? <p className="mt-2 text-xs text-white/80">{errorDetail}</p> : null}
-        </div>
-      ) : null}
-
-      {usersQuery.data && usersQuery.data.length > 0 ? (
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-primary/80">
-          <table className="w-full border-collapse text-left text-sm">
-            <thead className="bg-secondary/20 text-xs uppercase tracking-[0.16em] text-grays-100">
-              <tr>
-                <th className="px-4 py-3">Usuário</th>
-                <th className="px-4 py-3">Nickname</th>
-                <th className="px-4 py-3">E-mail</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usersQuery.data.map((user) => (
-                <tr key={user.id ?? user.email} className="border-t border-white/8">
-                  <td className="px-4 py-3 text-white">{user.username || "-"}</td>
-                  <td className="px-4 py-3 text-white/90">{user.nickname || "-"}</td>
-                  <td className="px-4 py-3 text-grays-100">{user.email || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
-
-      {usersQuery.data && usersQuery.data.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-primary/55 p-6 text-sm text-grays-100">
-          Nenhum usuário encontrado.
-        </div>
-      ) : null}
-    </div>
+      <div className="mt-6">
+        <Table<IUserListItem>
+          headerData={tableColumns}
+          bodyData={users}
+          bodyHeight="calc(100vh - 280px)"
+        />
+      </div>
+    </section>
   );
 }

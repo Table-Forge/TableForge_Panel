@@ -1,57 +1,42 @@
 import { z } from "zod";
+import {
+  dateOptional,
+  dateRequired,
+  emailOptional,
+  emailRequired,
+  numberOptional,
+  numberRequired,
+  stringOptional,
+  stringRequired,
+} from "@/src/utils/custom-schema-validations";
 
-const asOptionalNumber = z.preprocess((value) => {
-  if (value === null || value === undefined || value === "") return undefined;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
-}, z.number().optional());
-
-const asOptionalDate = z
-  .union([z.coerce.date(), z.string(), z.number(), z.null(), z.undefined()])
-  .transform((value) => {
-    if (value instanceof Date) return value;
-    if (!value) return undefined;
-
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-  });
-
-const asOptionalString = z.preprocess((value) => {
-  if (value === null || value === undefined) return undefined;
-
-  if (typeof value !== "string") {
-    return String(value);
-  }
-
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : undefined;
-}, z.string().optional());
-
-const maybeString = asOptionalString;
-const maybeEmail = asOptionalString;
-
-export const UserSchema = z.object({
-  id: asOptionalNumber,
-  username: maybeString,
-  nickname: maybeString,
-  email: maybeEmail,
-  gender: maybeString,
-  birthDate: asOptionalDate,
-  avatarUrl: maybeString,
-  createdAt: asOptionalDate,
-  status: maybeString,
+const BaseUserSchema = z.object({
+  id: numberOptional,
+  username: stringOptional,
+  nickname: stringOptional,
+  email: emailOptional,
+  gender: stringOptional,
+  birthDate: dateOptional,
+  avatarUrl: stringOptional,
+  createdAt: dateOptional,
+  status: stringOptional,
 });
+
+export const UserSchema = BaseUserSchema;
 
 export const UserCreateSchema = z
   .object({
-    username: z.string().trim().min(1, "Usuário obrigatório"),
-    nickname: z.string().trim().min(1, "Nickname obrigatório"),
-    email: z.string().trim().email("E-mail inválido"),
-    gender: z.string().trim().optional(),
-    birthDate: z.coerce.date(),
-    avatarUrl: z.string().trim().optional(),
-    password: z.string().trim().min(6, "A senha deve ter ao menos 6 caracteres"),
-    confirmPassword: z.string().trim().min(1, "Confirme a senha"),
+    username: stringRequired,
+    nickname: stringRequired,
+    email: emailRequired,
+    gender: stringOptional,
+    birthDate: dateRequired,
+    avatarUrl: stringOptional,
+    password: z
+      .string()
+      .trim()
+      .min(6, "A senha deve ter ao menos 6 caracteres"),
+    confirmPassword: stringRequired,
   })
   .superRefine((data, context) => {
     if (data.password !== data.confirmPassword) {
@@ -63,20 +48,23 @@ export const UserCreateSchema = z
     }
   });
 
-export const UserUpdateSchema = UserSchema.partial().extend({
-  id: asOptionalNumber,
+export const UserUpdateSchema = BaseUserSchema.partial().extend({
+  id: numberOptional,
 });
 
 export const RecoverPasswordSchema = z.object({
-  email: z.string().trim().email("E-mail inválido"),
+  email: emailRequired,
 });
 
 export const UpdatePasswordSchema = z
   .object({
-    userId: z.number(),
-    currentPassword: z.string().trim().min(1, "Senha atual obrigatória"),
-    newPassword: z.string().trim().min(6, "Nova senha deve ter ao menos 6 caracteres"),
-    confirmPassword: z.string().trim().min(1, "Confirme a nova senha"),
+    userId: numberRequired,
+    currentPassword: stringRequired,
+    newPassword: z
+      .string()
+      .trim()
+      .min(6, "Nova senha deve ter ao menos 6 caracteres"),
+    confirmPassword: stringRequired,
   })
   .superRefine(({ newPassword, confirmPassword }, context) => {
     if (newPassword !== confirmPassword) {

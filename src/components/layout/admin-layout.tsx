@@ -1,7 +1,8 @@
-import { BrandName } from "@/src/components/ui/brand-name";
-import { useAuth } from "@/src/context/auth";
 import { LayoutGrid, LogOut, ScrollText, ShieldUser } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { BrandName } from "@/src/components/ui/brand-name";
+import { Button } from "@/src/components/button/button";
+import { useAuth } from "@/src/context/auth";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
@@ -62,14 +63,10 @@ export function AdminLayout() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="inline-flex items-center gap-2 rounded-xl border border-tertiary/50 bg-tertiary/20 px-3 py-2 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-tertiary/35"
-            >
+            <Button buttonStyle="secondary" className="!h-10 !px-3 !py-2" onClick={handleSignOut}>
               <LogOut size={16} />
               Sair
-            </button>
+            </Button>
           </header>
 
           <section className="flex-1 p-5 lg:p-8">

@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { stringRequired } from "@/src/utils/custom-schema-validations";
 import { UserSchema } from "@/src/features/users/schemas/user.schema";
 
 export const LoginRequestSchema = z.object({
-  login: z.string().trim().min(1, "O login é obrigatório"),
-  password: z.string().trim().min(1, "A senha é obrigatória"),
+  login: stringRequired,
+  password: stringRequired,
 });
 
 export const TokenResponseSchema = z.object({

@@ -2,8 +2,8 @@ import { Shield } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BrandName } from "@/src/components/ui/brand-name";
-import { TFButton } from "@/src/components/ui/tf-button";
 import { TFInput } from "@/src/components/ui/tf-input";
+import { Button } from "@/src/components/button/button";
 import { useAuth } from "@/src/context/auth";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 
@@ -78,7 +78,9 @@ export function LoginPage() {
             error={loginErrorMessage}
           />
 
-          <TFButton type="submit" variant="tertiary" isLoading={isLoadingLoginMutation} text="Iniciar Jornada" />
+          <Button type="submit" buttonStyle="secondary" maxWidth isLoading={isLoadingLoginMutation}>
+            Iniciar Jornada
+          </Button>
         </form>
       </div>
     </main>

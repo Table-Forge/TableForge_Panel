@@ -1,4 +1,4 @@
-import { AUTH_STORAGE_KEY } from "@/src/context/auth";
+import { AUTH_STORAGE_KEY } from "@/src/store/slices/auth-slice";
 import axios from "axios";
 
 const baseURL = import.meta.env.VITE_API_URL;
