@@ -5,13 +5,15 @@ export interface IInputStyles {
   isLoading?: boolean;
   disabled?: boolean;
   uppercase?: boolean;
+  removeSpaces?: boolean;
 }
 
 export interface IControllerInput<TFieldValues extends FieldValues = FieldValues>
   extends IInputStyles {
-  hookForm: UseFormReturn<TFieldValues, unknown, undefined>;
+  hookForm: UseFormReturn<TFieldValues>;
   name: Path<TFieldValues>;
   placeholder?: string;
+  autoComplete?: string;
   maxLength?: number;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
@@ -47,9 +49,23 @@ export interface IMaskedInput extends React.InputHTMLAttributes<HTMLInputElement
   isLoading?: boolean;
 }
 
+export interface IInput extends React.InputHTMLAttributes<HTMLInputElement>, IInputStyles {
+  sanitize?: boolean;
+  sanitizeEmail?: boolean;
+  wrapperClassName?: string;
+}
+
 export interface IControlledConfirmationInput<TFieldValues extends FieldValues = FieldValues>
   extends IControllerInput<TFieldValues> {
   label?: string;
+}
+
+export interface IControlledImageInput<TFieldValues extends FieldValues = FieldValues>
+  extends IControllerInput<TFieldValues> {
+  label?: string;
+  previewValue?: string;
+  fallbackPreview?: string;
+  onFileNameChange?: (name: string) => void;
 }
 
 export type TConfirmationStatus = "idle" | "editando" | "confirmando" | "errado" | "ok";

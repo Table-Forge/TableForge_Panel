@@ -1,7 +1,7 @@
 import {
   LoginResponseSchema,
   type ILoginResponse,
-} from "@/src/features/users/schemas/auth.schema";
+} from "@/src/features/auth/schemas/auth.schema";
 import type { AuthSlice, SliceCreator } from "@/src/store/types";
 
 export const AUTH_STORAGE_KEY = "auth_data";

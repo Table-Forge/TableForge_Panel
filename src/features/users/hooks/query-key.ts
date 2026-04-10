@@ -1,2 +1,2 @@
 export const USER = "user";
-export const USERS = "users";
+export const USER_LIST = "user-list";

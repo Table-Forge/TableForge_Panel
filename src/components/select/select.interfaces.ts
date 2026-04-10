@@ -1,11 +1,14 @@
+import type { ReactNode } from "react";
 import type { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 
-export type TSelectValue = string | number | boolean;
+export type TSelectValue = string | number | boolean | null | undefined;
 
 export interface TSelectOptions {
   value: TSelectValue;
+  id?: string | number;
   name?: string;
-  label?: string;
+  label?: ReactNode | string;
+  allowSelect?: boolean;
 }
 
 interface ISelect<TFieldValues extends FieldValues = FieldValues> {
@@ -15,7 +18,7 @@ interface ISelect<TFieldValues extends FieldValues = FieldValues> {
   searchInput?: boolean;
   name: Path<TFieldValues>;
   required?: boolean;
-  hookForm: UseFormReturn<TFieldValues, unknown, undefined>;
+  hookForm: UseFormReturn<TFieldValues>;
   className?: string;
   firstReset?: boolean;
   resetCallback?: () => void;

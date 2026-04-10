@@ -1,18 +1,21 @@
+import type { ReactNode } from "react";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
 export type TPrimitives = string | number | boolean;
 
 export interface TMultiSelectOption {
   value: TPrimitives;
-  name: string;
-  label?: string;
+  id?: string | number;
+  name?: string;
+  label?: ReactNode | string;
+  allowSelect?: boolean;
 }
 
 export interface IMultiSelect<TFieldValues extends FieldValues = FieldValues> {
   initialOptions: TMultiSelectOption[];
   title: string;
   name: Path<TFieldValues>;
-  hookForm: UseFormReturn<TFieldValues, unknown, undefined>;
+  hookForm: UseFormReturn<TFieldValues>;
   disabled?: boolean;
   required?: boolean;
   className?: string;

@@ -8,6 +8,7 @@ import { ErrorMessage } from "@/src/components/error-message/error-message";
 export function ControlledPasswordInput<TFieldValues extends FieldValues = FieldValues>({
   name,
   hookForm,
+  removeSpaces = false,
   isLoading,
   ...props
 }: IControllerInput<TFieldValues>) {
@@ -34,7 +35,12 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
               ref={ref}
               type={showPassword ? "text" : "password"}
               value={(value ?? "") as string}
-              onChange={(event) => onChange(event.target.value)}
+              onChange={(event) => {
+                const inputValue = removeSpaces
+                  ? event.target.value.replace(/\s+/g, "")
+                  : event.target.value;
+                onChange(inputValue);
+              }}
               onBlur={onBlur}
               autoComplete="current-password"
               maxLength={100}

@@ -1,4 +1,8 @@
-export const getInputClasses = (error?: string, isLoading?: boolean, disabled?: boolean) => {
+export const getInputClasses = (
+  error?: string,
+  isLoading?: boolean,
+  disabled?: boolean,
+) => {
   const base =
     "flex h-12 w-full min-w-[80px] items-center overflow-hidden rounded-2xl border bg-transparent transition";
   const border = error
@@ -13,4 +17,4 @@ export const getInputClasses = (error?: string, isLoading?: boolean, disabled?: 
 };
 
 export const inputInnerClasses =
-  "h-full w-full border-none bg-transparent px-3 py-2 text-sm font-medium text-white placeholder:text-white/35 placeholder:uppercase focus:outline-none disabled:cursor-not-allowed";
+  "h-full w-full border-none bg-transparent px-3 py-2 text-sm font-medium text-white placeholder:text-white/35 focus:outline-none disabled:cursor-not-allowed";

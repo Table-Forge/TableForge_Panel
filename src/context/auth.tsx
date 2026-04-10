@@ -1,7 +1,7 @@
-import { useEffect, type PropsWithChildren } from "react";
-import type { ILoginResponse } from "@/src/features/users/schemas/auth.schema";
-import { useBoundStore } from "@/src/store/use-bound-store";
+import type { ILoginResponse } from "@/src/features/auth/schemas/auth.schema";
 import { AUTH_STORAGE_KEY } from "@/src/store/slices/auth-slice";
+import { useBoundStore } from "@/src/store/use-bound-store";
+import { useEffect, type PropsWithChildren } from "react";
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const hydrateAuth = useBoundStore((state) => state.hydrateAuth);

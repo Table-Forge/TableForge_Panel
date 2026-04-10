@@ -21,3 +21,5 @@ export interface INormalizedPaginatedResponse<TItem> {
   nextPage: number | null;
   previousPage: number | null;
 }
+
+export type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";

@@ -1,7 +1,11 @@
+import type { TModalSize } from "@/src/components/modals/modal.interface";
+import type {
+  IToast,
+  ToastType,
+} from "@/src/components/toast/toast.interfaces";
+import type { ILoginResponse } from "@/src/features/auth/schemas/auth.schema";
 import type { ReactNode } from "react";
 import type { StateCreator } from "zustand";
-import type { ILoginResponse } from "@/src/features/users/schemas/auth.schema";
-import type { IToast, ToastType } from "@/src/components/toast/toast.interfaces";
 
 export interface AuthSlice {
   authData: ILoginResponse | null;
@@ -18,7 +22,13 @@ export interface ToastSlice {
   clearToasts: () => void;
 }
 
-export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
+export type ModalSize = TModalSize;
+
+export interface IOpenModalPayload {
+  title?: ReactNode;
+  content?: ReactNode;
+  size?: ModalSize;
+}
 
 export interface IModalState {
   isOpen: boolean;
@@ -29,7 +39,10 @@ export interface IModalState {
 
 export interface ModalSlice {
   modal: IModalState;
-  openModal: (payload: Omit<IModalState, "isOpen">) => void;
+  openModal: {
+    (payload: IOpenModalPayload): void;
+    (title: ReactNode, content: ReactNode, size?: ModalSize): void;
+  };
   closeModal: () => void;
 }
 

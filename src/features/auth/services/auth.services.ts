@@ -3,7 +3,7 @@ import {
   LoginResponseSchema,
   type ILoginRequest,
   type ILoginResponse,
-} from "@/src/features/users/schemas/auth.schema";
+} from "@/src/features/auth/schemas/auth.schema";
 
 const ENDPOINT = "/users";
 

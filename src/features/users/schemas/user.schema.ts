@@ -1,4 +1,3 @@
-import { z } from "zod";
 import {
   dateOptional,
   dateRequired,
@@ -9,6 +8,7 @@ import {
   stringOptional,
   stringRequired,
 } from "@/src/utils/custom-schema-validations";
+import { z } from "zod";
 
 const BaseUserSchema = z.object({
   id: numberOptional,
@@ -26,6 +26,7 @@ export const UserSchema = BaseUserSchema;
 
 export const UserCreateSchema = z
   .object({
+    id: z.number().optional(),
     username: stringRequired,
     nickname: stringRequired,
     email: emailRequired,

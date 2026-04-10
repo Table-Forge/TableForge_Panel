@@ -1,56 +1,79 @@
-import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "@/src/context/auth";
-import { AuthService } from "@/src/features/users/services/auth.services";
-import { UserService } from "@/src/features/users/services/users.services";
-import { useBoundStore } from "@/src/store/use-bound-store";
-import type {
-  ILoginRequest,
-  ILoginResponse,
-} from "@/src/features/users/schemas/auth.schema";
-import type {
+﻿import type {
   IUpdatePassword,
   IUser,
-  IUserUpdateOutput,
 } from "@/src/features/users/schemas/user.schema";
+import { UserService } from "@/src/features/users/services/users.services";
+import { useBoundStore } from "@/src/store/use-bound-store";
+import { handleError } from "@/src/utils/error-handler";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { USER, USER_LIST } from "./query-key";
 
 export const useUsersMutation = () => {
-  const { signIn } = useAuth();
+  const queryClient = useQueryClient();
+
   const addToast = useBoundStore((state) => state.addToast);
+  const closeModal = useBoundStore((state) => state.closeModal);
 
-  const loginMutation = useMutation({
-    mutationFn: (credentials: ILoginRequest) => AuthService.login(credentials),
-    onSuccess: async (data: ILoginResponse) => {
-      await signIn(data);
-      addToast("success", "Login realizado com sucesso.");
-    },
-    onError: (error: unknown) => {
-      const fallback = "Não foi possível realizar o login.";
-      const message =
-        error instanceof Error ? error.message || fallback : fallback;
-      addToast("error", message);
-    },
-  });
-
-  const newUserMutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: (data: IUser) => UserService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
+      addToast("success", "Usuário salvo com sucesso!");
+      closeModal();
+    },
+    onError: (error: Error) => handleError(error),
   });
 
-  const updateUserMutation = useMutation({
-    mutationFn: (data: IUserUpdateOutput) => UserService.update(data),
+  const updateMutation = useMutation({
+    mutationFn: (data: IUser) => UserService.update(data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
+      queryClient.invalidateQueries({ queryKey: [USER, variables.id] });
+      addToast("success", "Usuário editado com sucesso!");
+      closeModal();
+    },
+    onError: (error: Error) => handleError(error),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => UserService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
+      addToast("success", "Usuário removido com sucesso!");
+      closeModal();
+    },
+    onError: (error: Error) => handleError(error),
+  });
+
+  const createOrUpdate = (data: IUser) => {
+    if (data.id) {
+      return updateMutation.mutate(data);
+    }
+    return createMutation.mutate(data);
+  };
 
   const updatePasswordMutation = useMutation({
-    mutationFn: (data: IUpdatePassword) => UserService.updatePassword(data),
+    mutationFn: (data: IUpdatePassword) => {
+      return UserService.updatePassword(data);
+    },
+    onSuccess: () => {
+      addToast("success", "Senha alterada com sucesso!");
+      closeModal();
+    },
+    onError: (error: Error) => handleError(error),
   });
 
   return {
-    loginMutation,
-    isLoadingLoginMutation: loginMutation.isPending,
-    newUserMutation,
-    isLoadingNewUserMutation: newUserMutation.isPending,
+    createMutation,
+    updateMutation,
+    deleteMutation,
+    createOrUpdate,
+    isPending:
+      createMutation.isPending ||
+      updateMutation.isPending ||
+      deleteMutation.isPending,
+
     updatePasswordMutation,
     isUpdatingPassword: updatePasswordMutation.isPending,
-    updateUserMutation,
-    isUpdatingUser: updateUserMutation.isPending,
   };
 };

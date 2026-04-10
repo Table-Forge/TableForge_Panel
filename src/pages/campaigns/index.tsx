@@ -1,28 +1,39 @@
-import { useMemo, useState } from "react";
-import { Search, MapPin, Users, BookOpen } from "lucide-react";
-import { Button } from "@/src/components/button/button";
+﻿import { Paginate } from "@/src/components";
+import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
+import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import {
   CAMPAIGNS_PAGE_SIZE,
-  useInfiniteCampaigns,
-} from "@/src/features/campaigns/hooks/use-infinite-campaigns";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
-import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
+  useCampaigns,
+} from "@/src/features/campaigns/hooks/use-campaigns";
+import { BookOpen, MapPin, Search, Users } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export function CampaignsPage() {
   const [search, setSearch] = useState("");
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteCampaigns({ size: CAMPAIGNS_PAGE_SIZE, search });
+  const [page, setPage] = useState(1);
 
-  const campaigns = useMemo(
-    () => data?.pages.flatMap((page) => page.items) ?? [],
-    [data],
+  const { data, isLoading, isError } = useCampaigns({
+    page,
+    size: CAMPAIGNS_PAGE_SIZE,
+    search,
+  });
+
+  const campaigns = data?.items ?? [];
+
+  const paginationData = useMemo(
+    () => ({
+      page: data?.page ?? page,
+      itemsPerPage: data?.size ?? CAMPAIGNS_PAGE_SIZE,
+      filteredItems: data?.totalItems ?? campaigns.length,
+    }),
+    [campaigns.length, data?.page, data?.size, data?.totalItems, page],
   );
 
   if (isLoading && campaigns.length === 0) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
   return (
-    <section id="campaigns" className="space-y-5 p-6">
+    <>
       <header className="rounded-3xl border border-secondary/20 bg-primary/70 p-5">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-tertiary">
           Mesas disponíveis
@@ -35,7 +46,10 @@ export function CampaignsPage() {
           <Search size={16} className="text-white/60" />
           <input
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setPage(1);
+            }}
             placeholder="Buscar por título ou sistema"
             className="h-full w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
           />
@@ -80,18 +94,7 @@ export function CampaignsPage() {
         </div>
       ) : null}
 
-      {hasNextPage ? (
-        <div className="max-w-xs">
-          <Button
-            buttonStyle="secondary"
-            maxWidth
-            onClick={() => fetchNextPage()}
-            isLoading={isFetchingNextPage}
-          >
-            Carregar Mais
-          </Button>
-        </div>
-      ) : null}
-    </section>
+      <Paginate paginationData={paginationData} onPageChange={setPage} />
+    </>
   );
 }
