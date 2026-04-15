@@ -6,9 +6,9 @@
   Label,
   Select,
 } from "@/src/components";
-import { GENDER_OPTIONS } from "@/src/constants/select-options";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
+import { useUserEnums } from "@/src/features/users/hooks/use-user-enums";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import { type IUser } from "@/src/features/users/schemas/user.schema";
 import { useBoundStore } from "@/src/store";
@@ -25,6 +25,8 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
+
+  const { genderEnum, isLoadingGenderEnum } = useUserEnums();
 
   const defaultValues = useMemo<IUser>(
     () => ({
@@ -133,12 +135,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           <Select
             hookForm={form}
             name="gender"
-            initialOptions={GENDER_OPTIONS}
+            initialOptions={genderEnum}
             title="Selecione o gênero"
             error={errors.gender?.message}
             searchInput={false}
-            disabled={isPending || isLoadingImage}
-            isLoading={isPending || isLoadingImage}
+            disabled={isLoadingGenderEnum}
+            isLoading={isLoadingGenderEnum}
           />
         </InputGroup>
 

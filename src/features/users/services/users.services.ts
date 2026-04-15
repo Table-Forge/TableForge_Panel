@@ -1,3 +1,4 @@
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { api } from "@/src/features/api";
 import {
   type IUpdatePassword,
@@ -22,7 +23,7 @@ export const UserService = {
   },
 
   create: async (data: IUser) => api.post(`${ENDPOINT}`, data),
-  update: async (data: IUser) => api.put(`${ENDPOINT}/${data.id}`, data),
+  update: async (data: IUser) => api.put(`${ENDPOINT}`, data),
   delete: async (id: number) => api.delete(`${ENDPOINT}/${id}`),
 
   updatePassword: async (params: IUpdatePassword) => {
@@ -36,6 +37,19 @@ export const UserService = {
         },
       },
     );
+    return data;
+  },
+
+  getGenderEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/user-gender`);
+    return data;
+  },
+  getStatusEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/user-status`);
+    return data;
+  },
+  getDeliveryMethodEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/delivery-method`);
     return data;
   },
 };
