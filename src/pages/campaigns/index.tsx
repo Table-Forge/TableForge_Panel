@@ -5,7 +5,7 @@ import {
   CAMPAIGNS_PAGE_SIZE,
   useCampaigns,
 } from "@/src/features/campaigns/hooks/use-campaigns";
-import { BookOpen, MapPin, Search, Users } from "lucide-react";
+import { BookOpen, MapPin, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export function CampaignsPage() {
@@ -41,20 +41,19 @@ export function CampaignsPage() {
         <h1 className="mt-2 text-2xl font-black uppercase tracking-tight text-white">
           Campanhas
         </h1>
-
-        <label className="mt-4 flex h-12 items-center gap-3 rounded-2xl border border-white/25 bg-background/60 px-3">
-          <Search size={16} className="text-white/60" />
-          <input
-            value={search}
-            onChange={(event) => {
-              setSearch(event.target.value);
-              setPage(1);
-            }}
-            placeholder="Buscar por título ou sistema"
-            className="h-full w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
-          />
-        </label>
       </header>
+
+      <div className="mt-4 rounded-2xl border border-white/10 bg-primary/55 p-3">
+        <input
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value);
+            setPage(1);
+          }}
+          placeholder="Buscar campanha por título ou sistema"
+          className="h-10 w-full rounded-xl border border-white/15 bg-background/60 px-3 text-sm text-white outline-none placeholder:text-white/35"
+        />
+      </div>
 
       <section className="grid gap-4 lg:grid-cols-2">
         {campaigns.map((campaign) => (

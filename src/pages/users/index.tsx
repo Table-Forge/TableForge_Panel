@@ -26,11 +26,13 @@ export default function UsersPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useUsersMutation();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const { statusEnum } = useUserStatusEnum();
 
   const { data, isLoading, isError } = useUsers({
     page,
     size: USERS_PAGE_SIZE,
+    search,
   });
 
   const users = data?.items ?? [];
@@ -160,11 +162,23 @@ export default function UsersPage() {
         </Button>
       </header>
 
+      <div className="mt-4 rounded-2xl border border-white/10 bg-primary/55 p-3">
+        <input
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value);
+            setPage(1);
+          }}
+          placeholder="Buscar usuário por nome, nickname ou e-mail"
+          className="h-10 w-full rounded-xl border border-white/15 bg-background/60 px-3 text-sm text-white outline-none placeholder:text-white/35"
+        />
+      </div>
+
       <div className="mt-6">
         <Table
           tableContents={tableContents}
           bodyData={users}
-          bodyHeight="calc(100vh - 280px)"
+          bodyHeight="calc(100vh - 300px)"
         />
       </div>
 
