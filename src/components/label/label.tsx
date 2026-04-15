@@ -2,12 +2,14 @@ import React from "react";
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   spaced?: boolean;
+  isRequired?: boolean;
 }
 
 export const Label: React.FC<LabelProps> = ({
   children,
   htmlFor,
   spaced,
+  isRequired = false,
   className,
   ...props
 }) => {
@@ -20,6 +22,7 @@ export const Label: React.FC<LabelProps> = ({
       } ${className ?? ""}`}
     >
       {children}
+      {isRequired ? <span className="text-danger">*</span> : null}
     </label>
   );
 };

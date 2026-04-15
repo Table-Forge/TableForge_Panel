@@ -17,6 +17,7 @@ export {
 export type { ICardBox } from "@/src/components/card-box/card-box.interfaces";
 
 export { Label, LabelStatusMessage } from "@/src/components/label/label";
+export { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 
 export { ErrorMessage } from "@/src/components/error-message/error-message";
 export {

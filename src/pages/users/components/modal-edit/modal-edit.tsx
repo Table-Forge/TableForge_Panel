@@ -1,11 +1,13 @@
-﻿import {
+import {
   Button,
   ControlledImageInput,
   ControlledInput,
+  FieldsWrapper,
   InputGroup,
   Label,
   Select,
 } from "@/src/components";
+import { USER_TYPE_OPTIONS } from "@/src/constants/select-options";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
 import { useUserEnums } from "@/src/features/users/hooks/use-user-enums";
@@ -27,6 +29,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     useImagesMutation();
 
   const { genderEnum, isLoadingGenderEnum } = useUserEnums();
+  const isCreateMode = !data?.id;
 
   const defaultValues = useMemo<IUser>(
     () => ({
@@ -71,7 +74,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
         payload.avatarUrl = imageUrl;
       } catch {
-        addToast("error", "Não foi possível enviar a imagem do usuário.");
+        addToast("error", "Nao foi possivel enviar a imagem do usuario.");
         return;
       }
     }
@@ -82,18 +85,18 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <p className="text-sm text-grays-200">
-        Altere os dados do usuário abaixo.
+        Altere os dados do usuario abaixo.
       </p>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="username" className="text-[11px] font-bold uppercase">
-            Usuário
+          <Label htmlFor="username" isRequired>
+            Usuario
           </Label>
           <ControlledInput
             hookForm={form}
             name="username"
-            placeholder="Usuário"
+            placeholder="Usuario"
             error={errors.username?.message}
             isLoading={isLoading}
             removeSpaces
@@ -101,7 +104,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="nickname" className="text-[11px] font-bold uppercase">
+          <Label htmlFor="nickname" isRequired>
             Nickname
           </Label>
           <ControlledInput
@@ -114,7 +117,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="email" className="text-[11px] font-bold uppercase">
+          <Label htmlFor="email" isRequired>
             E-mail
           </Label>
           <ControlledInput
@@ -127,16 +130,15 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
             removeSpaces
           />
         </InputGroup>
-
+      </FieldsWrapper>
+      <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="gender" className="text-[11px] font-bold uppercase">
-            Gênero
-          </Label>
+          <Label htmlFor="gender">Genero</Label>
           <Select
             hookForm={form}
             name="gender"
             initialOptions={genderEnum}
-            title="Selecione o gênero"
+            title="Selecione o genero"
             error={errors.gender?.message}
             searchInput={false}
             disabled={isLoadingGenderEnum}
@@ -144,16 +146,31 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           />
         </InputGroup>
 
-        <InputGroup className="sm:col-span-2">
-          <ControlledImageInput
+        <InputGroup>
+          <Label htmlFor="type" isRequired={isCreateMode}>
+            Tipo Perfil
+          </Label>
+          <Select
             hookForm={form}
-            name="avatarUrl"
-            label="Avatar"
-            previewValue={toImageSource(dataEdit?.avatarUrl)}
-            disabled={isLoading || isPending || isLoadingImage}
+            name="type"
+            initialOptions={USER_TYPE_OPTIONS}
+            title="Selecione o tipo"
+            error={errors.type?.message}
+            searchInput={false}
+            disabled={!isCreateMode || isPending || isLoadingImage || isLoading}
           />
         </InputGroup>
-      </div>
+      </FieldsWrapper>
+
+      <InputGroup className="basis-full">
+        <ControlledImageInput
+          hookForm={form}
+          name="avatarUrl"
+          label="Avatar"
+          previewValue={toImageSource(dataEdit?.avatarUrl)}
+          disabled={isLoading || isPending || isLoadingImage}
+        />
+      </InputGroup>
 
       <div className="mt-6 flex justify-end gap-3">
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
@@ -164,7 +181,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           isLoading={isPending || isLoadingImage}
           disabled={!isDirty || isPending || isLoadingImage}
         >
-          Salvar Alterações
+          Salvar Alteracoes
         </Button>
       </div>
     </form>

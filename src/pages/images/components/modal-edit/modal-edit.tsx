@@ -1,7 +1,8 @@
-﻿import {
+import {
   Button,
   ControlledImageInput,
   ControlledInput,
+  FieldsWrapper,
   InputGroup,
   Label,
   Select,
@@ -67,9 +68,9 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
         Configure os dados da imagem e selecione o arquivo abaixo.
       </p>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="type" className="text-[11px] font-bold uppercase">
+          <Label htmlFor="type" isRequired>
             Tipo
           </Label>
           <Select
@@ -85,7 +86,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="name" className="text-[11px] font-bold uppercase">
+          <Label htmlFor="name" isRequired>
             Nome
           </Label>
           <ControlledInput
@@ -97,11 +98,11 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           />
         </InputGroup>
 
-        <InputGroup className="sm:col-span-2">
+        <InputGroup className="basis-full">
           <ControlledImageInput
             hookForm={form}
             name="content"
-            label="Conteúdo da imagem"
+            label="Conteudo da imagem *"
             previewValue={toImageSource(dataEdit?.url)}
             disabled={isSubmitting || isLoading}
             error={errors.content?.message}
@@ -112,7 +113,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
             }}
           />
         </InputGroup>
-      </div>
+      </FieldsWrapper>
 
       <div className="mt-6 flex justify-end gap-3">
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
@@ -123,7 +124,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           isLoading={isSubmitting}
           disabled={!isDirty || isLoading || isSubmitting}
         >
-          {data?.id ? "Salvar Alterações" : "Criar Imagem"}
+          {data?.id ? "Salvar Alteracoes" : "Criar Imagem"}
         </Button>
       </div>
     </form>
