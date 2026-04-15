@@ -3,6 +3,7 @@ import type {
   ILoginRequest,
   ILoginResponse,
 } from "@/src/features/auth/schemas/auth.schema";
+import { isAdminAuthType } from "@/src/features/auth/schemas/auth.schema";
 import { AuthService } from "@/src/features/auth/services/auth.services";
 import { useBoundStore } from "@/src/store/use-bound-store";
 import { useMutation } from "@tanstack/react-query";
@@ -12,7 +13,15 @@ export const useAuthMutation = () => {
   const addToast = useBoundStore((state) => state.addToast);
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: ILoginRequest) => AuthService.login(credentials),
+    mutationFn: async (credentials: ILoginRequest) => {
+      const data = await AuthService.login(credentials);
+
+      if (!isAdminAuthType(data.user?.type)) {
+        throw new Error("Acesso permitido apenas para usuários Admin.");
+      }
+
+      return data;
+    },
     onSuccess: async (data: ILoginResponse) => {
       await signIn(data);
       addToast("success", "Login realizado com sucesso.");

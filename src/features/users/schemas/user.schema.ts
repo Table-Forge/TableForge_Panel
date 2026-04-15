@@ -13,6 +13,7 @@ import { z } from "zod";
 const BaseUserSchema = z.object({
   id: numberOptional,
   username: stringOptional,
+  type: stringOptional,
   nickname: stringOptional,
   email: emailOptional,
   gender: stringOptional,

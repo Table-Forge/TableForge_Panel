@@ -20,3 +20,8 @@ export const LoginResponseSchema = z.object({
 
 export type ILoginRequest = z.infer<typeof LoginRequestSchema>;
 export type ILoginResponse = z.infer<typeof LoginResponseSchema>;
+
+export const isAdminAuthType = (type: string | null | undefined) =>
+  String(type ?? "")
+    .trim()
+    .toLowerCase() === "admin";

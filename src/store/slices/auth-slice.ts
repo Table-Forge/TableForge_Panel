@@ -1,5 +1,6 @@
 import {
   LoginResponseSchema,
+  isAdminAuthType,
   type ILoginResponse,
 } from "@/src/features/auth/schemas/auth.schema";
 import type { AuthSlice, SliceCreator } from "@/src/store/types";
@@ -18,6 +19,7 @@ function parsePersistedAuth(value: string | null): ILoginResponse | null {
       parsedAuth.data.token.expiration.getTime() <= Date.now();
 
     if (isTokenExpired) return null;
+    if (!isAdminAuthType(parsedAuth.data.user?.type)) return null;
 
     return parsedAuth.data;
   } catch {
