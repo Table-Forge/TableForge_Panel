@@ -8,9 +8,13 @@ import { ERROR_MESSAGE } from "@/src/components/error-message/error-message.cons
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { getInputClasses } from "@/src/components/input/input.styles";
 import { Input } from "@/src/components/input/input.default";
+import { useDropdownPosition } from "@/src/hooks/utils/useDropdownPosition";
 import { normalizeString } from "@/src/utils/format";
 
-import type { IMultiSelect, TMultiSelectOption } from "./multi-select.interfaces";
+import type {
+  IMultiSelect,
+  TMultiSelectOption,
+} from "./multi-select.interfaces";
 
 const areValuesEqual = (first: unknown, second: unknown) => {
   if (first === second) return true;
@@ -59,7 +63,6 @@ export function MultiSelect<TFieldValues extends FieldValues>({
   const [inputSearch, setInputSearch] = useState("");
   const [customOptions, setCustomOptions] = useState<TMultiSelectOption[]>([]);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [listStyle, setListStyle] = useState({ top: 0, left: 0, width: 0 });
   const [isTyping, setIsTyping] = useState(false);
 
   const headerRef = useRef<HTMLButtonElement>(null);
@@ -100,7 +103,10 @@ export function MultiSelect<TFieldValues extends FieldValues>({
 
         return {
           value: selectedValue,
-          name: matchedOption?.name ?? matchedOption?.label ?? String(selectedValue),
+          name:
+            matchedOption?.name ??
+            matchedOption?.label ??
+            String(selectedValue),
         };
       }),
     [options, selectedValues],
@@ -108,6 +114,28 @@ export function MultiSelect<TFieldValues extends FieldValues>({
 
   const fieldError = error ?? fieldState.error?.message;
   const isComponentLoading = isLoading || isTyping;
+
+  const {
+    listStyle,
+    listDirection,
+    isSettling,
+    prepareOpenPosition,
+    resetDropdownPosition,
+  } = useDropdownPosition({
+    triggerRef: headerRef,
+    listRef,
+    isOpen: listOpen,
+    watchDeps: [
+      displayedOptions.length,
+      allowNewOption,
+      inputSearch,
+      allowSelectAll,
+      isComponentLoading,
+    ],
+    offsetTop: 2,
+    offsetLeft: -1,
+    widthOffset: 2,
+  });
 
   const getNextSelectableIndex = (startIndex: number, direction: 1 | -1) => {
     let nextIndex = startIndex + direction;
@@ -151,20 +179,13 @@ export function MultiSelect<TFieldValues extends FieldValues>({
   );
 
   const handleOpenList = (open: boolean) => {
-    if (open && headerRef.current) {
-      const rect = headerRef.current.getBoundingClientRect();
-      setListStyle({
-        top: rect.bottom + window.scrollY + 6,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      });
-    }
-
+    if (open) prepareOpenPosition();
     setListOpen(open);
 
     if (!open) {
       setFocusedIndex(-1);
       shouldFocusSearchRef.current = false;
+      resetDropdownPosition();
     }
   };
 
@@ -207,7 +228,9 @@ export function MultiSelect<TFieldValues extends FieldValues>({
       return;
     }
 
-    const exists = options.some((item) => areValuesEqual(item.value, normalized));
+    const exists = options.some((item) =>
+      areValuesEqual(item.value, normalized),
+    );
     if (exists) {
       setNewOptionError(ERROR_MESSAGE.duplicate);
       return;
@@ -299,8 +322,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
         return;
       }
 
-      setListOpen(false);
-      setFocusedIndex(-1);
+      handleOpenList(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -380,6 +402,138 @@ export function MultiSelect<TFieldValues extends FieldValues>({
     }, 100);
   };
 
+  const searchElement = searchInput ? (
+    <div className="border-b border-white/10 p-2">
+      <div className="relative">
+        <Input
+          ref={searchInputRef}
+          value={inputSearch}
+          onChange={(event) => {
+            setInputSearch(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") {
+              event.preventDefault();
+              setFocusedIndex(getNextSelectableIndex(-1, 1));
+              headerRef.current?.focus();
+            }
+          }}
+          placeholder={
+            searchPlaceholder ||
+            (onChangeInputSearch
+              ? "Digite 3 caracteres para pesquisar"
+              : "Pesquisar...")
+          }
+          autoComplete="off"
+          wrapperClassName="w-full"
+          className="pr-8"
+        />
+        <Search
+          size={15}
+          className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-white/60"
+        />
+      </div>
+    </div>
+  ) : null;
+
+  const newOptionElement = allowNewOption ? (
+    <div className="flex gap-2 border-b border-white/10 p-2">
+      <Input
+        ref={newOptionInputRef}
+        value={newOption}
+        onChange={(event) => {
+          setNewOption(event.target.value);
+          setNewOptionError("");
+        }}
+        placeholder="Adicionar novo..."
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            handleAddOption();
+          }
+        }}
+        wrapperClassName="flex-1"
+        error={newOptionError || undefined}
+      />
+      <button
+        type="button"
+        onMouseDown={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          handleAddOption();
+        }}
+        className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-secondary bg-secondary text-white"
+      >
+        <Plus size={18} />
+      </button>
+    </div>
+  ) : null;
+
+  const selectAllElement = allowSelectAll ? (
+    <button
+      type="button"
+      onMouseDown={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleAllSelected();
+      }}
+      className="flex w-full items-center justify-between border-b border-white/10 px-3 py-2 text-left text-xs font-bold tracking-wide text-white hover:bg-white/10"
+    >
+      Selecionar todos
+      {selectableDisplayedValues.length > 0 &&
+      selectableDisplayedValues.every((optionValue) =>
+        includesValue(selectedValues, optionValue),
+      ) ? (
+        <Check size={14} />
+      ) : null}
+    </button>
+  ) : null;
+
+  const optionsElement = (
+    <ul className="max-h-56 overflow-auto p-1">
+      {isComponentLoading ? (
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+          Carregando...
+        </li>
+      ) : displayedOptions.length > 0 ? (
+        displayedOptions.map((option, index) => {
+          const isSelected = includesValue(selectedValues, option.value);
+          const isFocused = focusedIndex === index;
+          const isSelectable = option.allowSelect !== false;
+
+          return (
+            <li key={String(option.id ?? option.value ?? index)}>
+              <button
+                type="button"
+                data-option-index={index}
+                className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition ${
+                  isSelected
+                    ? "bg-secondary/20 text-white"
+                    : "text-white/85 hover:bg-white/10"
+                } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
+                  isSelectable || isSelected ? "opacity-100" : "opacity-50"
+                }`}
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!isSelectable && !isSelected) return;
+                  toggleSelection(option);
+                }}
+              >
+                {option.name ?? option.label ?? String(option.value)}
+                {isSelected ? <Check size={14} /> : null}
+              </button>
+            </li>
+          );
+        })
+      ) : (
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+          Nenhuma opcao encontrada
+        </li>
+      )}
+    </ul>
+  );
+
   const listElement =
     listOpen && listStyle.top > 0
       ? createPortal(
@@ -391,137 +545,25 @@ export function MultiSelect<TFieldValues extends FieldValues>({
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,
               width: `${listStyle.width}px`,
+              opacity: isSettling ? 0 : 1,
+              pointerEvents: isSettling ? "none" : "auto",
             }}
           >
-            {allowNewOption ? (
-              <div className="flex gap-2 border-b border-white/10 p-2">
-                <Input
-                  ref={newOptionInputRef}
-                  value={newOption}
-                  onChange={(event) => {
-                    setNewOption(event.target.value);
-                    setNewOptionError("");
-                  }}
-                  placeholder="Adicionar novo..."
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault();
-                      handleAddOption();
-                    }
-                  }}
-                  wrapperClassName="flex-1"
-                  error={newOptionError || undefined}
-                />
-                <button
-                  type="button"
-                  onMouseDown={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    handleAddOption();
-                  }}
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-secondary bg-secondary text-white"
-                >
-                  <Plus size={18} />
-                </button>
-              </div>
-            ) : null}
-
-            {allowSelectAll ? (
-              <button
-                type="button"
-                onMouseDown={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  toggleAllSelected();
-                }}
-                className="flex w-full items-center justify-between border-b border-white/10 px-3 py-2 text-left text-xs font-bold uppercase tracking-wide text-white hover:bg-white/10"
-              >
-                Selecionar todos
-                {selectableDisplayedValues.length > 0 &&
-                selectableDisplayedValues.every((optionValue) =>
-                  includesValue(selectedValues, optionValue),
-                ) ? (
-                  <Check size={14} />
-                ) : null}
-              </button>
-            ) : null}
-
-            {searchInput ? (
-              <div className="border-b border-white/10 p-2">
-                <div className="relative">
-                  <Input
-                    ref={searchInputRef}
-                    value={inputSearch}
-                    onChange={(event) => {
-                      setInputSearch(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "ArrowDown") {
-                        event.preventDefault();
-                        setFocusedIndex(getNextSelectableIndex(-1, 1));
-                        headerRef.current?.focus();
-                      }
-                    }}
-                    placeholder={
-                      searchPlaceholder ||
-                      (onChangeInputSearch
-                        ? "Digite 3 caracteres para pesquisar"
-                        : "Pesquisar...")
-                    }
-                    autoComplete="off"
-                    wrapperClassName="w-full"
-                    className="pr-8"
-                  />
-                  <Search
-                    size={15}
-                    className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-white/60"
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            <ul className="max-h-56 overflow-auto p-1">
-              {isComponentLoading ? (
-                <li className="px-3 py-4 text-center text-xs uppercase tracking-wide text-white/55">
-                  Carregando...
-                </li>
-              ) : displayedOptions.length > 0 ? (
-                displayedOptions.map((option, index) => {
-                  const isSelected = includesValue(selectedValues, option.value);
-                  const isFocused = focusedIndex === index;
-                  const isSelectable = option.allowSelect !== false;
-
-                  return (
-                    <li key={String(option.id ?? option.value ?? index)}>
-                      <button
-                        type="button"
-                        data-option-index={index}
-                        className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs uppercase transition ${
-                          isSelected
-                            ? "bg-secondary/20 text-white"
-                            : "text-white/85 hover:bg-white/10"
-                        } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
-                          isSelectable || isSelected ? "opacity-100" : "opacity-50"
-                        }`}
-                        onMouseDown={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          if (!isSelectable && !isSelected) return;
-                          toggleSelection(option);
-                        }}
-                      >
-                        {option.name ?? option.label ?? String(option.value)}
-                        {isSelected ? <Check size={14} /> : null}
-                      </button>
-                    </li>
-                  );
-                })
-              ) : (
-                <li className="px-3 py-4 text-center text-xs uppercase tracking-wide text-white/55">
-                  Nenhuma opcao encontrada
-                </li>
-              )}
-            </ul>
+            {listDirection === "up" ? (
+              <>
+                {optionsElement}
+                {selectAllElement}
+                {newOptionElement}
+                {searchElement}
+              </>
+            ) : (
+              <>
+                {searchElement}
+                {newOptionElement}
+                {selectAllElement}
+                {optionsElement}
+              </>
+            )}
           </div>,
           document.body,
         )
@@ -549,7 +591,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
       >
         <div className="flex w-full items-center justify-between gap-2">
           <div
-            className={`flex flex-wrap gap-1 text-left text-xs uppercase ${selectedItems.length ? "text-white" : "text-white/45"}`}
+            className={`flex flex-wrap gap-1 text-left text-xs ${selectedItems.length ? "text-white" : "text-white/45"}`}
           >
             {selectedItems.length > 0
               ? selectedItems.map((item) => (
@@ -600,5 +642,3 @@ export function MultiSelect<TFieldValues extends FieldValues>({
     </div>
   );
 }
-
-

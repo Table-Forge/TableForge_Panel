@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import type { TPortalResolverContext } from "@/src/hooks/utils/usePortalPosition";
+import { usePortalPosition } from "@/src/hooks/utils/usePortalPosition";
 import type { ITooltip } from "./tooltip.interfaces";
 
 export const Tooltip: React.FC<ITooltip> = ({
@@ -10,55 +12,62 @@ export const Tooltip: React.FC<ITooltip> = ({
   ...props
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const gap = 8;
 
+  const resolvePosition = useCallback(
+    ({ triggerRect }: TPortalResolverContext) => {
+      let top = triggerRect.top + triggerRect.height / 2;
+      let left = triggerRect.left + triggerRect.width / 2;
+
+      switch (side) {
+        case "full-right":
+          left = triggerRect.left + triggerRect.width + gap;
+          break;
+        case "right":
+          left = triggerRect.left + triggerRect.width - 8;
+          break;
+        case "full-left":
+          left = triggerRect.left - gap;
+          break;
+        case "left":
+          left = triggerRect.left - 8;
+          break;
+        case "top":
+          top = triggerRect.top - gap;
+          break;
+        case "center":
+          break;
+        default:
+          top = triggerRect.top + triggerRect.height + gap;
+          break;
+      }
+
+      return { top, left };
+    },
+    [gap, side],
+  );
+
+  const { position, prepareOpenPosition } = usePortalPosition({
+    triggerRef: wrapperRef,
+    portalRef: tooltipRef,
+    isOpen: showTooltip,
+    watchDeps: [side, text],
+    resolvePosition,
+  });
+
   const handleMouseEnter = () => {
-    if (!wrapperRef.current) return;
-
-    const rect = wrapperRef.current.getBoundingClientRect();
-    let top = rect.top + rect.height / 2;
-    let left = rect.left + rect.width / 2;
-
-    switch (side) {
-      case "full-right":
-        left = rect.left + rect.width + gap;
-        break;
-      case "right":
-        left = rect.left + rect.width - 8;
-        break;
-      case "full-left":
-        left = rect.left - gap;
-        break;
-      case "left":
-        left = rect.left - 8;
-        break;
-      case "top":
-        top = rect.top - gap;
-        break;
-      case "center":
-        break;
-      default:
-        top = rect.top + rect.height + gap;
-        break;
-    }
-
-    setPosition({ top, left });
+    prepareOpenPosition();
     setShowTooltip(true);
   };
 
   const handleMouseLeave = () => setShowTooltip(false);
 
-  useEffect(() => {
-    if (!showTooltip) return;
-    window.addEventListener("scroll", handleMouseLeave, true);
-    return () => window.removeEventListener("scroll", handleMouseLeave, true);
-  }, [showTooltip]);
-
   const tooltipElement = (
     <div
+      ref={tooltipRef}
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
       className={`fixed z-[9999] max-w-[280px] rounded-lg border border-white/10 bg-primary px-2 py-1 text-xs text-white shadow-lg ${
         props.uppercase ? "uppercase" : "normal-case"

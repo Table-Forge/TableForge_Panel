@@ -7,6 +7,7 @@ import type { ISelect } from "./select.interfaces";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { getInputClasses } from "@/src/components/input/input.styles";
 import { Input } from "@/src/components/input/input.default";
+import { useDropdownPosition } from "@/src/hooks/utils/useDropdownPosition";
 import { normalizeString } from "@/src/utils/format";
 
 const areValuesEqual = (first: unknown, second: unknown) => {
@@ -48,7 +49,6 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   const [listOpen, setListOpen] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [listStyle, setListStyle] = useState({ top: 0, left: 0, width: 0 });
   const [isTyping, setIsTyping] = useState(false);
 
   const headerRef = useRef<HTMLButtonElement>(null);
@@ -73,7 +73,9 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     const normalizedSearch = normalizeString(inputSearch);
 
     const filtered = initialOptions.filter((item) =>
-      normalizeString(`${item.name ?? item.label ?? ""}`).includes(normalizedSearch),
+      normalizeString(`${item.name ?? item.label ?? ""}`).includes(
+        normalizedSearch,
+      ),
     );
 
     if (
@@ -85,6 +87,19 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
 
     return filtered;
   }, [initialOptions, inputSearch, selectedItem]);
+
+  const {
+    listStyle,
+    listDirection,
+    isSettling,
+    prepareOpenPosition,
+    resetDropdownPosition,
+  } = useDropdownPosition({
+    triggerRef: headerRef,
+    listRef,
+    isOpen: listOpen,
+    watchDeps: [displayedOptions.length, inputSearch, isComponentLoading],
+  });
 
   useEffect(() => {
     if (!firstReset) return;
@@ -149,8 +164,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
         return;
       }
 
-      setListOpen(false);
-      setFocusedIndex(-1);
+      handleOpenList(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -172,20 +186,13 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   };
 
   const handleOpenList = (open: boolean) => {
-    if (open && headerRef.current) {
-      const rect = headerRef.current.getBoundingClientRect();
-      setListStyle({
-        top: rect.bottom + window.scrollY + 6,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      });
-    }
-
+    if (open) prepareOpenPosition();
     setListOpen(open);
 
     if (!open) {
       setFocusedIndex(-1);
       shouldFocusSearchRef.current = false;
+      resetDropdownPosition();
     }
   };
 
@@ -266,6 +273,84 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     }, 100);
   };
 
+  const searchElement = searchInput ? (
+    <div className="border-b border-white/10 p-2">
+      <div className="relative">
+        <Input
+          ref={searchInputRef}
+          value={inputSearch}
+          onChange={(event) => {
+            setInputSearch(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") {
+              event.preventDefault();
+              setFocusedIndex(getNextSelectableIndex(-1, 1));
+              headerRef.current?.focus();
+            }
+          }}
+          placeholder={
+            searchPlaceholder ||
+            (onChangeInputSearch
+              ? "Digite 3 caracteres para pesquisar"
+              : "Pesquisar...")
+          }
+          autoComplete="off"
+          wrapperClassName="w-full"
+          className="pr-8"
+        />
+        <Search
+          size={15}
+          className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-white/60"
+        />
+      </div>
+    </div>
+  ) : null;
+
+  const optionsElement = (
+    <ul className="max-h-56 overflow-auto p-1">
+      {isComponentLoading ? (
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+          Carregando...
+        </li>
+      ) : displayedOptions.length > 0 ? (
+        displayedOptions.map((item, index) => {
+          const isSelected = areValuesEqual(item.value, currentValue);
+          const isFocused = focusedIndex === index;
+          const isSelectable = item.allowSelect !== false;
+
+          return (
+            <li key={String(item.id ?? item.value ?? index)}>
+              <button
+                type="button"
+                data-option-index={index}
+                disabled={!isSelectable}
+                className={`w-full rounded-xl px-3 py-2 text-left text-sm transition ${
+                  isSelected
+                    ? "bg-secondary/20 text-white"
+                    : "text-white/85 hover:bg-white/10"
+                } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
+                  isSelectable ? "opacity-100" : "opacity-50"
+                }`}
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  handleSelect(index);
+                }}
+              >
+                {item.name ?? item.label}
+              </button>
+            </li>
+          );
+        })
+      ) : (
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+          Nenhum resultado encontrado
+        </li>
+      )}
+    </ul>
+  );
+
   const listElement =
     listOpen && listStyle.top > 0
       ? createPortal(
@@ -277,83 +362,21 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,
               width: `${listStyle.width}px`,
+              opacity: isSettling ? 0 : 1,
+              pointerEvents: isSettling ? "none" : "auto",
             }}
           >
-            {searchInput ? (
-              <div className="border-b border-white/10 p-2">
-                <div className="relative">
-                  <Input
-                    ref={searchInputRef}
-                    value={inputSearch}
-                    onChange={(event) => {
-                      setInputSearch(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "ArrowDown") {
-                        event.preventDefault();
-                        setFocusedIndex(getNextSelectableIndex(-1, 1));
-                        headerRef.current?.focus();
-                      }
-                    }}
-                    placeholder={
-                      searchPlaceholder ||
-                      (onChangeInputSearch
-                        ? "Digite 3 caracteres para pesquisar"
-                        : "Pesquisar...")
-                    }
-                    autoComplete="off"
-                    wrapperClassName="w-full"
-                    className="pr-8"
-                  />
-                  <Search
-                    size={15}
-                    className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-white/60"
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            <ul className="max-h-56 overflow-auto p-1">
-              {isComponentLoading ? (
-                <li className="px-3 py-4 text-center text-xs uppercase tracking-wide text-white/55">
-                  Carregando...
-                </li>
-              ) : displayedOptions.length > 0 ? (
-                displayedOptions.map((item, index) => {
-                  const isSelected = areValuesEqual(item.value, currentValue);
-                  const isFocused = focusedIndex === index;
-                  const isSelectable = item.allowSelect !== false;
-
-                  return (
-                    <li key={String(item.id ?? item.value ?? index)}>
-                      <button
-                        type="button"
-                        data-option-index={index}
-                        disabled={!isSelectable}
-                        className={`w-full rounded-xl px-3 py-2 text-left text-sm uppercase transition ${
-                          isSelected
-                            ? "bg-secondary/20 text-white"
-                            : "text-white/85 hover:bg-white/10"
-                        } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
-                          isSelectable ? "opacity-100" : "opacity-50"
-                        }`}
-                        onMouseDown={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          handleSelect(index);
-                        }}
-                      >
-                        {item.name ?? item.label}
-                      </button>
-                    </li>
-                  );
-                })
-              ) : (
-                <li className="px-3 py-4 text-center text-xs uppercase tracking-wide text-white/55">
-                  Nenhum resultado encontrado
-                </li>
-              )}
-            </ul>
+            {listDirection === "up" ? (
+              <>
+                {optionsElement}
+                {searchElement}
+              </>
+            ) : (
+              <>
+                {searchElement}
+                {optionsElement}
+              </>
+            )}
           </div>,
           document.body,
         )
@@ -377,16 +400,23 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           handleOpenList(!listOpen);
           headerRef.current?.focus();
         }}
-        className={`flex h-12 w-full items-center justify-between rounded-2xl px-3 text-left ${
-          getInputClasses(message, isComponentLoading, disabled)
-        }`}
+        className={`flex h-12 w-full items-center justify-between rounded-2xl px-3 text-left ${getInputClasses(
+          message,
+          isComponentLoading,
+          disabled,
+        )}`}
       >
-        <span className={`truncate text-sm ${selectedItem ? "text-white" : "text-white/45"}`}>
+        <span
+          className={`truncate text-sm ${selectedItem ? "text-white" : "text-white/45"}`}
+        >
           {isComponentLoading
             ? "Carregando..."
-            : selectedItem?.name ?? selectedItem?.label ?? title}
+            : (selectedItem?.name ?? selectedItem?.label ?? title)}
         </span>
-        <ChevronDown size={18} className={`text-white/70 transition ${listOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          size={18}
+          className={`text-white/70 transition ${listOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       {listElement}
