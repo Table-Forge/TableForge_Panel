@@ -2,11 +2,11 @@ import { handleError } from "@/src/utils/error-handler";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { UserService } from "../services/users.services";
-import { USER } from "./query-key";
+import { USER_KEYS } from "./query-key";
 
 export function useUserById(id?: number) {
   const query = useQuery({
-    queryKey: [USER, id],
+    queryKey: USER_KEYS.detail(id),
     queryFn: () => UserService.getById(id!),
     enabled: !!id,
   });

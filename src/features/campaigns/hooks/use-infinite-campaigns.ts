@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { CAMPAIGNS } from "@/src/features/campaigns/hooks/query-key";
+import { CAMPAIGN_KEYS } from "@/src/features/campaigns/hooks/query-key";
 import { CampaignService } from "@/src/features/campaigns/services/campaigns.services";
 
 const DEFAULT_LIMIT = 20;
@@ -16,7 +16,7 @@ export function useInfiniteCampaigns({
   const normalizedSearch = search.trim();
 
   return useInfiniteQuery({
-    queryKey: [CAMPAIGNS, size, normalizedSearch],
+    queryKey: CAMPAIGN_KEYS.infinite({ size, search: normalizedSearch }),
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       CampaignService.getPaginated({

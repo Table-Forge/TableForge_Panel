@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CampaignService } from "@/src/features/campaigns/services/campaigns.services";
-import { CAMPAIGNS } from "./query-key";
+import { CAMPAIGN_KEYS } from "./query-key";
 import type { IGetCampaigns } from "./types";
 
 const DEFAULT_LIMIT = 20;
@@ -11,7 +11,11 @@ export function useCampaigns(params: IGetCampaigns = {}) {
   const normalizedSearch = params.search?.trim() ?? "";
 
   return useQuery({
-    queryKey: [CAMPAIGNS, page, size, normalizedSearch],
+    queryKey: CAMPAIGN_KEYS.paginated({
+      page,
+      size,
+      search: normalizedSearch,
+    }),
     queryFn: () =>
       CampaignService.getPaginated({
         page,

@@ -6,7 +6,7 @@ import { UserService } from "@/src/features/users/services/users.services";
 import { useBoundStore } from "@/src/store/use-bound-store";
 import { handleError } from "@/src/utils/error-handler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { USER, USER_LIST } from "./query-key";
+import { USER_KEYS } from "./query-key";
 
 export const useUsersMutation = () => {
   const queryClient = useQueryClient();
@@ -17,7 +17,7 @@ export const useUsersMutation = () => {
   const createMutation = useMutation({
     mutationFn: (data: IUser) => UserService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.lists() });
       addToast("success", "Usuário salvo com sucesso!");
       closeModal();
     },
@@ -27,8 +27,8 @@ export const useUsersMutation = () => {
   const updateMutation = useMutation({
     mutationFn: (data: IUser) => UserService.update(data),
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
-      queryClient.invalidateQueries({ queryKey: [USER, variables.id] });
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.detail(variables.id) });
       addToast("success", "Usuário editado com sucesso!");
       closeModal();
     },
@@ -38,7 +38,7 @@ export const useUsersMutation = () => {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => UserService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [USER_LIST] });
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.lists() });
       addToast("success", "Usuário removido com sucesso!");
       closeModal();
     },
