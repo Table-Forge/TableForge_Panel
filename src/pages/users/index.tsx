@@ -1,8 +1,15 @@
-﻿import { Button, ModalDelete, MoreInfo, Paginate } from "@/src/components";
+import {
+  Button,
+  ModalDelete,
+  MoreInfo,
+  Paginate,
+} from "@/src/components";
+import { UserStatus } from "@/src/components/user-status/user-status";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Table } from "@/src/components/table/table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { useUserStatusEnum } from "@/src/features/users/hooks/use-user-status-enum";
 import { useUsers } from "@/src/features/users/hooks/use-users";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import type { IUser } from "@/src/features/users/schemas/user.schema";
@@ -19,6 +26,7 @@ export default function UsersPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useUsersMutation();
   const [page, setPage] = useState(1);
+  const { statusEnum } = useUserStatusEnum();
 
   const { data, isLoading, isError } = useUsers({
     page,
@@ -76,7 +84,7 @@ export default function UsersPage() {
       title: "ID",
       key: "id",
       width: "120px",
-      render: (user) => <span className="font-bold">#{user.id}</span>,
+      render: (user) => <span className="font-bold">{user.id}</span>,
     },
     {
       title: "Usuário",
@@ -104,24 +112,7 @@ export default function UsersPage() {
       key: "status",
       width: "140px",
       align: "center",
-      render: (user) => {
-        const status = (user.status || "indefinido").toLowerCase();
-        const styles: Record<string, string> = {
-          ativo: "bg-green-500/10 text-green-400 border-green-500/30",
-          inativo: "bg-danger/10 text-danger border-danger/30",
-          indefinido: "bg-secondary/10 text-secondary border-secondary/30",
-        };
-
-        return (
-          <span
-            className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase ${
-              styles[status] ?? styles.indefinido
-            }`}
-          >
-            {status}
-          </span>
-        );
-      },
+      render: (user) => <UserStatus value={user.status} options={statusEnum} />,
     },
     {
       title: "Criado em",
