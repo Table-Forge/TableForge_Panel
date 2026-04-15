@@ -90,7 +90,7 @@ export default function ImagesPage() {
       title: "ID",
       key: "id",
       width: "100px",
-      render: (image) => <span className="font-bold">#{image.id ?? "-"}</span>,
+      render: (image) => <span className="font-bold">{image.id ?? "-"}</span>,
     },
     {
       title: "Preview",
