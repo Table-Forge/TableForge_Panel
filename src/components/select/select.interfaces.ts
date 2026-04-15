@@ -1,15 +1,20 @@
-import type { ReactNode } from "react";
-import type { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
+import type { JSX } from "react";
+import type {
+  FieldValues,
+  Path,
+  PathValue,
+  UseFormReturn,
+} from "react-hook-form";
 
-export type TSelectValue = string | number | boolean | null | undefined;
+type TPrimitives = string | number | boolean;
 
-export interface TSelectOptions {
-  value: TSelectValue;
-  id?: string | number;
-  name?: string;
-  label?: ReactNode | string;
+type TSelectOptions<TValue extends TPrimitives = TPrimitives> = {
+  value: TValue | undefined | null;
+  label?: string | JSX.Element;
+  name: string;
+  id?: number | string;
   allowSelect?: boolean;
-}
+};
 
 interface ISelect<TFieldValues extends FieldValues = FieldValues> {
   initialOptions: TSelectOptions[];
@@ -30,4 +35,4 @@ interface ISelect<TFieldValues extends FieldValues = FieldValues> {
   searchPlaceholder?: string;
 }
 
-export type { ISelect };
+export type { ISelect, TPrimitives, TSelectOptions };

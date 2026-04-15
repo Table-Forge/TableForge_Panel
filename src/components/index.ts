@@ -24,12 +24,12 @@ export {
   FILE_ERROR_MESSAGE,
 } from "@/src/components/error-message/error-message.constants";
 
-export { InputGroup } from "@/src/components/input-group/input-group";
 export { ImageInput } from "@/src/components/image-input/image-input";
 export type {
   IImageInput,
   IImageInputValue,
 } from "@/src/components/image-input/image-input.interfaces";
+export { InputGroup } from "@/src/components/input-group/input-group";
 
 export { DateInput } from "@/src/components/input/input.date.controlled";
 export { Input } from "@/src/components/input/input.default";
@@ -68,19 +68,20 @@ export { Select } from "@/src/components/select/select";
 export type {
   ISelect,
   TSelectOptions,
-  TSelectValue,
 } from "@/src/components/select/select.interfaces";
 
 export { MultiSelect } from "@/src/components/multi-select/multi-select";
 export type {
   IMultiSelect,
   TMultiSelectOption,
-  TPrimitives,
 } from "@/src/components/multi-select/multi-select.interfaces";
 
 export { Paginate } from "@/src/components/paginate/paginate";
 export { INITIAL_PAGINATE } from "@/src/components/paginate/paginate.constants";
-export type { IPaginateProps, IPages } from "@/src/components/paginate/paginate.interface";
+export type {
+  IPages,
+  IPaginateProps,
+} from "@/src/components/paginate/paginate.interface";
 
 export { Table } from "@/src/components/table/table";
 export type {
@@ -99,6 +100,8 @@ export type {
   ITooltip,
   ITooltipStyles,
 } from "@/src/components/tooltip/tooltip.interfaces";
+
+export { UserStatus } from "@/src/components/user-status/user-status";
 
 export { MoreInfo } from "@/src/components/more-info/more-info";
 export type { IMoreInfo } from "@/src/components/more-info/more-info.interfaces";

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
-
-export type TPrimitives = string | number | boolean;
+import type { TPrimitives } from "../select/select.interfaces";
 
 export interface TMultiSelectOption {
   value: TPrimitives;
