@@ -14,6 +14,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      gcTime: 5 * 60 * 1000, // 5 minutes
     },
   },
   queryCache: new QueryCache({
