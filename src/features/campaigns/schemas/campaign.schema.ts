@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  numberRequired,
+  numberOptional,
   stringOptional,
   stringRequired,
 } from "@/src/utils/custom-schema-validations";
@@ -17,7 +17,7 @@ export const SessionScheduleSchema = z.object({
 });
 
 export const CampaignSchema = z.object({
-  id: numberRequired,
+  id: numberOptional,
   title: stringRequired,
   image: stringOptional,
   system: stringRequired,

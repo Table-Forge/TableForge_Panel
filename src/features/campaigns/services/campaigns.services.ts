@@ -24,4 +24,11 @@ export const CampaignService = {
 
     return data;
   },
+  getById: async (id: number): Promise<ICampaign> => {
+    const { data } = await api.get(`${ENDPOINT}/${id}`);
+    return data;
+  },
+  create: async (payload: ICampaign) => api.post(ENDPOINT, payload),
+  update: async (payload: ICampaign) => api.put(ENDPOINT, payload),
+  delete: async (id: number) => api.delete(`${ENDPOINT}/${id}`),
 };
