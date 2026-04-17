@@ -77,7 +77,7 @@ export function LoginPage() {
 
         <form onSubmit={onSubmit} className="space-y-5">
           <InputGroup>
-            <Label htmlFor="login">Usuário ou E-mail</Label>
+            <Label htmlFor="login">Usuário ou e-mail</Label>
 
             <ControlledInput<ILoginRequest>
               hookForm={form}

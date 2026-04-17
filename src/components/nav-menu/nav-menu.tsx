@@ -3,7 +3,7 @@ import { Image, LayoutGrid, ScrollText, ShieldUser } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
+  { to: "/", label: "Painel", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/users", label: "Usuários", icon: ShieldUser },
   { to: "/images", label: "Imagens", icon: Image },

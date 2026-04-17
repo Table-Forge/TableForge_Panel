@@ -528,7 +528,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
         })
       ) : (
         <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
-          Nenhuma opcao encontrada
+          Nenhuma opção encontrada
         </li>
       )}
     </ul>

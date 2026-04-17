@@ -23,7 +23,7 @@ export const Header = () => {
       content: (
         <div className="space-y-5">
           <p className="text-sm text-grays-100">
-            Você realmente deseja deslogar da sua conta?
+            Você realmente deseja sair da sua conta?
           </p>
 
           <div className="flex justify-end gap-2">

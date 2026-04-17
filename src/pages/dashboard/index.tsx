@@ -10,7 +10,7 @@ export function DashboardPage() {
     () => [
       {
         title: "Campanhas",
-        description: "Gerencie campanhas, descrições e publicações do app.",
+        description: "Gerencie campanhas, descrições e publicações do aplicativo.",
         to: "/campaigns",
         icon: ScrollText,
       },
@@ -41,7 +41,7 @@ export function DashboardPage() {
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-grays-100">
           {`Administrador: ${user?.nickname ?? user?.username ?? "Usuário"}.`}{" "}
-          Use os atalhos abaixo para gerenciar o conteúdo do TableForge App.
+          Use os atalhos abaixo para gerenciar o conteúdo do TableForge.
         </p>
       </section>
 

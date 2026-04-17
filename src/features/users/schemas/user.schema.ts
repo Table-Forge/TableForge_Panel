@@ -72,7 +72,7 @@ export const UpdatePasswordSchema = z
     if (newPassword !== confirmPassword) {
       context.addIssue({
         code: "custom",
-        message: "Os novos segredos não coincidem.",
+        message: "As novas senhas não coincidem.",
         path: ["confirmPassword"],
       });
     }

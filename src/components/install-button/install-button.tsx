@@ -30,7 +30,7 @@ export const InstallButton = () => {
 
   return (
     <Button buttonStyle="secondary" onClick={onInstall}>
-      Instalar App
+      Instalar aplicativo
       <Download size={16} />
     </Button>
   );

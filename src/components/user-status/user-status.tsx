@@ -30,11 +30,11 @@ const STATUS_PRESENTATION: Record<string, StatusPresentation> = {
     classes: "bg-slate-400/10 text-slate-300 border-slate-300/30",
   },
   none: {
-    label: "None",
+    label: "Nenhum",
     classes: "bg-secondary/10 text-secondary border-secondary/30",
   },
   deleted: {
-    label: "Deleted",
+    label: "Excluído",
     classes: "bg-zinc-500/10 text-zinc-300 border-zinc-400/30",
   },
   default: {
