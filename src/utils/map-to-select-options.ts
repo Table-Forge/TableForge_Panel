@@ -1,5 +1,9 @@
-import type { TSelectOptions } from "../components";
-import type { TPrimitives } from "../types/global.types";
+import type {
+  TPrimitives,
+  TSelectOptions,
+} from "../components/select/select.interfaces";
+
+type TSelectablePrimitive<T> = Extract<T, TPrimitives>;
 
 type TMapToSelectOptionsParams<T, K extends keyof T> = {
   data: T[] | undefined;
@@ -20,7 +24,7 @@ export function mapToSelectOptions<T, K extends keyof T>(
 ): TSelectOptions<string>[];
 export function mapToSelectOptions<T, K extends keyof T>(
   params: TMapToSelectOptionsParams<T, K>,
-): TSelectOptions<T[K] & TPrimitives>[];
+): TSelectOptions<TSelectablePrimitive<T[K]>>[];
 export function mapToSelectOptions<T, K extends keyof T>({
   data,
   labelKey,
@@ -28,7 +32,7 @@ export function mapToSelectOptions<T, K extends keyof T>({
   filterAllowed = true,
   stringifyValue = false,
 }: TMapToSelectOptionsParams<T, K>): TSelectOptions<
-  (T[K] & TPrimitives) | string
+  TSelectablePrimitive<T[K]> | string
 >[] {
   if (!data || !Array.isArray(data)) return [];
 
@@ -44,7 +48,7 @@ export function mapToSelectOptions<T, K extends keyof T>({
     .map((item) => {
       const value = stringifyValue
         ? String(item[valueKey])
-        : (item[valueKey] as T[K] & TPrimitives);
+        : (item[valueKey] as TSelectablePrimitive<T[K]>);
       const label = String(item[labelKey]);
       const allowSelect = (item as T & TWithAllowSelect).allowSelect;
 

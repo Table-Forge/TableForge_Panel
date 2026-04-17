@@ -9,15 +9,12 @@ export interface IInputStyles {
 }
 
 export interface IControllerInput<TFieldValues extends FieldValues = FieldValues>
-  extends IInputStyles {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name">,
+    IInputStyles {
   hookForm: UseFormReturn<TFieldValues>;
   name: Path<TFieldValues>;
-  placeholder?: string;
-  autoComplete?: string;
-  maxLength?: number;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
-  className?: string;
 }
 
 export interface IMaskedControllerInput<TFieldValues extends FieldValues = FieldValues>
