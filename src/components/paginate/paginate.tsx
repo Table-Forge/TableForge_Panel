@@ -76,7 +76,7 @@ export const Paginate: React.FC<IPaginateProps> = ({
 
   return (
     <footer
-      className={`mt-4 flex flex-col gap-4 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between ${className}`}
+      className={`flex flex-col gap-4 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between ${className}`}
     >
       <p className="text-sm text-grays-100">
         Mostrando <span className="font-bold text-secondary">{itemStart}</span>{" "}

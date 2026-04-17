@@ -1,5 +1,6 @@
 import {
   Button,
+  Input,
   ModalDelete,
   MoreInfo,
   Paginate,
@@ -93,7 +94,7 @@ export default function ImagesPage() {
       render: (image) => <span className="font-bold">{image.id ?? "-"}</span>,
     },
     {
-      title: "Preview",
+      title: "Prévia",
       key: "url",
       width: "100px",
       align: "center",
@@ -164,7 +165,7 @@ export default function ImagesPage() {
             Imagens
           </h1>
           <p className="text-sm text-grays-100">
-            Gerencie os assets de imagem disponíveis no sistema.
+            Gerencie os recursos de imagem disponíveis no sistema.
           </p>
         </div>
 
@@ -178,25 +179,19 @@ export default function ImagesPage() {
         </Button>
       </header>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-primary/55 p-3">
-        <input
+      <div className=" rounded-2xl border border-white/10 bg-primary/55 p-3">
+        <Input
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
             setPage(1);
           }}
           placeholder="Buscar imagem por nome ou tipo"
-          className="h-10 w-full rounded-xl border border-white/15 bg-background/60 px-3 text-sm text-white outline-none placeholder:text-white/35"
+          wrapperClassName="w-full"
         />
       </div>
 
-      <div className="mt-6">
-        <Table
-          tableContents={tableContents}
-          bodyData={images}
-          bodyHeight="calc(100vh - 300px)"
-        />
-      </div>
+      <Table tableContents={tableContents} bodyData={images} />
 
       <Paginate paginationData={paginationData} onPageChange={setPage} />
     </>
