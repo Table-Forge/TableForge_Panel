@@ -12,9 +12,11 @@ import { handleError } from "@/src/utils/error-handler";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      gcTime: 1000 * 60 * 60 * 24, // 24h
+      staleTime: 1000 * 60 * 5, // 5 min
+      retry: 0,
       refetchOnWindowFocus: false,
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnReconnect: false,
     },
   },
   queryCache: new QueryCache({
