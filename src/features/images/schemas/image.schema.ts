@@ -13,6 +13,8 @@ const ImageTypeSchema = z.enum(IMAGE_TYPE_VALUES, {
 
 export const ImageSchema = z.object({
   id: numberOptional,
+  userId: numberOptional,
+  campaignId: numberOptional,
   uuid: stringOptional,
   type: ImageTypeSchema,
   name: stringRequired,
