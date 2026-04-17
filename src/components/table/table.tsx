@@ -70,19 +70,33 @@ export function Table<T extends { id?: number | string }>({
     [detailsLink, handleLinkNavigation],
   );
 
-  const columnOffsets = useMemo(() => {
-    let accumulated = 0;
+  const columnOffsets = useMemo(
+    () =>
+      tableContents.reduce<{
+        offsets: string[];
+        accumulated: number;
+      }>(
+        (result, column) => {
+          if (!column.fixed) {
+            return {
+              ...result,
+              offsets: [...result.offsets, "0px"],
+            };
+          }
 
-    return tableContents.map((column) => {
-      if (!column.fixed) return "0px";
+          const currentOffset = `${result.accumulated}px`;
+          const widthValue = Number.parseInt(column.width ?? "100", 10);
+          const safeWidth = Number.isNaN(widthValue) ? 100 : widthValue;
 
-      const currentOffset = `${accumulated}px`;
-      const widthValue = Number.parseInt(column.width ?? "100", 10);
-      accumulated += Number.isNaN(widthValue) ? 100 : widthValue;
-
-      return currentOffset;
-    });
-  }, [tableContents]);
+          return {
+            offsets: [...result.offsets, currentOffset],
+            accumulated: result.accumulated + safeWidth,
+          };
+        },
+        { offsets: [], accumulated: 0 },
+      ).offsets,
+    [tableContents],
+  );
 
   const handleContextMenu = useCallback(
     (event: MouseEvent<HTMLDivElement>, row: T) => {
@@ -120,17 +134,20 @@ export function Table<T extends { id?: number | string }>({
 
   if (!bodyData?.length) {
     return (
-      <div className="h-full rounded-2xl border border-white/10 bg-primary/40 px-6 py-10 text-center text-xs font-semibold uppercase tracking-wider text-grays-100">
-        Nenhum dado listado.
+      <div className="h-full">
+        <p className="rounded-2xl border border-white/10 bg-primary/40 px-3 py-6 text-center text-xs font-semibold uppercase tracking-wider text-grays-100">
+          Nenhum dado listado.
+        </p>
       </div>
     );
   }
 
   return (
     <div
-      aria-label="table"
-      className={`relative h-full min-h-full w-full overflow-x-auto ${scrollable ? "max-w-full" : ""}`}
+      aria-label="tabela"
+      className={`relative h-full min-h-0 w-full overflow-x-auto ${scrollable ? "max-w-full" : ""}`}
       style={{
+        height: bodyHeight,
         maxHeight: bodyHeight,
         overflowY: bodyHeight ? "auto" : "visible",
         isolation: "isolate",
@@ -263,7 +280,9 @@ function TableRowComponent<T extends { id?: number | string }>({
               position: column.fixed ? "sticky" : "static",
               left: column.fixed ? columnOffsets[index] : undefined,
               zIndex: column.fixed ? 25 : undefined,
-              backgroundColor: column.fixed ? "var(--color-primary)" : undefined,
+              backgroundColor: column.fixed
+                ? "var(--color-primary)"
+                : undefined,
             }}
             className={`items-center px-0 text-sm ${
               column.align === "center"
