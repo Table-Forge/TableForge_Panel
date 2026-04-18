@@ -82,6 +82,8 @@ export const useDropdownPosition = ({
       const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight =
         window.innerHeight || document.documentElement.clientHeight;
+      const viewportWidth =
+        window.innerWidth || document.documentElement.clientWidth;
       const scrollY = window.scrollY || window.pageYOffset;
       const scrollX = window.scrollX || window.pageXOffset;
 
@@ -135,10 +137,16 @@ export const useDropdownPosition = ({
         : listWidth > 0
           ? listWidth
           : fallbackWidth;
-      const left =
+      const rawLeft =
         horizontalAnchor === "right"
           ? rect.right + offsetLeft + scrollX - width
           : rect.left + offsetLeft + scrollX;
+      const minLeft = scrollX + margin;
+      const maxLeft = scrollX + viewportWidth - width - margin;
+      const left =
+        width > 0
+          ? Math.min(Math.max(rawLeft, minLeft), Math.max(minLeft, maxLeft))
+          : rawLeft;
 
       return {
         direction,

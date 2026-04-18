@@ -540,7 +540,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
           <div
             ref={listRef}
             data-portal="true"
-            className="absolute z-[1100] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-xl"
+            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-xl"
             style={{
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,

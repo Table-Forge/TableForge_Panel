@@ -34,6 +34,7 @@ export interface IControlledDateInput<TFieldValues extends FieldValues = FieldVa
   minDate?: string | Date;
   maxDate?: string | Date;
   showYearDropdown?: boolean;
+  showTime?: boolean;
   startDate?: string | Date;
   endDate?: string | Date;
   selectsStart?: boolean;

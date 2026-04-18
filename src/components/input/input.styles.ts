@@ -17,4 +17,4 @@ export const getInputClasses = (
 };
 
 export const inputInnerClasses =
-  "h-full w-full border-none bg-transparent px-3 py-2 text-sm font-medium text-white placeholder:text-white/35 focus:outline-none disabled:cursor-not-allowed";
+  "h-full w-full border-none bg-transparent px-3 py-2 text-sm font-medium text-white placeholder:font-normal placeholder:text-white/35 focus:outline-none disabled:cursor-not-allowed";

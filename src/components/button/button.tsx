@@ -19,7 +19,7 @@ export const Button: React.FC<IButton> = ({
   ...props
 }) => {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 rounded-2xl border text-xs font-bold uppercase tracking-wider transition";
+    "inline-flex items-center justify-center gap-2 rounded-2xl border text-xs font-bold uppercase tracking-wider transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-60";
 
   const widthStyles = maxWidth ? "w-full" : "w-max";
   const sizeStyles: Record<NonNullable<IButton["size"]>, string> = {
@@ -34,7 +34,8 @@ export const Button: React.FC<IButton> = ({
     primary: "bg-secondary border-secondary text-white hover:brightness-110",
     secondary: "bg-tertiary border-tertiary text-white hover:brightness-110",
     danger: "bg-danger border-danger text-white hover:brightness-110",
-    hollow: "bg-transparent border-secondary text-secondary hover:bg-secondary/10",
+    hollow:
+      "bg-transparent border-secondary text-secondary hover:bg-secondary/10",
   };
 
   const interactionStyles =
