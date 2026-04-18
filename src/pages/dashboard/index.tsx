@@ -1,5 +1,5 @@
-﻿import { useAuth } from "@/src/context/auth";
-import { LayoutGrid, ScrollText, ShieldUser } from "lucide-react";
+﻿import { useAuth } from "@/src/context/use-auth";
+import { FileText, LayoutGrid, ScrollText, ShieldUser } from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
@@ -25,6 +25,12 @@ export function DashboardPage() {
         description: "Visão geral das operações do painel administrativo.",
         to: "/",
         icon: LayoutGrid,
+      },
+      {
+        title: "Logs",
+        description: "Consulte logs de execução e erros do sistema.",
+        to: "/logs",
+        icon: FileText,
       },
     ],
     [],
@@ -66,3 +72,4 @@ export function DashboardPage() {
     </div>
   );
 }
+

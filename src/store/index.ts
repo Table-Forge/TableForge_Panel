@@ -1,4 +1,5 @@
 export { useBoundStore } from "@/src/store/use-bound-store";
+export { useComponentStore } from "@/src/store/use-component-store";
 export { AUTH_STORAGE_KEY } from "@/src/store/slices/auth-slice";
 export type {
   AuthSlice,

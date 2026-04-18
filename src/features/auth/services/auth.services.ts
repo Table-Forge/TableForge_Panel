@@ -15,4 +15,33 @@ export const AuthService = {
 
     return LoginResponseSchema.parse(data);
   },
+
+  sendRecoveryCode: async (email: string) => {
+    const { data } = await api.put(`${ENDPOINT}/recovery/${email}/send-code`);
+    return data;
+  },
+  validateRecoveryCode: async (email: string, code: string) => {
+    const { data } = await api.put(
+      `${ENDPOINT}/recovery/${email}/validate-code`,
+      null,
+      {
+        params: { code, email },
+      },
+    );
+    return data;
+  },
+  updateRecoveryPassword: async (
+    email: string,
+    code: string,
+    newPassword: string,
+  ) => {
+    const { data } = await api.put(
+      `${ENDPOINT}/recovery/${email}/password`,
+      null,
+      {
+        params: { code, email, newPassword },
+      },
+    );
+    return data;
+  },
 };

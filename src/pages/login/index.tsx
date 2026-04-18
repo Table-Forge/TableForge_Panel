@@ -3,14 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Shield } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm, type Resolver } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
 import { BrandName } from "@/src/components/ui/brand-name";
-import { useAuth } from "@/src/context/auth";
+import { useAuth } from "@/src/context/use-auth";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
 import {
   LoginRequestSchema,
@@ -104,6 +104,15 @@ export function LoginPage() {
             />
           </InputGroup>
 
+          <div className="flex justify-end">
+            <Link
+              to="/recover-password"
+              className="text-xs font-semibold text-secondary transition hover:brightness-110"
+            >
+              Esqueceu sua senha?
+            </Link>
+          </div>
+
           <Button
             type="submit"
             buttonStyle="secondary"
@@ -117,3 +126,4 @@ export function LoginPage() {
     </main>
   );
 }
+

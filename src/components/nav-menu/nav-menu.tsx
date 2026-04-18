@@ -1,5 +1,11 @@
 ﻿import { BrandName } from "@/src/components/ui/brand-name";
-import { Image, LayoutGrid, ScrollText, ShieldUser } from "lucide-react";
+import {
+  FileText,
+  Image,
+  LayoutGrid,
+  ScrollText,
+  ShieldUser,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
@@ -7,6 +13,7 @@ const navItems = [
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/users", label: "Usuários", icon: ShieldUser },
   { to: "/images", label: "Imagens", icon: Image },
+  { to: "/logs", label: "Logs", icon: FileText },
 ];
 
 export function NavMenu() {

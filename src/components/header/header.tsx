@@ -1,4 +1,4 @@
-import { useAuth } from "@/src/context/auth";
+﻿import { useAuth } from "@/src/context/use-auth";
 import { useBoundStore } from "@/src/store/use-bound-store";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -73,3 +73,4 @@ export const Header = () => {
     </header>
   );
 };
+

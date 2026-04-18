@@ -1,4 +1,5 @@
 import type { ICardBox } from "./card-box.interfaces";
+import Masonry from "react-masonry-css";
 
 export const CardBox: React.FC<ICardBox> = ({ title, children, className = "" }) => {
   return (
@@ -43,4 +44,23 @@ export const GridBox: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 export const CardsBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex flex-col gap-4">{children}</div>
+);
+
+export const CardsMasonry: React.FC<{
+  children: React.ReactNode;
+  breakpoints?: Record<number | "default", number>;
+}> = ({
+  children,
+  breakpoints = {
+    default: 2,
+    992: 1,
+  },
+}) => (
+  <Masonry
+    breakpointCols={breakpoints}
+    className="tf-masonry-grid"
+    columnClassName="tf-masonry-grid-column"
+  >
+    {children}
+  </Masonry>
 );

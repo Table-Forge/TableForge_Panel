@@ -1,4 +1,5 @@
-﻿import { useAuth } from "@/src/context/auth";
+﻿import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/src/context/use-auth";
 import type {
   ILoginRequest,
   ILoginResponse,
@@ -6,7 +7,22 @@ import type {
 import { isAdminAuthType } from "@/src/features/auth/schemas/auth.schema";
 import { AuthService } from "@/src/features/auth/services/auth.services";
 import { useBoundStore } from "@/src/store/use-bound-store";
-import { useMutation } from "@tanstack/react-query";
+
+type TValidateRecoveryCodeParams = {
+  email: string;
+  code: string;
+};
+
+type TUpdateRecoveryPasswordParams = {
+  email: string;
+  code: string;
+  newPassword: string;
+};
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error && error.message.trim()) return error.message;
+  return fallback;
+};
 
 export const useAuthMutation = () => {
   const { signIn } = useAuth();
@@ -27,15 +43,52 @@ export const useAuthMutation = () => {
       addToast("success", "Login realizado com sucesso.");
     },
     onError: (error: unknown) => {
-      const fallback = "Não foi possível realizar o login.";
-      const message =
-        error instanceof Error ? error.message || fallback : fallback;
-      addToast("error", message);
+      addToast(
+        "error",
+        getErrorMessage(error, "Não foi possível realizar o login."),
+      );
+    },
+  });
+
+  const sendRecoveryCodeMutation = useMutation({
+    mutationFn: (email: string) => AuthService.sendRecoveryCode(email),
+    onError: (error: unknown) => {
+      addToast(
+        "error",
+        getErrorMessage(error, "Não foi possível enviar o código."),
+      );
+    },
+  });
+
+  const validateRecoveryCodeMutation = useMutation({
+    mutationFn: (params: TValidateRecoveryCodeParams) =>
+      AuthService.validateRecoveryCode(params.email, params.code),
+    onError: (error: unknown) => {
+      addToast("error", getErrorMessage(error, "Código inválido."));
+    },
+  });
+
+  const updateRecoveryPasswordMutation = useMutation({
+    mutationFn: (params: TUpdateRecoveryPasswordParams) =>
+      AuthService.updateRecoveryPassword(
+        params.email,
+        params.code,
+        params.newPassword,
+      ),
+    onError: (error: unknown) => {
+      addToast(
+        "error",
+        getErrorMessage(error, "Não foi possível atualizar sua senha."),
+      );
     },
   });
 
   return {
     loginMutation,
     isLoadingLoginMutation: loginMutation.isPending,
+    sendRecoveryCodeMutation,
+    validateRecoveryCodeMutation,
+    updateRecoveryPasswordMutation,
   };
 };
+

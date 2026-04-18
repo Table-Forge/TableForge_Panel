@@ -1,11 +1,15 @@
 import { AdminLayout } from "@/src/components/layout/admin-layout";
 import { GlobalModal } from "@/src/components/modals/global-modal";
 import { ToastContainer } from "@/src/components/toast/toast-container";
-import { AuthProvider, useAuth } from "@/src/context/auth";
+import { AuthProvider } from "@/src/context/auth";
+import { useAuth } from "@/src/context/use-auth";
 import { CampaignsPage } from "@/src/pages/campaigns";
 import { DashboardPage } from "@/src/pages/dashboard";
 import ImagesPage from "@/src/pages/images";
 import { LoginPage } from "@/src/pages/login";
+import { LogDetailsPage } from "@/src/pages/logs/details";
+import { LogsPage } from "@/src/pages/logs";
+import { RecoverPasswordPage } from "@/src/pages/recover-password";
 import UsersPage from "@/src/pages/users";
 import {
   BrowserRouter,
@@ -21,6 +25,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/recover-password" element={<RecoverPasswordPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
@@ -28,6 +33,8 @@ function App() {
               <Route path="campaigns" element={<CampaignsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="images" element={<ImagesPage />} />
+              <Route path="logs" element={<LogsPage />} />
+              <Route path="logs/:id" element={<LogDetailsPage />} />
             </Route>
           </Route>
 
@@ -36,6 +43,7 @@ function App() {
 
         <GlobalModal />
         <ToastContainer />
+        <div id="root-portal" />
       </BrowserRouter>
     </AuthProvider>
   );

@@ -2,6 +2,9 @@ export interface IGetPaginatedParams {
   page?: number;
   size?: number;
   search?: string;
+  logType?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface IPaginationResponse {
