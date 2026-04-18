@@ -85,7 +85,7 @@ export function CampaignsPage() {
       ),
     },
     {
-      title: "Titulo",
+      title: "Título",
       key: "title",
       width: "220px",
       normalCase: true,
@@ -153,7 +153,7 @@ export function CampaignsPage() {
             Campanhas
           </h1>
           <p className="text-sm text-grays-100">
-            Suas campanhas disponiveis para administracao.
+            Suas campanhas disponíveis para administração.
           </p>
         </div>
 
@@ -174,7 +174,7 @@ export function CampaignsPage() {
             setSearch(event.target.value);
             setPage(1);
           }}
-          placeholder="Buscar campanha por titulo, sistema, mestre ou local"
+          placeholder="Buscar campanha por título, sistema, mestre ou local"
           wrapperClassName="w-full"
         />
       </div>

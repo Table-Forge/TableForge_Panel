@@ -75,12 +75,12 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       <FieldsWrapper>
         <InputGroup>
           <Label htmlFor="title" isRequired>
-            Titulo
+            Título
           </Label>
           <ControlledInput
             hookForm={form}
             name="title"
-            placeholder="Digite o titulo da campanha"
+            placeholder="Digite o título da campanha"
             error={errors.title?.message}
             isLoading={isLoading}
           />
@@ -146,7 +146,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
 
         <InputGroup>
           <Label htmlFor="maxPartySize" isRequired>
-            Maximo de jogadores
+            Máximo de jogadores
           </Label>
           <ControlledInput
             hookForm={form}
@@ -180,7 +180,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           isLoading={isPending}
           disabled={!isDirty || isLoading || isPending}
         >
-          {data?.id ? "Salvar alteracoes" : "Criar campanha"}
+          {data?.id ? "Salvar alterações" : "Criar campanha"}
         </Button>
       </div>
     </form>
