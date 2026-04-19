@@ -266,9 +266,9 @@ function TableRowComponent<T extends { id?: number | string }>({
           ? column.render(row)
           : ((rawValue as ReactNode) ?? "-");
 
-        const isSimpleText =
-          typeof rawValue === "string" || typeof rawValue === "number";
-        const textValue = String(rawValue ?? "-");
+        const isSimpleTextContent =
+          typeof content === "string" || typeof content === "number";
+        const textValue = String(content ?? "-");
 
         return (
           <div
@@ -291,9 +291,9 @@ function TableRowComponent<T extends { id?: number | string }>({
                 : column.align === "right"
                   ? "justify-end text-right"
                   : "justify-start text-left"
-            } ${column.normalCase ? "normal-case" : "uppercase"} min-w-0 overflow-hidden`}
+            } ${column.normalCase ? "normal-case" : "uppercase"} min-w-0`}
           >
-            {isSimpleText && !column.render ? (
+            {isSimpleTextContent ? (
               <Tooltip
                 text={textValue}
                 overflowed
@@ -305,7 +305,7 @@ function TableRowComponent<T extends { id?: number | string }>({
                 </span>
               </Tooltip>
             ) : (
-              <div className="w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+              <div className="w-full min-w-0">
                 {content}
               </div>
             )}
