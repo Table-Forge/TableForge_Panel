@@ -1,61 +1,28 @@
-import {
-  Button,
-  Input,
-  ModalDelete,
-  MoreInfo,
-  Paginate,
-  Table,
-} from "@/src/components";
+﻿import { Button } from "@/src/components/button/button";
+import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
+import { MoreInfo } from "@/src/components/more-info/more-info";
+import { Paginate } from "@/src/components/paginate/paginate";
+import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
-import { useImages } from "@/src/features/images/hooks/use-images";
+import { useAllImages } from "@/src/features/images/hooks/use-all-images";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import type { IImage } from "@/src/features/images/schemas/image.schema";
-import type { IMoreOptions } from "@/src/interfaces";
+import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
-import { useMemo, useState } from "react";
+import { toImageSource } from "@/src/utils/image";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
-
-const IMAGES_PAGE_SIZE = 20;
-
-const toImageSource = (value?: string) => {
-  if (!value) return "";
-  if (/^data:image\//i.test(value) || /^https?:\/\//i.test(value)) return value;
-  return `data:image/*;base64,${value}`;
-};
+import { ImagesSearchFilters } from "./components/search-filters/search-filters";
 
 export default function ImagesPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useImagesMutation();
 
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-
-  const { data, isLoading, isError } = useImages({
-    page,
-    size: IMAGES_PAGE_SIZE,
-    search,
-  });
-
-  const images = data?.items ?? [];
-
-  const paginationData = useMemo(
-    () => ({
-      page: data?.pagination?.page ?? page,
-      itemsPerPage: data?.pagination?.itemsPerPage ?? IMAGES_PAGE_SIZE,
-      filteredItems: data?.pagination?.filteredItems ?? images.length,
-    }),
-    [
-      data?.pagination?.filteredItems,
-      data?.pagination?.itemsPerPage,
-      data?.pagination?.page,
-      images.length,
-      page,
-    ],
-  );
+  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+    useAllImages();
 
   const getMoreInfoOptions = (item: IImage): IMoreOptions[] => {
     const options = [
@@ -179,21 +146,26 @@ export default function ImagesPage() {
         </Button>
       </header>
 
-      <div className=" rounded-2xl border border-white/10 bg-primary/55 p-3">
-        <Input
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(1);
-          }}
-          placeholder="Buscar imagem por nome ou tipo"
-          wrapperClassName="w-full"
-        />
-      </div>
+      <ImagesSearchFilters
+        filters={filters}
+        setFilters={setFilters}
+        resetFilters={resetFilters}
+      />
 
-      <Table tableContents={tableContents} bodyData={images} />
+      <Table tableContents={tableContents} bodyData={data?.items ?? []} />
 
-      <Paginate paginationData={paginationData} onPageChange={setPage} />
+      <Paginate
+        paginationData={data?.pagination}
+        onPageChange={(nextPage) =>
+          setFilters({
+            ...filters,
+            page: nextPage,
+          })
+        }
+      />
     </>
   );
 }
+
+
+

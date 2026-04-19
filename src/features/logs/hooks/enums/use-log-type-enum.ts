@@ -1,20 +1,22 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
-import { mapToSelectOptions } from "@/src/utils/map-to-select-options";
+import { LogService } from "@/src/features/logs/services/logs.services";
 import { handleError } from "@/src/utils/error-handler";
-import { LogService } from "../services/logs.services";
-import { LOG_KEYS } from "./query-key";
+import { mapToSelectOptions } from "@/src/utils/map-to-select-options";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { LOG_KEYS } from "../query-key";
 
-interface IUseLogEnumsProps {
+const ENUM_GC_TIME = 1000 * 60 * 60 * 24;
+
+interface IUseLogTypeEnumProps {
   enabled?: boolean;
   filterAllowed?: boolean;
 }
 
-export const useLogEnums = ({
+export const useLogTypeEnum = ({
   enabled = true,
   filterAllowed = true,
-}: IUseLogEnumsProps = {}) => {
+}: IUseLogTypeEnumProps = {}) => {
   const logTypeEnumQuery = useQuery({
     queryKey: LOG_KEYS.logTypeEnum(),
     queryFn: () => LogService.getLogTypeEnum(),
@@ -26,6 +28,9 @@ export const useLogEnums = ({
         filterAllowed,
       }),
     enabled,
+    staleTime: Infinity,
+    gcTime: ENUM_GC_TIME,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

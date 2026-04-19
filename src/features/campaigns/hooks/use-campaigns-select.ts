@@ -1,23 +1,14 @@
-import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { useMemo, useState } from "react";
-import { useCampaigns } from "./use-campaigns";
+import { useAllCampaigns } from "./use-all-campaigns";
+import type { IGetCampaigns } from "./types";
+import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 
-interface IUseCampaignsSelectProps {
-  enabled?: boolean;
-  size?: number;
-}
-
-const DEFAULT_SIZE = 50;
-
-export const useCampaignsSelect = ({
-  enabled = true,
-  size = DEFAULT_SIZE,
-}: IUseCampaignsSelectProps = {}) => {
+export const useCampaignsSelect = ({ enabled = true }: IGetCampaigns = {}) => {
   const [search, setSearch] = useState("");
 
-  const campaignsQuery = useCampaigns({
-    page: 1,
-    size,
+  const campaignsQuery = useAllCampaigns({
+    ...INITIAL_PAGINATE,
     search,
     enabled,
   });
@@ -41,3 +32,4 @@ export const useCampaignsSelect = ({
     campaignsQuery,
   };
 };
+

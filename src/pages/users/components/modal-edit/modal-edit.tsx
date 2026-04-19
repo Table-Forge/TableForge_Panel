@@ -1,24 +1,22 @@
-import {
-  Button,
-  ControlledImageInput,
-  ControlledInput,
-  FieldsWrapper,
-  InputGroup,
-  Label,
-  Select,
-} from "@/src/components";
-import { USER_TYPE_OPTIONS } from "@/src/constants/select-options";
-import { useImages } from "@/src/features/images/hooks/use-images";
+﻿import { USER_TYPE_OPTIONS } from "@/src/constants/select-options";
+import { useAllImages } from "@/src/features/images/hooks/use-all-images";
 import { type IImage } from "@/src/features/images/schemas/image.schema";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
-import { useUserEnums } from "@/src/features/users/hooks/use-user-enums";
+import { useUserGenderEnum } from "@/src/features/users/hooks/enums/use-user-gender-enum";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import { type IUser } from "@/src/features/users/schemas/user.schema";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "@/src/components/button/button";
+import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
+import { InputGroup } from "@/src/components/input-group/input-group";
+import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
+import { Label } from "@/src/components/label/label";
+import { Select } from "@/src/components/select/select";
 
 const PICKER_PAGE_SIZE = 24;
 
@@ -32,13 +30,13 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
 
-  const { genderEnum, isLoadingGenderEnum } = useUserEnums();
+  const { genderEnum, isLoadingGenderEnum } = useUserGenderEnum();
   const isCreateMode = !data?.id;
 
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
   const [imageSearch, setImageSearch] = useState("");
 
-  const { data: imagesData, isLoading: isLoadingImages } = useImages({
+  const { data: imagesData, isLoading: isLoadingImages } = useAllImages({
     page: 1,
     size: PICKER_PAGE_SIZE,
     search: imageSearch,
@@ -316,3 +314,4 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     </form>
   );
 };
+

@@ -1,5 +1,4 @@
-﻿import { Label } from "@/src/components";
-import { zodResolver } from "@hookform/resolvers/zod";
+﻿import { zodResolver } from "@hookform/resolvers/zod";
 import { Shield } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -16,6 +15,7 @@ import {
   LoginRequestSchema,
   type ILoginRequest,
 } from "@/src/features/auth/schemas/auth.schema";
+import { Label } from "@/src/components/label/label";
 
 interface LoginLocationState {
   from?: { pathname?: string };
@@ -126,4 +126,3 @@ export function LoginPage() {
     </main>
   );
 }
-

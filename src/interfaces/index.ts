@@ -1,28 +1,16 @@
-export interface IGetPaginatedParams {
-  page?: number;
-  size?: number;
+interface IBaseParams {
   search?: string;
   logType?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date | string;
+  endDate?: Date | string;
 }
+
+export type IGetParams = IBaseParams;
+
+export type IGetPaginatedParams = IPaginationResponse & IBaseParams;
 
 export interface IPaginationResponse {
-  page: number;
-  itemsPerPage: number;
-  filteredItems: number;
+  page?: number;
+  size?: number;
+  filteredItems?: number;
 }
-
-export interface INormalizedPaginatedResponse<TItem> {
-  items: TItem[];
-  page: number;
-  size: number;
-  totalItems: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  nextPage: number | null;
-  previousPage: number | null;
-}
-
-export type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";

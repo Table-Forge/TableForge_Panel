@@ -1,49 +1,26 @@
-﻿import {
-  Button,
-  Input,
-  ModalDelete,
-  MoreInfo,
-  Paginate,
-  Table,
-} from "@/src/components";
+﻿import { Button } from "@/src/components/button/button";
+import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
+import { MoreInfo } from "@/src/components/more-info/more-info";
+import { Paginate } from "@/src/components/paginate/paginate";
+import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { useAllCampaigns } from "@/src/features/campaigns/hooks/use-all-campaigns";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
-import {
-  CAMPAIGNS_PAGE_SIZE,
-  useCampaigns,
-} from "@/src/features/campaigns/hooks/use-campaigns";
 import type { ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
-import type { IMoreOptions } from "@/src/interfaces";
+import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
-import { useMemo, useState } from "react";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
+import { CampaignsSearchFilters } from "./components/search-filters/search-filters";
 
 export function CampaignsPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useCampaignsMutation();
 
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-
-  const { data, isLoading, isError } = useCampaigns({
-    page,
-    size: CAMPAIGNS_PAGE_SIZE,
-    search,
-  });
-
-  const campaigns = data?.items ?? [];
-
-  const paginationData = useMemo(
-    () => ({
-      page: data?.page ?? page,
-      itemsPerPage: data?.size ?? CAMPAIGNS_PAGE_SIZE,
-      filteredItems: data?.totalItems ?? campaigns.length,
-    }),
-    [campaigns.length, data?.page, data?.size, data?.totalItems, page],
-  );
+  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+    useAllCampaigns();
 
   const getMoreInfoOptions = (item: ICampaign): IMoreOptions[] => {
     const options = [
@@ -142,7 +119,7 @@ export function CampaignsPage() {
     },
   ];
 
-  if (isLoading && campaigns.length === 0) return <SkeletonTable />;
+  if (isLoading) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
   return (
@@ -167,25 +144,30 @@ export function CampaignsPage() {
         </Button>
       </header>
 
-      <div className="shrink-0 rounded-2xl border border-white/10 bg-primary/55 p-3">
-        <Input
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(1);
-          }}
-          placeholder="Buscar campanha por título, sistema, mestre ou local"
-          wrapperClassName="w-full"
-        />
-      </div>
+      <CampaignsSearchFilters
+        filters={filters}
+        setFilters={setFilters}
+        resetFilters={resetFilters}
+      />
 
       <Table
         tableContents={tableContents}
-        bodyData={campaigns}
+        bodyData={data?.items ?? []}
         bodyHeight="100%"
       />
 
-      <Paginate paginationData={paginationData} onPageChange={setPage} />
+      <Paginate
+        paginationData={data?.pagination}
+        onPageChange={(nextPage) =>
+          setFilters({
+            ...filters,
+            page: nextPage,
+          })
+        }
+      />
     </>
   );
 }
+
+
+

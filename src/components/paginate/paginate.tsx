@@ -7,24 +7,21 @@ export const Paginate: React.FC<IPaginateProps> = ({
   onPageChange,
   className = "",
 }) => {
-  const { page, itemsPerPage, filteredItems } = paginationData;
+  const { page, size, filteredItems } = paginationData;
 
   const totalPages = useMemo(() => {
-    if (filteredItems <= 0 || itemsPerPage <= 0) return 0;
+    if (filteredItems <= 0 || size <= 0) return 0;
 
-    return Math.ceil(filteredItems / itemsPerPage);
-  }, [filteredItems, itemsPerPage]);
+    return Math.ceil(filteredItems / size);
+  }, [filteredItems, size]);
 
   const safePage =
     totalPages <= 0 ? 1 : Math.min(Math.max(page, 1), totalPages);
 
   const itemStart =
-    filteredItems === 0 || itemsPerPage <= 0
-      ? 0
-      : (safePage - 1) * itemsPerPage + 1;
+    filteredItems === 0 || size <= 0 ? 0 : (safePage - 1) * size + 1;
 
-  const itemEnd =
-    itemsPerPage <= 0 ? 0 : Math.min(safePage * itemsPerPage, filteredItems);
+  const itemEnd = size <= 0 ? 0 : Math.min(safePage * size, filteredItems);
 
   const pages = useMemo(() => {
     const arrPages: IPages[] = [];

@@ -3,21 +3,21 @@ import { useCallback, useEffect, useMemo } from "react";
 import type { IGetPaginatedParams } from "@/src/interfaces";
 import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 import { useComponentStore } from "@/src/store";
-import { CampaignService } from "@/src/features/campaigns/services/campaigns.services";
-import { CAMPAIGN_KEYS } from "./query-key";
-import type { IGetAllCampaignsResponse, IGetCampaigns } from "./types";
+import { ImageService } from "@/src/features/images/services/images.services";
+import { IMAGE_KEYS } from "./query-key";
+import type { IGetAllImagesResponse, IGetImages } from "./types";
 
-export const CAMPAIGNS_COMPONENT_FILTER_KEY = "campaigns";
+export const IMAGES_COMPONENT_FILTER_KEY = "images";
 
-export const INITIAL_CAMPAIGNS_FILTERS: IGetPaginatedParams = {
+export const INITIAL_IMAGES_FILTERS: IGetPaginatedParams = {
   ...INITIAL_PAGINATE,
   search: "",
 };
 
-export function useAllCampaigns(params?: IGetCampaigns) {
+export function useAllImages(params?: IGetImages) {
   const storedFilters = useComponentStore(
     (state) =>
-      state.states[CAMPAIGNS_COMPONENT_FILTER_KEY]?.filters as
+      state.states[IMAGES_COMPONENT_FILTER_KEY]?.filters as
         | IGetPaginatedParams
         | undefined,
   );
@@ -25,26 +25,25 @@ export function useAllCampaigns(params?: IGetCampaigns) {
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
 
   const filters = useMemo<IGetPaginatedParams>(
-    () => storedFilters || { ...INITIAL_CAMPAIGNS_FILTERS, ...params },
+    () => storedFilters || { ...INITIAL_IMAGES_FILTERS, ...params },
     [params, storedFilters],
   );
 
   const setFilters = useCallback(
     (newFilters: IGetPaginatedParams) =>
-      setFiltersGlobal(CAMPAIGNS_COMPONENT_FILTER_KEY, newFilters),
+      setFiltersGlobal(IMAGES_COMPONENT_FILTER_KEY, newFilters),
     [setFiltersGlobal],
   );
 
   const resetFilters = useCallback(
-    () =>
-      resetFiltersGlobal(CAMPAIGNS_COMPONENT_FILTER_KEY, INITIAL_CAMPAIGNS_FILTERS),
+    () => resetFiltersGlobal(IMAGES_COMPONENT_FILTER_KEY, INITIAL_IMAGES_FILTERS),
     [resetFiltersGlobal],
   );
 
   const query = useQuery({
-    queryKey: CAMPAIGN_KEYS.list(filters),
-    queryFn: () => CampaignService.getAll(filters),
-    placeholderData: (previousData: IGetAllCampaignsResponse | undefined) =>
+    queryKey: IMAGE_KEYS.list(filters),
+    queryFn: () => ImageService.getAll(filters),
+    placeholderData: (previousData: IGetAllImagesResponse | undefined) =>
       previousData,
     enabled: params?.enabled ?? true,
   });

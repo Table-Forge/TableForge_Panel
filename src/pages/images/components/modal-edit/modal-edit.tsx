@@ -1,12 +1,10 @@
-import {
-  Button,
-  ControlledImageInput,
-  ControlledInput,
-  FieldsWrapper,
-  InputGroup,
-  Label,
-  Select,
-} from "@/src/components";
+import { Button } from "@/src/components/button/button";
+import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
+import { InputGroup } from "@/src/components/input-group/input-group";
+import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
+import { Label } from "@/src/components/label/label";
+import { Select } from "@/src/components/select/select";
 import { IMAGE_TYPE_OPTIONS } from "@/src/constants/select-options";
 import { useCampaignsSelect } from "@/src/features/campaigns/hooks/use-campaigns-select";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";

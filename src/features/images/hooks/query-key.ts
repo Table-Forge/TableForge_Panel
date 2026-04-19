@@ -1,4 +1,4 @@
-import type { IGetImages } from "./types";
+﻿import type { IGetImages } from "./types";
 
 export const IMAGE_KEYS = {
   all: ["images"] as const,

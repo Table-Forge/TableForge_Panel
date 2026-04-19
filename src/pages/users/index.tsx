@@ -1,57 +1,30 @@
-import {
-  Button,
-  Input,
-  ModalDelete,
-  MoreInfo,
-  Paginate,
-} from "@/src/components";
-import { UserStatus } from "@/src/components/user-status/user-status";
+﻿import { Button } from "@/src/components/button/button";
+import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
+import { MoreInfo } from "@/src/components/more-info/more-info";
+import { Paginate } from "@/src/components/paginate/paginate";
+import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
-import { Table } from "@/src/components/table/table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
-import { useUserStatusEnum } from "@/src/features/users/hooks/use-user-status-enum";
-import { useUsers } from "@/src/features/users/hooks/use-users";
+import { UserStatus } from "@/src/components/user-status/user-status";
+import { useUserStatusEnum } from "@/src/features/users/hooks/enums/use-user-status-enum";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
+import { useAllUsers } from "@/src/features/users/hooks/use-all-users";
 import type { IUser } from "@/src/features/users/schemas/user.schema";
-import type { IMoreOptions } from "@/src/interfaces";
+import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
-import { useMemo, useState } from "react";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
-
-const USERS_PAGE_SIZE = 20;
+import { UsersSearchFilters } from "./components/search-filters/search-filters";
 
 export default function UsersPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useUsersMutation();
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const { statusEnum } = useUserStatusEnum();
 
-  const { data, isLoading, isError } = useUsers({
-    page,
-    size: USERS_PAGE_SIZE,
-    search,
-  });
-
-  const users = data?.items ?? [];
-
-  const paginationData = useMemo(
-    () => ({
-      page: data?.pagination?.page ?? page,
-      itemsPerPage: data?.pagination?.itemsPerPage ?? USERS_PAGE_SIZE,
-      filteredItems: data?.pagination?.filteredItems ?? users.length,
-    }),
-    [
-      data?.pagination?.filteredItems,
-      data?.pagination?.itemsPerPage,
-      data?.pagination?.page,
-      page,
-      users.length,
-    ],
-  );
+  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+    useAllUsers();
 
   const getMoreInfoOptions = (item: IUser): IMoreOptions[] => {
     const options = [
@@ -163,21 +136,26 @@ export default function UsersPage() {
         </Button>
       </header>
 
-      <div className="rounded-2xl border border-white/10 bg-primary/55 p-3">
-        <Input
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(1);
-          }}
-          placeholder="Buscar usuário por nome, apelido ou e-mail"
-          wrapperClassName="w-full"
-        />
-      </div>
+      <UsersSearchFilters
+        filters={filters}
+        setFilters={setFilters}
+        resetFilters={resetFilters}
+      />
 
-      <Table tableContents={tableContents} bodyData={users} />
+      <Table tableContents={tableContents} bodyData={data?.items ?? []} />
 
-      <Paginate paginationData={paginationData} onPageChange={setPage} />
+      <Paginate
+        paginationData={data?.pagination}
+        onPageChange={(nextPage) =>
+          setFilters({
+            ...filters,
+            page: nextPage,
+          })
+        }
+      />
     </>
   );
 }
+
+
+

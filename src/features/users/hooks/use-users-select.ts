@@ -1,6 +1,6 @@
-import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { useMemo, useState } from "react";
-import { useUsers } from "./use-users";
+import { useAllUsers } from "./use-all-users";
 
 interface IUseUsersSelectProps {
   enabled?: boolean;
@@ -15,7 +15,7 @@ export const useUsersSelect = ({
 }: IUseUsersSelectProps = {}) => {
   const [search, setSearch] = useState("");
 
-  const usersQuery = useUsers({
+  const usersQuery = useAllUsers({
     page: 1,
     size,
     search,
@@ -45,3 +45,4 @@ export const useUsersSelect = ({
     usersQuery,
   };
 };
+

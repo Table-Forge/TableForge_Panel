@@ -1,4 +1,4 @@
-import type { TSelectOptions } from "../components";
+﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 
 export const IMAGE_TYPE_VALUES = ["CampaignBanner", "UserProfile"] as const;
 

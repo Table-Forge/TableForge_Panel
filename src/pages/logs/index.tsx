@@ -1,35 +1,16 @@
-﻿import { Paginate, Table } from "@/src/components";
+﻿import { Paginate } from "@/src/components/paginate/paginate";
+import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
-import { LOGS_PAGE_SIZE, useLogs } from "@/src/features/logs/hooks/use-logs";
+import { useAllLogs } from "@/src/features/logs/hooks/use-all-logs";
 import type { ILog } from "@/src/features/logs/schemas/log.schema";
 import { cleanStringForKey, formatDate } from "@/src/utils/format";
-import { useMemo } from "react";
 import { LogsSearchFilters } from "./components/search-filters/search-filters";
 
 export function LogsPage() {
   const { data, isLoading, isError, filters, setFilters, resetFilters } =
-    useLogs();
-
-  const logs = data?.items ?? [];
-
-  const paginationData = useMemo(
-    () => ({
-      page: data?.pagination?.page ?? filters.page ?? 1,
-      itemsPerPage:
-        data?.pagination?.itemsPerPage ?? filters.size ?? LOGS_PAGE_SIZE,
-      filteredItems: data?.pagination?.filteredItems ?? logs.length,
-    }),
-    [
-      data?.pagination?.filteredItems,
-      data?.pagination?.itemsPerPage,
-      data?.pagination?.page,
-      filters.page,
-      filters.size,
-      logs.length,
-    ],
-  );
+    useAllLogs();
 
   const tableContents: ITableColumn<ILog>[] = [
     {
@@ -96,7 +77,9 @@ export function LogsPage() {
           <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
             Logs
           </h1>
-          <p className="text-sm text-grays-100">Histórico de logs do sistema.</p>
+          <p className="text-sm text-grays-100">
+            Histórico de logs do sistema.
+          </p>
         </div>
       </header>
 
@@ -108,7 +91,7 @@ export function LogsPage() {
 
       <Table
         tableContents={tableContents}
-        bodyData={logs}
+        bodyData={data?.items ?? []}
         detailsLink="/logs"
         getRowColor={(row) => {
           const normalizedType = cleanStringForKey(row.type);
@@ -121,7 +104,7 @@ export function LogsPage() {
       />
 
       <Paginate
-        paginationData={paginationData}
+        paginationData={data?.pagination}
         onPageChange={(nextPage) =>
           setFilters({
             ...filters,
@@ -132,4 +115,6 @@ export function LogsPage() {
     </>
   );
 }
+
+
 

@@ -1,24 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { LogService } from "@/src/features/logs/services/logs.services";
-import { useComponentStore } from "@/src/store";
-import { LOG_KEYS } from "./query-key";
+﻿import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo } from "react";
-import type { IGetAllLogsResponse, IGetLogs } from "./types";
 import type { IGetPaginatedParams } from "@/src/interfaces";
+import { INITIAL_PAGINATE } from "@/src/constants/paginate";
+import { useComponentStore } from "@/src/store";
+import { LogService } from "@/src/features/logs/services/logs.services";
+import { LOG_KEYS } from "./query-key";
+import type { IGetAllLogsResponse, IGetLogs } from "./types";
+import dayjs from "dayjs";
 
-export const LOGS_PAGE_SIZE = 20;
 export const LOGS_COMPONENT_FILTER_KEY = "logs";
 
 export const INITIAL_LOGS_FILTERS: IGetPaginatedParams = {
-  page: 1,
-  size: LOGS_PAGE_SIZE,
+  ...INITIAL_PAGINATE,
   search: "",
-  logType: "",
-  startDate: "",
-  endDate: "",
+  startDate: dayjs().subtract(7, "days").format("YYYY-MM-DD"),
+  endDate: dayjs().format("YYYY-MM-DD"),
 };
 
-export function useLogs(params: IGetLogs = {}) {
+export function useAllLogs(params?: IGetLogs) {
   const storedFilters = useComponentStore(
     (state) =>
       state.states[LOGS_COMPONENT_FILTER_KEY]?.filters as
@@ -49,7 +48,7 @@ export function useLogs(params: IGetLogs = {}) {
     queryFn: () => LogService.getAll(filters),
     placeholderData: (previousData: IGetAllLogsResponse | undefined) =>
       previousData,
-    enabled: params.enabled ?? true,
+    enabled: params?.enabled ?? true,
   });
 
   useEffect(() => {

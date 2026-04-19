@@ -1,4 +1,4 @@
-import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { api } from "@/src/features/api";
 import {
   type IUpdatePassword,
@@ -11,7 +11,7 @@ const ENDPOINT = "/users";
 export const UserService = {
   getAll: async (params: IGetUsers = {}): Promise<IGetAllUsersResponse> => {
     const { enabled: _enabled, ...queryParams } = params;
-    const { data } = await api.get(ENDPOINT, {
+    const { data } = await api.get<IGetAllUsersResponse>(ENDPOINT, {
       params: queryParams,
     });
     return data;
