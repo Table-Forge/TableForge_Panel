@@ -5,45 +5,6 @@ import type { IGetAllLogsResponse, IGetLogs } from "../hooks/types";
 
 const ENDPOINT = "/logs";
 
-type TApiLogListResponse = Partial<IGetAllLogsResponse> & {
-  page?: number;
-  size?: number;
-  totalItems?: number;
-};
-
-const normalizeLogListResponse = (
-  data: TApiLogListResponse | undefined,
-  fallbackPage: number,
-  fallbackSize: number,
-): IGetAllLogsResponse => {
-  if (!data) {
-    return {
-      items: [],
-      pagination: {
-        page: fallbackPage,
-        itemsPerPage: fallbackSize,
-        filteredItems: 0,
-      },
-    };
-  }
-
-  if (data.pagination) {
-    return {
-      items: data.items ?? [],
-      pagination: data.pagination,
-    };
-  }
-
-  return {
-    items: data.items ?? [],
-    pagination: {
-      page: data.page ?? fallbackPage,
-      itemsPerPage: data.size ?? fallbackSize,
-      filteredItems: data.totalItems ?? (data.items?.length ?? 0),
-    },
-  };
-};
-
 export const LogService = {
   getAll: async (params: IGetLogs = {}): Promise<IGetAllLogsResponse> => {
     const { enabled: _enabled, ...queryParams } = params;
@@ -53,11 +14,11 @@ export const LogService = {
       ),
     );
 
-    const { data } = await api.get<TApiLogListResponse>(ENDPOINT, {
+    const { data } = await api.get<IGetAllLogsResponse>(ENDPOINT, {
       params: normalizedParams,
     });
 
-    return normalizeLogListResponse(data, params.page ?? 1, params.size ?? 20);
+    return data;
   },
 
   getById: async (id: number): Promise<ILog> => {

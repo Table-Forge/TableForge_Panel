@@ -9,9 +9,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { BiCalendar } from "react-icons/bi";
 import { ptBR } from "date-fns/locale";
 import { parseISO } from "date-fns";
-import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
-
-const BRAZIL_TIME_ZONE = "America/Sao_Paulo";
 
 const toTwoDigits = (value: number) => String(value).padStart(2, "0");
 
@@ -23,7 +20,7 @@ const serializeDateOnly = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-const serializeDateTimeInSaoPaulo = (date: Date) => {
+const serializeDateTime = (date: Date) => {
   const year = date.getFullYear();
   const month = toTwoDigits(date.getMonth() + 1);
   const day = toTwoDigits(date.getDate());
@@ -31,14 +28,7 @@ const serializeDateTimeInSaoPaulo = (date: Date) => {
   const minute = toTwoDigits(date.getMinutes());
   const seconds = toTwoDigits(date.getSeconds());
 
-  const dateTime = `${year}-${month}-${day} ${hour}:${minute}:${seconds}`;
-  const zonedDate = fromZonedTime(dateTime, BRAZIL_TIME_ZONE);
-
-  return formatInTimeZone(
-    zonedDate,
-    BRAZIL_TIME_ZONE,
-    "yyyy-MM-dd'T'HH:mm:ssXXX",
-  );
+  return `${year}-${month}-${day}T${hour}:${minute}:${seconds}`;
 };
 
 const parseDateValue = (value: unknown): Date | null => {
@@ -133,7 +123,7 @@ export function DateInput<TFieldValues extends FieldValues>({
     }
 
     if (showTime) {
-      onChange(serializeDateTimeInSaoPaulo(date));
+      onChange(serializeDateTime(date));
       return;
     }
 
