@@ -1,10 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IError } from "@/src/interfaces/error.interface";
 import { useBoundStore } from "@/src/store/use-bound-store";
 
 const isHtml = (val: any) =>
   typeof val === "string" &&
   (val.startsWith("<!DOCTYPE") || val.startsWith("<html"));
+
+const HTML_ERROR_MESSAGE =
+  "HTML retornado, verifique os logs para mais informações.";
+
+const pickString = (...values: unknown[]) => {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) return value;
+  }
+  return undefined;
+};
+
+const getBackendPayload = (error: any) => {
+  if (!error || typeof error !== "object") return undefined;
+  return error.response?.data ?? error.data ?? error;
+};
+
+const getStatusCode = (error: any, payload: any) =>
+  error?.response?.status ??
+  error?.status ??
+  payload?.Code ??
+  payload?.code ??
+  500;
 
 export const handleError = (error: unknown): IError => {
   let finalError: IError = {
@@ -15,29 +37,37 @@ export const handleError = (error: unknown): IError => {
   };
 
   if (error instanceof Error) {
-    finalError = {
-      status: (error as any).status || 500,
-      code: (error as any).code || "ERROR",
-      message: error.message,
-      stackTrace: error.stack,
-      title: error.name || "Erro de Execução",
-    };
-  } else if (typeof error === "string") {
-    finalError.message = isHtml(error)
-      ? "Erro inesperado no servidor (resposta HTML)"
-      : error;
-  } else if (typeof error === "object" && error !== null) {
     const err = error as any;
-    const rawData = err.data || err.Message || err;
-    const hasHtml = isHtml(rawData);
+    const payload = getBackendPayload(err);
+    const hasHtml = isHtml(payload);
 
     finalError = {
-      status: err.status || 400,
-      code: err.code || "BACKEND_ERROR",
+      status: getStatusCode(err, payload),
+      code: err?.code || payload?.Code || payload?.code || "ERROR",
       message: hasHtml
-        ? "Erro inesperado no servidor (HTML retornado)"
-        : err.Message || err.message || "Erro processado pelo servidor",
-      title: "Aviso do Sistema",
+        ? HTML_ERROR_MESSAGE
+        : pickString(payload?.Message, payload?.message, err?.Message, err?.message) ||
+          "Erro processado pelo servidor",
+      stackTrace: err.stack,
+      title:
+        pickString(payload?.Title, payload?.title, err?.name) ||
+        "Erro de Execução",
+    };
+  } else if (typeof error === "string") {
+    finalError.message = isHtml(error) ? HTML_ERROR_MESSAGE : error;
+  } else if (typeof error === "object" && error !== null) {
+    const err = error as any;
+    const payload = getBackendPayload(err);
+    const hasHtml = isHtml(payload);
+
+    finalError = {
+      status: getStatusCode(err, payload),
+      code: err.code || payload?.Code || payload?.code || "BACKEND_ERROR",
+      message: hasHtml
+        ? HTML_ERROR_MESSAGE
+        : pickString(payload?.Message, payload?.message, err.Message, err.message) ||
+          "Erro processado pelo servidor",
+      title: pickString(payload?.Title, payload?.title) || "Aviso do Sistema",
     };
   }
 
