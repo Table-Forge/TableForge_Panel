@@ -25,6 +25,8 @@ jobs:
         run: npm run lint
 
       - name: Build
-        run: npm run build
+        run: npm run build:dev
         env:
           VITE_API_URL: ${{ vars.VITE_API_DEVELOPMENT_URL }}
+          VITE_API_DEVELOPMENT_URL: ${{ vars.VITE_API_DEVELOPMENT_URL }}
+          VITE_ENV: development
