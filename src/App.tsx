@@ -1,5 +1,6 @@
 import { AdminLayout } from "@/src/components/layout/admin-layout";
 import { GlobalModal } from "@/src/components/modals/global-modal";
+import { EnvFlag } from "@/src/components/env-flag/env-flag";
 import { ToastContainer } from "@/src/components/toast/toast-container";
 import { AuthProvider } from "@/src/context/auth";
 import { useAuth } from "@/src/context/use-auth";
@@ -42,6 +43,7 @@ function App() {
         </Routes>
 
         <GlobalModal />
+        <EnvFlag />
         <ToastContainer />
         <div id="root-portal" />
       </BrowserRouter>
