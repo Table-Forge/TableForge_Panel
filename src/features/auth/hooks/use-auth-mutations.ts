@@ -20,6 +20,24 @@ type TUpdateRecoveryPasswordParams = {
 };
 
 const getErrorMessage = (error: unknown, fallback: string) => {
+  const err = error as {
+    response?: { data?: { Message?: string; message?: string } };
+    data?: { Message?: string; message?: string };
+    Message?: string;
+    message?: string;
+  };
+
+  const backendMessage =
+    err?.response?.data?.Message ??
+    err?.response?.data?.message ??
+    err?.data?.Message ??
+    err?.data?.message ??
+    err?.Message;
+
+  if (typeof backendMessage === "string" && backendMessage.trim()) {
+    return backendMessage;
+  }
+
   if (error instanceof Error && error.message.trim()) return error.message;
   return fallback;
 };
