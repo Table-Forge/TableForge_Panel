@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy Production to GitHub Pages
 
 on:
   push:
@@ -32,6 +32,8 @@ jobs:
 
       - name: Build pages artifacts
         run: npm run build:pages
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_DEVELOPMENT_URL }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
