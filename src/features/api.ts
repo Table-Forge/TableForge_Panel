@@ -1,7 +1,8 @@
 import { AUTH_STORAGE_KEY } from "@/src/store/slices/auth-slice";
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL;
+const baseURL =
+  import.meta.env.VITE_API_URL ?? import.meta.env.VITE_API_DEVELOPMENT_URL;
 
 const api = axios.create({
   baseURL,
