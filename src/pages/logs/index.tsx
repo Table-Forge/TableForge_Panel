@@ -9,7 +9,7 @@ import { cleanStringForKey, formatDate } from "@/src/utils/format";
 import { LogsSearchFilters } from "./components/search-filters/search-filters";
 
 export function LogsPage() {
-  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+  const { data, isLoading, isError, filters, setFilters } =
     useAllLogs();
 
   const tableContents: ITableColumn<ILog>[] = [
@@ -83,11 +83,7 @@ export function LogsPage() {
         </div>
       </header>
 
-      <LogsSearchFilters
-        filters={filters}
-        setFilters={setFilters}
-        resetFilters={resetFilters}
-      />
+      <LogsSearchFilters />
 
       <Table
         tableContents={tableContents}

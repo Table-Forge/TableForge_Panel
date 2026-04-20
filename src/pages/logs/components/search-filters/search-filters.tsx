@@ -9,31 +9,33 @@ import { useFilterContext } from "@/src/components/filters/filters.context";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 import { PAGE_SIZE } from "@/src/constants/select-options";
+import {
+  INITIAL_LOGS_FILTERS,
+  LOGS_COMPONENT_FILTER_KEY,
+} from "@/src/features/logs/hooks/use-all-logs";
 import { useLogTypeEnum } from "@/src/features/logs/hooks/enums/use-log-type-enum";
-import { INITIAL_LOGS_FILTERS } from "@/src/features/logs/hooks/use-all-logs";
 import type { IGetPaginatedParams } from "@/src/interfaces";
+import { useComponentStore } from "@/src/store";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-interface ILogsSearchFiltersProps {
-  filters: IGetPaginatedParams;
-  setFilters: (newFilters: IGetPaginatedParams) => void;
-  resetFilters: () => void;
-}
-
 function AdvancedFiltersContent({
   filters,
-  setFilters,
-  resetFilters,
-}: ILogsSearchFiltersProps) {
+}: {
+  filters: IGetPaginatedParams;
+}) {
   const { close } = useFilterContext();
+  const setFiltersGlobal = useComponentStore((state) => state.setFilters);
+  const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
   const { logTypeEnum, isLoadingLogTypeEnum } = useLogTypeEnum();
 
-  const defaultValues = {
+  const defaultValues: IGetPaginatedParams = {
+    ...filters,
     logType: filters.logType ?? "",
     startDate: filters.startDate ?? "",
     endDate: filters.endDate ?? "",
-    ...INITIAL_PAGINATE,
+    size: filters.size ?? INITIAL_LOGS_FILTERS.size ?? INITIAL_PAGINATE.size,
+    page: filters.page ?? INITIAL_PAGINATE.page,
   };
 
   const form = useForm<IGetPaginatedParams>({
@@ -50,29 +52,33 @@ function AdvancedFiltersContent({
 
   useEffect(() => {
     form.reset(defaultValues);
-  }, [filters.endDate, filters.logType, filters.size, filters.startDate, form]);
+  }, [
+    filters.page,
+    filters.search,
+    filters.logType,
+    filters.startDate,
+    filters.endDate,
+    filters.size,
+    form,
+  ]);
 
-  const onApplyFilters = form.handleSubmit((values) => {
-    setFilters({
+  const handleApplyFilters = (data: IGetPaginatedParams) => {
+    setFiltersGlobal(LOGS_COMPONENT_FILTER_KEY, {
       ...filters,
-      ...defaultValues,
+      ...data,
+      page: 1,
     });
     close();
-  });
+  };
 
-  const onClearFilters = () => {
-    resetFilters();
+  const clearSearch = () => {
+    resetFiltersGlobal(LOGS_COMPONENT_FILTER_KEY, INITIAL_LOGS_FILTERS);
     form.reset(INITIAL_LOGS_FILTERS);
     close();
   };
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-      }}
-      className="space-y-4"
-    >
+    <form onSubmit={form.handleSubmit(handleApplyFilters)} className="space-y-4">
       <div className="grid gap-3 md:grid-cols-2">
         <InputGroup>
           <Label htmlFor="startDate">Data inicial</Label>
@@ -118,10 +124,10 @@ function AdvancedFiltersContent({
       </div>
 
       <div className="flex justify-end gap-2 border-t border-white/10 pt-3">
-        <Button type="button" buttonStyle="primary" onClick={onClearFilters}>
+        <Button type="button" buttonStyle="primary" onClick={clearSearch}>
           Limpar
         </Button>
-        <Button type="button" buttonStyle="secondary" onClick={onApplyFilters}>
+        <Button type="submit" buttonStyle="secondary">
           Filtrar
         </Button>
       </div>
@@ -129,18 +135,22 @@ function AdvancedFiltersContent({
   );
 }
 
-export function LogsSearchFilters({
-  filters,
-  setFilters,
-  resetFilters,
-}: ILogsSearchFiltersProps) {
+export function LogsSearchFilters() {
+  const setFiltersGlobal = useComponentStore((state) => state.setFilters);
+  const filters = useComponentStore(
+    (state) =>
+      (state.states[LOGS_COMPONENT_FILTER_KEY]?.filters as
+        | IGetPaginatedParams
+        | undefined) ?? INITIAL_LOGS_FILTERS,
+  );
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="w-full flex flex-row gap-3 items-center rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
           value={String(filters.search ?? "")}
           onChange={(event) => {
-            setFilters({
+            setFiltersGlobal(LOGS_COMPONENT_FILTER_KEY, {
               ...filters,
               page: 1,
               search: event.target.value,
@@ -153,8 +163,6 @@ export function LogsSearchFilters({
           filters={
             <AdvancedFiltersContent
               filters={filters}
-              setFilters={setFilters}
-              resetFilters={resetFilters}
             />
           }
           align="right"
@@ -163,6 +171,3 @@ export function LogsSearchFilters({
     </div>
   );
 }
-
-
-

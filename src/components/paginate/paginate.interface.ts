@@ -1,7 +1,7 @@
 import type { IPaginationResponse } from "@/src/interfaces";
 
 export interface IPaginateProps {
-  paginationData: IPaginationResponse;
+  paginationData?: IPaginationResponse;
   onPageChange: (page: number) => void;
   className?: string;
 }

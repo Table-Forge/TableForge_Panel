@@ -21,7 +21,7 @@ export default function ImagesPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useImagesMutation();
 
-  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+  const { data, isLoading, isError, filters, setFilters } =
     useAllImages();
 
   const getMoreInfoOptions = (item: IImage): IMoreOptions[] => {
@@ -146,11 +146,7 @@ export default function ImagesPage() {
         </Button>
       </header>
 
-      <ImagesSearchFilters
-        filters={filters}
-        setFilters={setFilters}
-        resetFilters={resetFilters}
-      />
+      <ImagesSearchFilters />
 
       <Table tableContents={tableContents} bodyData={data?.items ?? []} />
 

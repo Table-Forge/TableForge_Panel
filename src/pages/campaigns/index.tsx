@@ -19,7 +19,7 @@ export function CampaignsPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useCampaignsMutation();
 
-  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+  const { data, isLoading, isError, filters, setFilters } =
     useAllCampaigns();
 
   const getMoreInfoOptions = (item: ICampaign): IMoreOptions[] => {
@@ -144,11 +144,7 @@ export function CampaignsPage() {
         </Button>
       </header>
 
-      <CampaignsSearchFilters
-        filters={filters}
-        setFilters={setFilters}
-        resetFilters={resetFilters}
-      />
+      <CampaignsSearchFilters />
 
       <Table
         tableContents={tableContents}

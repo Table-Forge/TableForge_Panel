@@ -23,7 +23,7 @@ export default function UsersPage() {
   const { deleteMutation } = useUsersMutation();
   const { statusEnum } = useUserStatusEnum();
 
-  const { data, isLoading, isError, filters, setFilters, resetFilters } =
+  const { data, isLoading, isError, filters, setFilters } =
     useAllUsers();
 
   const getMoreInfoOptions = (item: IUser): IMoreOptions[] => {
@@ -136,11 +136,7 @@ export default function UsersPage() {
         </Button>
       </header>
 
-      <UsersSearchFilters
-        filters={filters}
-        setFilters={setFilters}
-        resetFilters={resetFilters}
-      />
+      <UsersSearchFilters />
 
       <Table tableContents={tableContents} bodyData={data?.items ?? []} />
 

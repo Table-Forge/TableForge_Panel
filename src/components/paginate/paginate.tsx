@@ -7,7 +7,9 @@ export const Paginate: React.FC<IPaginateProps> = ({
   onPageChange,
   className = "",
 }) => {
-  const { page, size, filteredItems } = paginationData;
+  const page = paginationData?.page ?? 1;
+  const size = paginationData?.size ?? 0;
+  const filteredItems = paginationData?.filteredItems ?? 0;
 
   const totalPages = useMemo(() => {
     if (filteredItems <= 0 || size <= 0) return 0;
