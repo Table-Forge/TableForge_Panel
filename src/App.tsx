@@ -6,6 +6,8 @@ import { AuthProvider } from "@/src/context/auth";
 import { useAuth } from "@/src/context/use-auth";
 import { CampaignsPage } from "@/src/pages/campaigns";
 import { DashboardPage } from "@/src/pages/dashboard";
+import { GameSystemDetailsPage } from "@/src/pages/game-systems/details";
+import { GameSystemsPage } from "@/src/pages/game-systems";
 import ImagesPage from "@/src/pages/images";
 import { LoginPage } from "@/src/pages/login";
 import { LogDetailsPage } from "@/src/pages/logs/details";
@@ -32,6 +34,8 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="campaigns" element={<CampaignsPage />} />
+              <Route path="gamesystems" element={<GameSystemsPage />} />
+              <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="images" element={<ImagesPage />} />
               <Route path="logs" element={<LogsPage />} />

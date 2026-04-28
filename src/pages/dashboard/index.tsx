@@ -1,5 +1,11 @@
 ﻿import { useAuth } from "@/src/context/use-auth";
-import { FileText, LayoutGrid, ScrollText, ShieldUser } from "lucide-react";
+import {
+  FileText,
+  Gamepad2,
+  LayoutGrid,
+  ScrollText,
+  ShieldUser,
+} from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
@@ -13,6 +19,12 @@ export function DashboardPage() {
         description: "Gerencie campanhas, descrições e publicações do aplicativo.",
         to: "/campaigns",
         icon: ScrollText,
+      },
+      {
+        title: "Sistemas de Jogo",
+        description: "Cadastre os sistemas usados nas campanhas.",
+        to: "/gamesystems",
+        icon: Gamepad2,
       },
       {
         title: "Usuários",
