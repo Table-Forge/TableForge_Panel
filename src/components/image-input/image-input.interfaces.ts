@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface IImageInputValue {
   name: string;
   content: string;
@@ -11,4 +13,5 @@ export interface IImageInput {
   error?: string;
   onChange: (value: IImageInputValue) => void;
   onClear?: () => void;
+  extraActions?: ReactNode;
 }

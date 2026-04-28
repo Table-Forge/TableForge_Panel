@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
-import type { ModalSize, ModalSlice, SliceCreator } from "@/src/store/types";
+import type {
+  IModalInstance,
+  ModalSize,
+  ModalSlice,
+  SliceCreator,
+} from "@/src/store/types";
 
 export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
   modal: {
@@ -8,6 +13,7 @@ export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
     content: undefined,
     size: "md",
   },
+  modals: [],
 
   openModal: ((arg1, arg2, arg3) => {
     const isPayloadShape =
@@ -31,24 +37,36 @@ export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
 
     const size = payload.size ?? "md";
 
-    set({
-      modal: {
+    set((state) => {
+      const modal: IModalInstance = {
+        id: Math.random().toString(36).substring(7),
         isOpen: true,
         title: payload.title,
         content: payload.content,
         size,
-      },
+      };
+
+      return {
+        modals: [...state.modals, modal],
+        modal,
+      };
     });
   }) as ModalSlice["openModal"],
 
   closeModal: () => {
-    set((state) => ({
-      modal: {
-        ...state.modal,
-        isOpen: false,
-        title: undefined,
-        content: undefined,
-      },
-    }));
+    set((state) => {
+      const modals = state.modals.slice(0, -1);
+      const lastModal = modals[modals.length - 1];
+
+      return {
+        modals,
+        modal: lastModal ?? {
+          isOpen: false,
+          title: undefined,
+          content: undefined,
+          size: "md",
+        },
+      };
+    });
   },
 });
