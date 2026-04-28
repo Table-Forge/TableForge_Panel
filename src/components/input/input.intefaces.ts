@@ -1,4 +1,5 @@
 import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import type { IImage } from "@/src/features/images/schemas/image.schema";
 
 export interface IInputStyles {
   error?: string;
@@ -64,6 +65,17 @@ export interface IControlledImageInput<TFieldValues extends FieldValues = FieldV
   previewValue?: string;
   fallbackPreview?: string;
   onFileNameChange?: (name: string) => void;
+  onClearImage?: () => void;
+  existingImagePicker?: {
+    buttonLabel?: string;
+    emptyMessage?: string;
+    imageType?: IImage["type"];
+    onSelect: (image: IImage) => void;
+    searchPlaceholder?: string;
+    selectedImageId?: number;
+    selectedImageUrl?: string;
+    title?: string;
+  };
 }
 
 export type TConfirmationStatus = "idle" | "editando" | "confirmando" | "errado" | "ok";

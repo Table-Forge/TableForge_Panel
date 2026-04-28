@@ -31,6 +31,15 @@ export interface IOpenModalPayload {
 }
 
 export interface IModalState {
+  id?: string;
+  isOpen: boolean;
+  title?: ReactNode;
+  content?: ReactNode;
+  size: ModalSize;
+}
+
+export interface IModalInstance {
+  id: string;
   isOpen: boolean;
   title?: ReactNode;
   content?: ReactNode;
@@ -39,6 +48,7 @@ export interface IModalState {
 
 export interface ModalSlice {
   modal: IModalState;
+  modals: IModalInstance[];
   openModal: {
     (payload: IOpenModalPayload): void;
     (title: ReactNode, content: ReactNode, size?: ModalSize): void;

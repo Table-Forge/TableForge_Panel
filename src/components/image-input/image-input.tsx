@@ -10,6 +10,7 @@ export const ImageInput: React.FC<IImageInput> = ({
   error,
   onChange,
   onClear,
+  extraActions,
 }) => {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -93,6 +94,8 @@ export const ImageInput: React.FC<IImageInput> = ({
                 Remover
               </button>
             ) : null}
+
+            {extraActions}
           </div>
         </div>
       </div>

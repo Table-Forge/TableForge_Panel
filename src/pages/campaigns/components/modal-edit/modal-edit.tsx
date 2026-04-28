@@ -13,16 +13,12 @@ import {
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
-import { useAllImages } from "@/src/features/images/hooks/use-all-images";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
-import { type IImage } from "@/src/features/images/schemas/image.schema";
 import { ImageService } from "@/src/features/images/services/images.services";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-
-const PICKER_PAGE_SIZE = 24;
 
 type ICampaignForm = Partial<ICampaign> & {
   title: string;
@@ -45,16 +41,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const { data: dataEdit, isLoading } = useCampaignById(data?.id);
   const { createOrUpdate, isPending } = useCampaignsMutation();
 
-  const [isBannerPickerOpen, setIsBannerPickerOpen] = useState(false);
-  const [bannerSearch, setBannerSearch] = useState("");
   const [isUploadingBanner, setIsUploadingBanner] = useState(false);
-
-  const { data: imagesData, isLoading: isLoadingImages } = useAllImages({
-    page: 1,
-    size: PICKER_PAGE_SIZE,
-    search: bannerSearch,
-    enabled: isBannerPickerOpen,
-  });
 
   const defaultValues = useMemo<ICampaignForm>(
     () => ({
@@ -94,48 +81,13 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     selectedBannerId ? Number(selectedBannerId) : undefined,
   );
 
-  const availableBanners = useMemo<IImage[]>(
-    () =>
-      (imagesData?.items ?? []).filter(
-        (image) => image.type === "CampaignBanner",
-      ),
-    [imagesData?.items],
-  );
-
-  const selectedBanner = useMemo(
-    () =>
-      availableBanners.find(
-        (image) =>
-          image.id !== undefined &&
-          selectedBannerId !== undefined &&
-          Number(image.id) === Number(selectedBannerId),
-      ),
-    [availableBanners, selectedBannerId],
-  );
-
   const selectedBannerSource = toImageSource(
-    selectedBanner?.url || currentBanner?.url || currentBannerContent,
+    currentBanner?.url || currentBannerContent,
   );
 
   useEffect(() => {
     reset(defaultValues);
   }, [defaultValues, reset]);
-
-  const handleSelectExistingBanner = (image: IImage) => {
-    if (!image.id) return;
-
-    setValue("bannerId", Number(image.id), {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-    setValue("bannerContent", image.url ?? "", {
-      shouldDirty: false,
-      shouldTouch: false,
-      shouldValidate: false,
-    });
-    setIsBannerPickerOpen(false);
-  };
 
   const onSubmit = handleSubmit(async (values) => {
     const { bannerContent: _bannerContent, ...campaignValues } = values;
@@ -321,104 +273,38 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           label="Banner"
           previewValue={selectedBannerSource}
           disabled={isLoading || isSubmitting}
-        />
-
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            buttonStyle="secondary"
-            onClick={() => setIsBannerPickerOpen(true)}
-            disabled={isLoading || isSubmitting}
-          >
-            Usar imagem existente
-          </Button>
-        </div>
-      </InputGroup>
-
-      {isBannerPickerOpen ? (
-        <div
-          className="fixed inset-0 z-[1200] flex items-center justify-center bg-background/70 p-4"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setIsBannerPickerOpen(false);
-            }
+          onClearImage={() => {
+            setValue("bannerId", 0, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            });
           }}
-        >
-          <section className="w-full max-w-4xl rounded-2xl border border-white/15 bg-primary shadow-2xl">
-            <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <h3 className="text-lg font-bold text-white">
-                Selecionar banner existente
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsBannerPickerOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-white/80 hover:bg-white/10 hover:text-white"
-              >
-                X
-              </button>
-            </header>
+          existingImagePicker={{
+            imageType: "CampaignBanner",
+            selectedImageId: selectedBannerId
+              ? Number(selectedBannerId)
+              : undefined,
+            title: "Selecionar banner existente",
+            searchPlaceholder: "Buscar banner por nome",
+            emptyMessage: "Nenhum banner encontrado.",
+            onSelect: (image) => {
+              if (!image.id) return;
 
-            <div className="space-y-4 p-4">
-              <input
-                value={bannerSearch}
-                onChange={(event) => setBannerSearch(event.target.value)}
-                placeholder="Buscar banner por nome"
-                className="h-10 w-full rounded-xl border border-white/15 bg-background/60 px-3 text-sm text-white outline-none placeholder:text-white/35"
-              />
-
-              {isLoadingImages ? (
-                <p className="text-sm text-white/75">Carregando banners...</p>
-              ) : availableBanners.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                  {availableBanners.map((image) => {
-                    const previewSource = toImageSource(image.url);
-                    const isSelected =
-                      image.id !== undefined &&
-                      selectedBannerId !== undefined &&
-                      Number(image.id) === Number(selectedBannerId);
-
-                    return (
-                      <button
-                        key={String(image.id ?? image.uuid)}
-                        type="button"
-                        onClick={() => handleSelectExistingBanner(image)}
-                        disabled={!image.id || !previewSource}
-                        className={`rounded-xl border p-2 text-left transition ${
-                          isSelected
-                            ? "border-secondary bg-secondary/10"
-                            : "border-white/15 bg-background/40 hover:border-white/30"
-                        } ${image.id && previewSource ? "opacity-100" : "opacity-60"}`}
-                      >
-                        <div className="mb-2 aspect-square overflow-hidden rounded-lg border border-white/15 bg-background/60">
-                          {previewSource ? (
-                            <img
-                              src={previewSource}
-                              alt={image.name || "Banner da campanha"}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center text-[10px] text-white/55">
-                              Sem prévia
-                            </div>
-                          )}
-                        </div>
-                        <p className="truncate text-xs text-white/90">
-                          {image.name || `Imagem ${image.id ?? ""}`}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-sm text-white/75">
-                  Nenhum banner encontrado.
-                </p>
-              )}
-            </div>
-          </section>
-        </div>
-      ) : null}
+              setValue("bannerId", Number(image.id), {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("bannerContent", image.url ?? "", {
+                shouldDirty: false,
+                shouldTouch: false,
+                shouldValidate: false,
+              });
+            },
+          }}
+        />
+      </InputGroup>
 
       <FieldsWrapper>
         <CheckboxControlled
