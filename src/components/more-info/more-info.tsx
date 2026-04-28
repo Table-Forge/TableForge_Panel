@@ -32,17 +32,22 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
     });
   }, []);
 
-  const { listStyle, isSettling, prepareOpenPosition, resetDropdownPosition } =
-    useDropdownPosition({
-      triggerRef,
-      listRef: menuRef,
-      isOpen: isOpen && !isFullRight,
-      watchDeps: [boxSide, options?.length || 0],
-      offsetTop: 8,
-      offsetLeft: boxSide === "right" ? 8 : 0,
-      horizontalAnchor: boxSide === "right" ? "right" : "left",
-      includeWidth: false,
-    });
+  const {
+    listStyle,
+    listDirection,
+    isSettling,
+    prepareOpenPosition,
+    resetDropdownPosition,
+  } = useDropdownPosition({
+    triggerRef,
+    listRef: menuRef,
+    isOpen: isOpen && !isFullRight,
+    watchDeps: [boxSide, options?.length || 0],
+    offsetTop: 8,
+    offsetLeft: boxSide === "right" ? 8 : 0,
+    horizontalAnchor: boxSide === "right" ? "right" : "left",
+    includeWidth: false,
+  });
 
   const handleToggle = (event: ReactMouseEvent) => {
     if (!options || options.length === 0) return;
@@ -112,6 +117,19 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
   const menuCoords = isFullRight
     ? fullRightCoords
     : { top: listStyle.top, left: listStyle.left };
+  const arrowStyle = isFullRight
+    ? { top: "calc(50% - 8px)", left: -8, transform: "rotate(45deg)" }
+    : listDirection === "up"
+      ? {
+          bottom: -11,
+          right: boxSide === "right" ? 11 : 40,
+          transform: "rotate(225deg)",
+        }
+      : {
+          top: -11,
+          right: boxSide === "right" ? 11 : 40,
+          transform: "rotate(45deg)",
+        };
 
   const menu = (
     <div
@@ -127,12 +145,8 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
       onClick={(event) => event.stopPropagation()}
     >
       <div
-        className="pointer-events-none absolute h-4 w-4 rotate-45 border-l border-t border-white/15 bg-primary"
-        style={
-          boxSide === "full-right"
-            ? { top: "calc(50% - 8px)", left: -8 }
-            : { top: -8, right: boxSide === "right" ? 12 : 40 }
-        }
+        className="pointer-events-none absolute h-4 w-4 border-l border-t border-white/15 bg-primary"
+        style={arrowStyle}
       />
 
       {options.map((opt, index) => (
