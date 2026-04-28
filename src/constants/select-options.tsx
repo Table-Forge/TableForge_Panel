@@ -1,10 +1,15 @@
 ﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 
-export const IMAGE_TYPE_VALUES = ["CampaignBanner", "UserProfile"] as const;
+export const IMAGE_TYPE_VALUES = [
+  "CampaignBanner",
+  "UserProfile",
+  "GameSystem",
+] as const;
 
 export const IMAGE_TYPE_OPTIONS: TSelectOptions[] = [
   { value: "CampaignBanner", name: "Banner de campanha" },
   { value: "UserProfile", name: "Foto de perfil" },
+  { value: "GameSystem", name: "Sistema de jogo" },
 ];
 
 export const USER_TYPE_OPTIONS: TSelectOptions[] = [
