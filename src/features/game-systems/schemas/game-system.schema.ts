@@ -10,6 +10,7 @@ export const GameSystemSchema = z.object({
   id: numberOptional,
   name: stringRequired,
   description: stringOptional,
+  imageId: z.coerce.number().min(0),
   createdAt: dateOptional,
   updatedAt: dateOptional,
 });

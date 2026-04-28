@@ -77,6 +77,13 @@ export function GameSystemsPage() {
       render: (gameSystem) => gameSystem.description || "-",
     },
     {
+      title: "Imagem",
+      key: "imageId",
+      width: "110px",
+      align: "center",
+      render: (gameSystem) => gameSystem.imageId ?? "-",
+    },
+    {
       title: "Criado em",
       key: "createdAt",
       width: "150px",

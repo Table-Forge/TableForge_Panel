@@ -63,6 +63,12 @@ export function GameSystemDetailsPage() {
             </CardValue>
           </InfoBox>
           <InfoBox>
+            <CardLabel>Imagem ID</CardLabel>
+            <CardValue className="mt-1 block break-all">
+              {String(data.imageId ?? "-")}
+            </CardValue>
+          </InfoBox>
+          <InfoBox>
             <CardLabel>Criado em</CardLabel>
             <CardValue className="mt-1 block break-all">
               {data.createdAt ? formatDate(data.createdAt, true) : "-"}
