@@ -1,8 +1,14 @@
-﻿import { Button } from "@/src/components/button/button";
+import { Button } from "@/src/components/button/button";
+import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlled";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { Label } from "@/src/components/label/label";
+import { Select } from "@/src/components/select/select";
+import {
+  CAMPAIGN_DIFFICULTY_OPTIONS,
+  CAMPAIGN_STATUS_OPTIONS,
+} from "@/src/constants/select-options";
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
@@ -12,11 +18,16 @@ import { useForm } from "react-hook-form";
 
 type ICampaignForm = Partial<ICampaign> & {
   title: string;
-  system: string;
-  gameMaster: string;
-  location: string;
-  currentPartySize: number;
-  maxPartySize: number;
+  description: string;
+  difficulty: string;
+  playersLimit: number;
+  status: string;
+  isPrivate: boolean;
+  isChatEnabled: boolean;
+  creatorId: number;
+  locationId: number;
+  bannerId: number;
+  gameSystemId: number;
 };
 
 export const ModalEdit = ({ data }: { data?: ICampaign }) => {
@@ -27,11 +38,16 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const defaultValues = useMemo<ICampaignForm>(
     () => ({
       title: "",
-      system: "",
-      gameMaster: "",
-      location: "",
-      currentPartySize: 0,
-      maxPartySize: 1,
+      description: "",
+      difficulty: "None",
+      playersLimit: 0,
+      status: "None",
+      isPrivate: false,
+      isChatEnabled: true,
+      creatorId: 0,
+      locationId: 0,
+      bannerId: 0,
+      gameSystemId: 0,
       ...(dataEdit ?? data),
     }),
     [data, dataEdit],
@@ -56,8 +72,11 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     const payload: ICampaign = {
       ...defaultValues,
       ...values,
-      currentPartySize: Number(values.currentPartySize ?? 0),
-      maxPartySize: Number(values.maxPartySize ?? 0),
+      playersLimit: Number(values.playersLimit ?? 0),
+      creatorId: Number(values.creatorId ?? 0),
+      locationId: Number(values.locationId ?? 0),
+      bannerId: Number(values.bannerId ?? 0),
+      gameSystemId: Number(values.gameSystemId ?? 0),
       id: dataEdit?.id ?? data?.id ?? values.id,
     };
 
@@ -85,14 +104,17 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="system" isRequired>
-            Sistema
+          <Label htmlFor="difficulty" isRequired>
+            Dificuldade
           </Label>
-          <ControlledInput
+          <Select
             hookForm={form}
-            name="system"
-            placeholder="Ex: D&D 5e"
-            error={errors.system?.message}
+            name="difficulty"
+            initialOptions={CAMPAIGN_DIFFICULTY_OPTIONS}
+            title="Selecione a dificuldade"
+            error={errors.difficulty?.message}
+            searchInput={false}
+            disabled={isLoading}
             isLoading={isLoading}
           />
         </InputGroup>
@@ -100,40 +122,45 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
 
       <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="gameMaster" isRequired>
-            Mestre
+          <Label htmlFor="status" isRequired>
+            Status
           </Label>
-          <ControlledInput
+          <Select
             hookForm={form}
-            name="gameMaster"
-            placeholder="Nome do mestre"
-            error={errors.gameMaster?.message}
+            name="status"
+            initialOptions={CAMPAIGN_STATUS_OPTIONS}
+            title="Selecione o status"
+            error={errors.status?.message}
+            searchInput={false}
+            disabled={isLoading}
             isLoading={isLoading}
           />
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="location" isRequired>
-            Local
+          <Label htmlFor="playersLimit" isRequired>
+            Limite de jogadores
           </Label>
           <ControlledInput
             hookForm={form}
-            name="location"
-            placeholder="Presencial ou Online"
-            error={errors.location?.message}
-            isLoading={isLoading}
+            name="playersLimit"
+            type="number"
+            min={0}
+            step={1}
+            placeholder="0"
+            disabled={isLoading || isPending}
           />
         </InputGroup>
       </FieldsWrapper>
 
       <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="currentPartySize" isRequired>
-            Jogadores atuais
+          <Label htmlFor="creatorId" isRequired>
+            ID do criador
           </Label>
           <ControlledInput
             hookForm={form}
-            name="currentPartySize"
+            name="creatorId"
             type="number"
             min={0}
             step={1}
@@ -143,31 +170,82 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="maxPartySize" isRequired>
-            Máximo de jogadores
+          <Label htmlFor="locationId" isRequired>
+            ID da localização
           </Label>
           <ControlledInput
             hookForm={form}
-            name="maxPartySize"
+            name="locationId"
             type="number"
-            min={1}
+            min={0}
             step={1}
-            placeholder="1"
+            placeholder="0"
+            disabled={isLoading || isPending}
+          />
+        </InputGroup>
+      </FieldsWrapper>
+
+      <FieldsWrapper>
+        <InputGroup>
+          <Label htmlFor="bannerId" isRequired>
+            ID do banner
+          </Label>
+          <ControlledInput
+            hookForm={form}
+            name="bannerId"
+            type="number"
+            min={0}
+            step={1}
+            placeholder="0"
+            disabled={isLoading || isPending}
+          />
+        </InputGroup>
+
+        <InputGroup>
+          <Label htmlFor="gameSystemId" isRequired>
+            ID do sistema de jogo
+          </Label>
+          <ControlledInput
+            hookForm={form}
+            name="gameSystemId"
+            type="number"
+            min={0}
+            step={1}
+            placeholder="0"
             disabled={isLoading || isPending}
           />
         </InputGroup>
       </FieldsWrapper>
 
       <InputGroup className="basis-full">
-        <Label htmlFor="summary">Resumo</Label>
+        <Label htmlFor="description" isRequired>
+          Descrição
+        </Label>
         <ControlledInput
           hookForm={form}
-          name="summary"
-          placeholder="Resumo da campanha"
-          error={errors.summary?.message}
+          name="description"
+          placeholder="Descrição da campanha"
+          error={errors.description?.message}
           isLoading={isLoading}
         />
       </InputGroup>
+
+      <FieldsWrapper>
+        <CheckboxControlled
+          hookForm={form}
+          name="isPrivate"
+          label="Campanha privada"
+          disabled={isLoading || isPending}
+        />
+
+        <CheckboxControlled
+          hookForm={form}
+          name="isChatEnabled"
+          label="Chat habilitado"
+          disabled={isLoading || isPending}
+          defaultValue
+        />
+      </FieldsWrapper>
 
       <div className="mt-6 flex justify-end gap-3">
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
@@ -184,5 +262,3 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     </form>
   );
 };
-
-
