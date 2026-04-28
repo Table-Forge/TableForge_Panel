@@ -12,6 +12,14 @@ export const USER_TYPE_OPTIONS: TSelectOptions[] = [
   { value: "Player", name: "Jogador" },
 ];
 
+export const CAMPAIGN_DIFFICULTY_OPTIONS: TSelectOptions[] = [
+  { value: "None", name: "Nenhuma" },
+];
+
+export const CAMPAIGN_STATUS_OPTIONS: TSelectOptions[] = [
+  { value: "None", name: "Nenhum" },
+];
+
 export const PAGE_SIZE: TSelectOptions<number>[] = [
   { value: 20, name: "20 por página" },
   { value: 50, name: "50 por página" },
