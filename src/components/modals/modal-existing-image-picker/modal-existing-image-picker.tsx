@@ -57,7 +57,7 @@ export function ModalExistingImagePicker({
       {isLoading ? (
         <p className="text-sm text-white/75">Carregando imagens...</p>
       ) : availableImages.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-6">
           {availableImages.map((image) => {
             const previewSource = toImageSource(image.url);
             const isSelected = isImageSelected({
@@ -127,7 +127,7 @@ function isImageSelected({
 
   return Boolean(
     previewSource &&
-      selectedImageUrl &&
-      previewSource === toImageSource(selectedImageUrl),
+    selectedImageUrl &&
+    previewSource === toImageSource(selectedImageUrl),
   );
 }
