@@ -62,7 +62,7 @@ export function ControlledImageInput<
               openModal(
                 existingImagePicker.title ?? "Selecionar imagem existente",
                 <ModalExistingImagePicker {...existingImagePicker} />,
-                "lg",
+                "md",
               )
             }
             className="inline-flex items-center rounded-lg border border-secondary/40 bg-secondary/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white transition hover:bg-secondary/25 disabled:cursor-not-allowed disabled:opacity-60"
