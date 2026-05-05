@@ -75,12 +75,14 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           content: _imageContent ?? "",
         });
 
-        imageId = getImageIdFromResponse(imageResponse);
+        const uploadedImageId = getImageIdFromResponse(imageResponse);
 
-        if (!imageId) {
+        if (!uploadedImageId) {
           addToast("error", "Não foi possível identificar a imagem enviada.");
           return;
         }
+
+        imageId = uploadedImageId;
       } catch {
         addToast("error", "Não foi possível enviar a imagem do sistema.");
         return;
