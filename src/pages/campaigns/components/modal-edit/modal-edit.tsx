@@ -102,12 +102,14 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           content: _bannerContent ?? "",
         });
 
-        bannerId = getImageIdFromResponse(imageResponse);
+        const uploadedBannerId = getImageIdFromResponse(imageResponse);
 
-        if (!bannerId) {
+        if (!uploadedBannerId) {
           addToast("error", "Não foi possível identificar o banner enviado.");
           return;
         }
+
+        bannerId = uploadedBannerId;
       } catch {
         addToast("error", "Não foi possível enviar o banner da campanha.");
         return;
