@@ -15,11 +15,7 @@ import { useComponentStore } from "@/src/store";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-function AdvancedFiltersContent({
-  filters,
-}: {
-  filters: IGetPaginatedParams;
-}) {
+function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
   const { close } = useFilterContext();
   const setFiltersGlobal = useComponentStore((state) => state.setFilters);
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
@@ -47,13 +43,19 @@ function AdvancedFiltersContent({
   };
 
   const clearSearch = () => {
-    resetFiltersGlobal(CAMPAIGNS_COMPONENT_FILTER_KEY, INITIAL_CAMPAIGNS_FILTERS);
+    resetFiltersGlobal(
+      CAMPAIGNS_COMPONENT_FILTER_KEY,
+      INITIAL_CAMPAIGNS_FILTERS,
+    );
     form.reset(INITIAL_CAMPAIGNS_FILTERS);
     close();
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleApplyFilters)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(handleApplyFilters)}
+      className="space-y-4"
+    >
       <InputGroup>
         <Label htmlFor="size">Itens por página</Label>
         <Select
@@ -102,12 +104,9 @@ export function CampaignsSearchFilters() {
         />
         <Filters
           filters={<AdvancedFiltersContent filters={filters} />}
-          align="right"
+          align="left"
         />
       </div>
     </div>
   );
 }
-
-
-

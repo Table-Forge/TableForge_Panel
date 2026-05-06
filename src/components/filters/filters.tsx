@@ -11,15 +11,16 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
 
   const triggerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
+  const resolvedAlign = align ?? "left";
 
   const { listStyle, isSettling, prepareOpenPosition, resetDropdownPosition } =
     useDropdownPosition({
       triggerRef,
       listRef: filterRef,
       isOpen,
-      watchDeps: [align],
+      watchDeps: [resolvedAlign],
       offsetTop: 8,
-      horizontalAnchor: align === "right" ? "right" : "left",
+      horizontalAnchor: resolvedAlign === "left" ? "right" : "left",
       includeWidth: false,
     });
 
