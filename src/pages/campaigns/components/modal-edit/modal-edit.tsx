@@ -4,6 +4,7 @@ import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
+import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import {
@@ -259,7 +260,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
         <Label htmlFor="description" isRequired>
           Descrição
         </Label>
-        <ControlledInput
+        <ControlledTextarea
           hookForm={form}
           name="description"
           placeholder="Descrição da campanha"
