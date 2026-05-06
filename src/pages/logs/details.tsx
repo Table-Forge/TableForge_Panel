@@ -59,6 +59,12 @@ export function LogDetailsPage() {
       <CardBox title="Informações Gerais">
         <GridBox>
           <InfoBox>
+            <CardLabel>ID</CardLabel>
+            <CardValue className="mt-1 block break-all">
+              {String(data.id ?? "-")}
+            </CardValue>
+          </InfoBox>
+          <InfoBox>
             <CardLabel>Tipo</CardLabel>
             <CardValue className="mt-1 block break-all">
               {data.type ?? "-"}
@@ -103,25 +109,25 @@ export function LogDetailsPage() {
         </CardValue>
       </CardBox>
 
-      <CardBox title="Message">
+      <CardBox title="Mensagem">
         <CardValue className="block whitespace-pre-wrap break-words font-medium">
           {structuredContent.message}
         </CardValue>
       </CardBox>
 
-      <CardBox title="Stack Trace">
+      <CardBox title="Rastreamento">
         <Code>
           {structuredContent.stackTrace}
         </Code>
       </CardBox>
 
-      <CardBox title="Inner Exception Message">
+      <CardBox title="Mensagem da Exceção Interna">
         <CardValue className="block whitespace-pre-wrap break-words font-medium">
           {structuredContent.innerExceptionMessage}
         </CardValue>
       </CardBox>
 
-      <CardBox title="Inner Exception Stack Trace">
+      <CardBox title="Rastreamento da Exceção Interna">
         <Code>
           {structuredContent.innerExceptionStackTrace}
         </Code>
