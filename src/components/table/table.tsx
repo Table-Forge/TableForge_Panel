@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
   type MouseEvent,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -98,16 +99,6 @@ export function Table<T extends { id?: number | string }>({
     [tableContents],
   );
 
-  const gridTemplateColumns = useMemo(
-    () =>
-      tableContents
-        .map((column) =>
-          (column.show ?? true) ? column.width || "10vw" : "0px",
-        )
-        .join(" "),
-    [tableContents],
-  );
-
   const handleContextMenu = useCallback(
     (event: MouseEvent<HTMLDivElement>, row: T) => {
       if (!getContextOptions) return;
@@ -163,20 +154,21 @@ export function Table<T extends { id?: number | string }>({
         isolation: "isolate",
       }}
     >
-      <div className="flex min-w-max flex-col">
+      <div className="flex min-w-max w-full flex-col">
         <div
           role="rowgroup"
-          className="sticky top-0 z-30 grid rounded-t-2xl border border-white/10 bg-primary px-4 py-3"
-          style={{ gridTemplateColumns }}
+          className="sticky top-0 z-30 flex rounded-t-2xl border border-white/10 bg-primary px-4 py-3"
         >
           {tableContents.map((column, index) => {
             const isVisible = column.show ?? true;
+            const cellStyle = getFlexColumnStyle(column.width, isVisible);
 
             return (
               <div
                 key={index}
                 role="columnheader"
                 style={{
+                  ...cellStyle,
                   display: isVisible ? "flex" : "none",
                   position: column.fixed ? "sticky" : "static",
                   left: column.fixed ? columnOffsets[index] : undefined,
@@ -185,13 +177,9 @@ export function Table<T extends { id?: number | string }>({
                     ? "var(--color-primary)"
                     : undefined,
                 }}
-                className={`items-center text-[11px] font-bold uppercase tracking-widest text-grays-100 ${
-                  column.align === "center"
-                    ? "justify-center text-center"
-                    : column.align === "right"
-                      ? "justify-end text-right"
-                      : "justify-start text-left"
-                }`}
+                className={`min-w-0 items-center px-2 text-[11px] font-bold uppercase tracking-widest text-grays-100 ${getColumnAlignmentClasses(
+                  column.align,
+                )}`}
               >
                 {column.title}
               </div>
@@ -209,7 +197,6 @@ export function Table<T extends { id?: number | string }>({
               row={row}
               tableContents={tableContents}
               columnOffsets={columnOffsets}
-              gridTemplateColumns={gridTemplateColumns}
               isClickable={Boolean(detailsLink)}
               handleRowClick={handleRowClick}
               handleContextMenu={handleContextMenu}
@@ -252,7 +239,6 @@ function TableRowComponent<T extends { id?: number | string }>({
   row,
   tableContents,
   columnOffsets,
-  gridTemplateColumns,
   isClickable,
   handleRowClick,
   handleContextMenu,
@@ -263,12 +249,12 @@ function TableRowComponent<T extends { id?: number | string }>({
       role="row"
       onClick={() => handleRowClick(row)}
       onContextMenu={(event) => handleContextMenu(event, row)}
-      className={`group grid items-center rounded-xl border border-white/10 bg-primary/80 px-4 py-3 transition ${
+      className={`group flex items-center rounded-xl border border-white/10 bg-primary/80 px-4 py-3 transition ${
         isClickable
           ? "cursor-pointer hover:border-secondary/40 hover:shadow-md"
           : "cursor-default"
       }`}
-      style={{ color: customRowColor, gridTemplateColumns }}
+      style={{ color: customRowColor }}
     >
       {tableContents.map((column, index) => {
         const isVisible = column.show ?? true;
@@ -286,6 +272,7 @@ function TableRowComponent<T extends { id?: number | string }>({
             key={index}
             role="cell"
             style={{
+              ...getFlexColumnStyle(column.width, isVisible),
               display: isVisible ? "flex" : "none",
               position: column.fixed ? "sticky" : "static",
               left: column.fixed ? columnOffsets[index] : undefined,
@@ -294,13 +281,9 @@ function TableRowComponent<T extends { id?: number | string }>({
                 ? "var(--color-primary)"
                 : undefined,
             }}
-            className={`items-center px-0 text-sm ${
-              column.align === "center"
-                ? "justify-center text-center"
-                : column.align === "right"
-                  ? "justify-end text-right"
-                  : "justify-start text-left"
-            } ${column.normalCase ? "normal-case" : "uppercase"} min-w-0`}
+            className={`min-w-0 items-center px-2 text-sm ${getColumnAlignmentClasses(
+              column.align,
+            )} ${column.normalCase ? "normal-case" : "uppercase"}`}
           >
             {isSimpleTextContent ? (
               <Tooltip
@@ -321,6 +304,27 @@ function TableRowComponent<T extends { id?: number | string }>({
       })}
     </div>
   );
+}
+
+function getFlexColumnStyle(
+  width = "10vw",
+  isVisible = true,
+): CSSProperties {
+  if (!isVisible) return { width: "0px", flex: "0 0 0px" };
+
+  return {
+    width,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis: width,
+  };
+}
+
+function getColumnAlignmentClasses(align?: "left" | "center" | "right") {
+  if (align === "center") return "justify-center text-center";
+  if (align === "right") return "justify-end text-right";
+
+  return "justify-start text-left";
 }
 
 export const TableRow = memo(TableRowComponent) as typeof TableRowComponent;

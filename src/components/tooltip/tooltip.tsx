@@ -130,7 +130,13 @@ export const Tooltip: React.FC<ITooltip> = ({
       className={`relative inline-flex ${forcePointer ? "cursor-pointer" : "cursor-help"}`}
       style={props.style}
     >
-      <div className={props.overflowed ? "max-w-full overflow-hidden text-ellipsis whitespace-nowrap" : ""}>
+      <div
+        className={
+          props.overflowed
+            ? "w-full max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+            : ""
+        }
+      >
         {children}
       </div>
       {showTooltip && position.top !== 0 ? createPortal(tooltipElement, document.body) : null}
