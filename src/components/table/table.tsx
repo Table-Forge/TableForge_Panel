@@ -98,6 +98,16 @@ export function Table<T extends { id?: number | string }>({
     [tableContents],
   );
 
+  const gridTemplateColumns = useMemo(
+    () =>
+      tableContents
+        .map((column) =>
+          (column.show ?? true) ? column.width || "10vw" : "0px",
+        )
+        .join(" "),
+    [tableContents],
+  );
+
   const handleContextMenu = useCallback(
     (event: MouseEvent<HTMLDivElement>, row: T) => {
       if (!getContextOptions) return;
@@ -156,7 +166,8 @@ export function Table<T extends { id?: number | string }>({
       <div className="flex min-w-max flex-col">
         <div
           role="rowgroup"
-          className="sticky top-0 z-30 flex gap-4 rounded-t-2xl border border-white/10 bg-primary px-4 py-3"
+          className="sticky top-0 z-30 grid rounded-t-2xl border border-white/10 bg-primary px-4 py-3"
+          style={{ gridTemplateColumns }}
         >
           {tableContents.map((column, index) => {
             const isVisible = column.show ?? true;
@@ -167,8 +178,6 @@ export function Table<T extends { id?: number | string }>({
                 role="columnheader"
                 style={{
                   display: isVisible ? "flex" : "none",
-                  width: column.width || "10vw",
-                  flexGrow: 1,
                   position: column.fixed ? "sticky" : "static",
                   left: column.fixed ? columnOffsets[index] : undefined,
                   zIndex: column.fixed ? 35 : undefined,
@@ -192,7 +201,7 @@ export function Table<T extends { id?: number | string }>({
 
         <div
           role="rowgroup"
-          className="flex flex-col gap-2 rounded-b-2xl border border-white/10 bg-primary/15 p-2"
+          className="flex flex-col gap-2 rounded-b-2xl border border-white/10 bg-primary/15 py-2"
         >
           {bodyData.map((row, index) => (
             <TableRow
@@ -200,6 +209,7 @@ export function Table<T extends { id?: number | string }>({
               row={row}
               tableContents={tableContents}
               columnOffsets={columnOffsets}
+              gridTemplateColumns={gridTemplateColumns}
               isClickable={Boolean(detailsLink)}
               handleRowClick={handleRowClick}
               handleContextMenu={handleContextMenu}
@@ -242,6 +252,7 @@ function TableRowComponent<T extends { id?: number | string }>({
   row,
   tableContents,
   columnOffsets,
+  gridTemplateColumns,
   isClickable,
   handleRowClick,
   handleContextMenu,
@@ -252,12 +263,12 @@ function TableRowComponent<T extends { id?: number | string }>({
       role="row"
       onClick={() => handleRowClick(row)}
       onContextMenu={(event) => handleContextMenu(event, row)}
-      className={`group flex items-center gap-4 rounded-xl border border-white/10 bg-primary/80 px-4 py-3 transition ${
+      className={`group grid items-center rounded-xl border border-white/10 bg-primary/80 px-4 py-3 transition ${
         isClickable
           ? "cursor-pointer hover:border-secondary/40 hover:shadow-md"
           : "cursor-default"
       }`}
-      style={{ color: customRowColor }}
+      style={{ color: customRowColor, gridTemplateColumns }}
     >
       {tableContents.map((column, index) => {
         const isVisible = column.show ?? true;
@@ -276,8 +287,6 @@ function TableRowComponent<T extends { id?: number | string }>({
             role="cell"
             style={{
               display: isVisible ? "flex" : "none",
-              width: column.width || "10vw",
-              flexGrow: 1,
               position: column.fixed ? "sticky" : "static",
               left: column.fixed ? columnOffsets[index] : undefined,
               zIndex: column.fixed ? 25 : undefined,
@@ -305,9 +314,7 @@ function TableRowComponent<T extends { id?: number | string }>({
                 </span>
               </Tooltip>
             ) : (
-              <div className="w-full min-w-0">
-                {content}
-              </div>
+              <div className="min-w-0 max-w-full">{content}</div>
             )}
           </div>
         );

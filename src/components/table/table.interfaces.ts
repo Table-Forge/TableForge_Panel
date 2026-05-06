@@ -27,6 +27,7 @@ interface TableRowProps<T extends { id?: number | string }> {
   row: T;
   tableContents: ITableColumn<T>[];
   columnOffsets: string[];
+  gridTemplateColumns: string;
   isClickable: boolean;
   handleRowClick: (row: T) => void;
   handleContextMenu: (event: MouseEvent<HTMLDivElement>, row: T) => void;
