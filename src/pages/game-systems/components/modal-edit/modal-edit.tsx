@@ -3,6 +3,7 @@ import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
 import { Label } from "@/src/components/label/label";
 import { useGameSystemById } from "@/src/features/game-systems/hooks/use-game-system-by-id";
 import { useGameSystemsMutation } from "@/src/features/game-systems/hooks/use-game-systems-mutations";
@@ -124,7 +125,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
 
       <InputGroup className="basis-full">
         <Label htmlFor="description">Descrição</Label>
-        <ControlledInput
+        <ControlledTextarea
           hookForm={form}
           name="description"
           placeholder="Descrição do sistema de jogo"

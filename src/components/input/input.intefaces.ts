@@ -54,6 +54,24 @@ export interface IInput extends React.InputHTMLAttributes<HTMLInputElement>, IIn
   wrapperClassName?: string;
 }
 
+export interface ITextarea
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    IInputStyles {
+  sanitize?: boolean;
+  sanitizeEmail?: boolean;
+  wrapperClassName?: string;
+}
+
+export interface IControllerTextarea<
+  TFieldValues extends FieldValues = FieldValues,
+> extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name">,
+    IInputStyles {
+  hookForm: UseFormReturn<TFieldValues>;
+  name: Path<TFieldValues>;
+  sanitize?: boolean;
+  sanitizeEmail?: boolean;
+}
+
 export interface IControlledConfirmationInput<TFieldValues extends FieldValues = FieldValues>
   extends IControllerInput<TFieldValues> {
   label?: string;
