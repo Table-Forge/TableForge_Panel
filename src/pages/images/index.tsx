@@ -6,13 +6,13 @@ import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useAllImages } from "@/src/features/images/hooks/use-all-images";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import type { IImage } from "@/src/features/images/schemas/image.schema";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
-import { toImageSource } from "@/src/utils/image";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { ImagesSearchFilters } from "./components/search-filters/search-filters";
@@ -66,16 +66,9 @@ export default function ImagesPage() {
       width: "100px",
       align: "center",
       normalCase: true,
-      render: (image) =>
-        image.url ? (
-          <img
-            src={toImageSource(image.url)}
-            alt={image.name}
-            className="h-10 w-10 rounded-lg border border-white/15 object-cover"
-          />
-        ) : (
-          "-"
-        ),
+      render: (image) => (
+        <Thumbnail image={image} width={40} height={40} alt={image.name} />
+      ),
     },
     {
       title: "Tipo",

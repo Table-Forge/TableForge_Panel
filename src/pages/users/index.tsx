@@ -6,6 +6,7 @@ import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { UserStatus } from "@/src/components/user-status/user-status";
 import { useUserStatusEnum } from "@/src/features/users/hooks/enums/use-user-status-enum";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
@@ -61,6 +62,21 @@ export default function UsersPage() {
       key: "id",
       width: "120px",
       render: (user) => <span className="font-bold">{user.id}</span>,
+    },
+    {
+      title: "Avatar",
+      key: "avatarUrl",
+      width: "100px",
+      align: "center",
+      normalCase: true,
+      render: (user) => (
+        <Thumbnail
+          image={user.avatarUrl}
+          width={40}
+          height={40}
+          alt={user.nickname || user.username || "Avatar"}
+        />
+      ),
     },
     {
       title: "Usuário",

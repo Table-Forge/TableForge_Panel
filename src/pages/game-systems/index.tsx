@@ -6,12 +6,17 @@ import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Table } from "@/src/components/table/table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useAllGameSystems } from "@/src/features/game-systems/hooks/use-all-game-systems";
 import { useGameSystemsMutation } from "@/src/features/game-systems/hooks/use-game-systems-mutations";
 import type { IGameSystem } from "@/src/features/game-systems/schemas/game-system.schema";
+import { IMAGE_KEYS } from "@/src/features/images/hooks/query-key";
+import { ImageService } from "@/src/features/images/services/images.services";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
+import { useQueries } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { GameSystemsSearchFilters } from "./components/search-filters/search-filters";
@@ -22,6 +27,32 @@ export function GameSystemsPage() {
 
   const { data, isLoading, isError, filters, setFilters } =
     useAllGameSystems();
+
+  const imageIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (data?.items ?? [])
+            .map((gameSystem) => gameSystem.imageId)
+            .filter((imageId) => Boolean(imageId)),
+        ),
+      ),
+    [data?.items],
+  );
+
+  const imageQueries = useQueries({
+    queries: imageIds.map((imageId) => ({
+      queryKey: IMAGE_KEYS.detail(imageId),
+      queryFn: () => ImageService.getById(imageId),
+    })),
+  });
+
+  const imagesById = new Map(
+    imageQueries
+      .map((query) => query.data)
+      .filter((image) => image?.id)
+      .map((image) => [image!.id!, image!]),
+  );
 
   const getMoreInfoOptions = (item: IGameSystem): IMoreOptions[] => {
     const options = [
@@ -81,7 +112,21 @@ export function GameSystemsPage() {
       key: "imageId",
       width: "110px",
       align: "center",
-      render: (gameSystem) => gameSystem.imageId ?? "-",
+      normalCase: true,
+      render: (gameSystem) => {
+        const image = gameSystem.imageId
+          ? imagesById.get(gameSystem.imageId)
+          : undefined;
+
+        return (
+          <Thumbnail
+            image={image}
+            width={40}
+            height={40}
+            alt={image?.name || gameSystem.name || "Imagem"}
+          />
+        );
+      },
     },
     {
       title: "Criado em",
