@@ -1,6 +1,9 @@
 import React, { useCallback, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { TPortalResolverContext } from "@/src/hooks/utils/usePortalPosition";
+import type {
+  TPortalPosition,
+  TPortalResolverContext,
+} from "@/src/hooks/utils/usePortalPosition";
 import { usePortalPosition } from "@/src/hooks/utils/usePortalPosition";
 import type { ITooltip } from "./tooltip.interfaces";
 
@@ -18,34 +21,77 @@ export const Tooltip: React.FC<ITooltip> = ({
   const gap = 8;
 
   const resolvePosition = useCallback(
-    ({ triggerRect }: TPortalResolverContext) => {
+    ({
+      triggerRect,
+      portalRect,
+      viewportHeight,
+      viewportWidth,
+    }: TPortalResolverContext): TPortalPosition => {
+      const tooltipWidth = portalRect?.width ?? 0;
+      const tooltipHeight = portalRect?.height ?? 0;
+      const margin = 8;
+      const centeredLeft =
+        triggerRect.left + triggerRect.width / 2 - tooltipWidth / 2;
+
+      const clampLeft = (value: number) =>
+        tooltipWidth > 0
+          ? Math.min(
+              Math.max(value, margin),
+              Math.max(margin, viewportWidth - tooltipWidth - margin),
+            )
+          : value;
+
+      const clampTop = (value: number) =>
+        tooltipHeight > 0
+          ? Math.min(
+              Math.max(value, margin),
+              Math.max(margin, viewportHeight - tooltipHeight - margin),
+            )
+          : value;
+
+      const shouldOpenUp =
+        triggerRect.bottom + gap + tooltipHeight > viewportHeight - margin &&
+        triggerRect.top > viewportHeight - triggerRect.bottom;
+      const shouldOpenDown =
+        triggerRect.top - gap - tooltipHeight < margin &&
+        viewportHeight - triggerRect.bottom > triggerRect.top;
+
       let top = triggerRect.top + triggerRect.height / 2;
-      let left = triggerRect.left + triggerRect.width / 2;
+      let left = centeredLeft;
 
       switch (side) {
         case "full-right":
           left = triggerRect.left + triggerRect.width + gap;
+          top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
           break;
         case "right":
           left = triggerRect.left + triggerRect.width - 8;
+          top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
           break;
         case "full-left":
-          left = triggerRect.left - gap;
+          left = triggerRect.left - tooltipWidth - gap;
+          top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
           break;
         case "left":
-          left = triggerRect.left - 8;
+          left = triggerRect.left - tooltipWidth + 8;
+          top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
           break;
         case "top":
-          top = triggerRect.top - gap;
+          top = shouldOpenDown
+            ? triggerRect.bottom + gap
+            : triggerRect.top - tooltipHeight - gap;
           break;
         case "center":
+          top = triggerRect.top + triggerRect.height / 2 - tooltipHeight / 2;
           break;
         default:
-          top = triggerRect.top + triggerRect.height + gap;
+          top = shouldOpenUp
+            ? triggerRect.top - tooltipHeight - gap
+            : triggerRect.bottom + gap;
           break;
       }
 
-      return { top, left };
+      return { top: clampTop(top), left: clampLeft(left) };
     },
     [gap, side],
   );

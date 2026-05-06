@@ -121,13 +121,13 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
     ? { top: "calc(50% - 8px)", left: -8, transform: "rotate(45deg)" }
     : listDirection === "up"
       ? {
-          bottom: -11,
-          right: boxSide === "right" ? 11 : 40,
+          bottom: -8,
+          right: boxSide === "right" ? 8 : 40,
           transform: "rotate(225deg)",
         }
       : {
-          top: -11,
-          right: boxSide === "right" ? 11 : 40,
+          top: -8,
+          right: boxSide === "right" ? 8 : 40,
           transform: "rotate(45deg)",
         };
 
@@ -145,7 +145,7 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
       onClick={(event) => event.stopPropagation()}
     >
       <div
-        className="pointer-events-none absolute h-4 w-4 border-l border-t border-white/15 bg-primary"
+        className="pointer-events-none absolute h-4 w-4 border-l border-t border-white/15 bg-primary -z-1"
         style={arrowStyle}
       />
 

@@ -19,11 +19,7 @@ import { useComponentStore } from "@/src/store";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-function AdvancedFiltersContent({
-  filters,
-}: {
-  filters: IGetPaginatedParams;
-}) {
+function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
   const { close } = useFilterContext();
   const setFiltersGlobal = useComponentStore((state) => state.setFilters);
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
@@ -78,7 +74,10 @@ function AdvancedFiltersContent({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleApplyFilters)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(handleApplyFilters)}
+      className="space-y-4"
+    >
       <div className="grid gap-3 md:grid-cols-2">
         <InputGroup>
           <Label htmlFor="startDate">Data inicial</Label>
@@ -160,12 +159,8 @@ export function LogsSearchFilters() {
           wrapperClassName="w-full"
         />
         <Filters
-          filters={
-            <AdvancedFiltersContent
-              filters={filters}
-            />
-          }
-          align="right"
+          filters={<AdvancedFiltersContent filters={filters} />}
+          align="left"
         />
       </div>
     </div>

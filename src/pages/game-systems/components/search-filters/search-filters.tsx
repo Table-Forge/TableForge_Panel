@@ -15,11 +15,7 @@ import { useComponentStore } from "@/src/store";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-function AdvancedFiltersContent({
-  filters,
-}: {
-  filters: IGetPaginatedParams;
-}) {
+function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
   const { close } = useFilterContext();
   const setFiltersGlobal = useComponentStore((state) => state.setFilters);
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
@@ -56,7 +52,10 @@ function AdvancedFiltersContent({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleApplyFilters)} className="space-y-4">
+    <form
+      onSubmit={form.handleSubmit(handleApplyFilters)}
+      className="space-y-4"
+    >
       <InputGroup>
         <Label htmlFor="size">Itens por página</Label>
         <Select
@@ -105,7 +104,7 @@ export function GameSystemsSearchFilters() {
         />
         <Filters
           filters={<AdvancedFiltersContent filters={filters} />}
-          align="right"
+          align="left"
         />
       </div>
     </div>

@@ -71,7 +71,8 @@ export const useDropdownPosition = ({
     left: 0,
     width: 0,
   });
-  const [listDirection, setListDirection] = useState<TDropdownDirection>("down");
+  const [listDirection, setListDirection] =
+    useState<TDropdownDirection>("down");
   const [isSettling, setIsSettling] = useState(false);
   const settlingRef = useRef(false);
 
@@ -82,13 +83,13 @@ export const useDropdownPosition = ({
       const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight =
         window.innerHeight || document.documentElement.clientHeight;
-      const viewportWidth =
-        window.innerWidth || document.documentElement.clientWidth;
       const scrollY = window.scrollY || window.pageYOffset;
       const scrollX = window.scrollX || window.pageXOffset;
 
       const preferredByThreshold =
-        rect.top / Math.max(viewportHeight, 1) >= openUpThreshold ? "up" : "down";
+        rect.top / Math.max(viewportHeight, 1) >= openUpThreshold
+          ? "up"
+          : "down";
 
       let direction = preferredDirection || preferredByThreshold;
 
@@ -137,20 +138,17 @@ export const useDropdownPosition = ({
         : listWidth > 0
           ? listWidth
           : fallbackWidth;
-      const rawLeft =
+      const left =
         horizontalAnchor === "right"
           ? rect.right + offsetLeft + scrollX - width
           : rect.left + offsetLeft + scrollX;
-      const minLeft = scrollX + margin;
-      const maxLeft = scrollX + viewportWidth - width - margin;
-      const left =
-        width > 0
-          ? Math.min(Math.max(rawLeft, minLeft), Math.max(minLeft, maxLeft))
-          : rawLeft;
+
+      const hasMeasuredHeight = listHeight > 0;
+      const hasMeasuredWidth = includeWidth ? true : listWidth > 0;
 
       return {
         direction,
-        hasMeasuredPortal: listHeight > 0,
+        hasMeasuredPortal: hasMeasuredHeight && hasMeasuredWidth,
         style: {
           top,
           left,
@@ -176,17 +174,17 @@ export const useDropdownPosition = ({
       const next = calculatePosition(preferredDirection, listHeightOverride);
       if (!next) return;
 
-      setListDirection((previous) =>
-        previous === next.direction ? previous : next.direction,
+      setListDirection((prev) =>
+        prev === next.direction ? prev : next.direction,
       );
 
-      setListStyle((previous) => {
+      setListStyle((prev) => {
         if (
-          previous.top === next.style.top &&
-          previous.left === next.style.left &&
-          previous.width === next.style.width
+          prev.top === next.style.top &&
+          prev.left === next.style.left &&
+          prev.width === next.style.width
         ) {
-          return previous;
+          return prev;
         }
 
         return next.style;
@@ -215,11 +213,11 @@ export const useDropdownPosition = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const frameId = requestAnimationFrame(() => {
+    const rafId = requestAnimationFrame(() => {
       applyPosition(listDirection);
     });
 
-    return () => cancelAnimationFrame(frameId);
+    return () => cancelAnimationFrame(rafId);
   }, [applyPosition, isOpen, listDirection, ...watchDeps]);
 
   useEffect(() => {
