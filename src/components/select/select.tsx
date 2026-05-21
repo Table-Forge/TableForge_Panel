@@ -55,6 +55,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   const listRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const shouldFocusSearchRef = useRef(false);
+  const shouldSkipOpenOnFocusRef = useRef(false);
   const searchRequestIdRef = useRef(0);
 
   const message = error ?? fieldState.error?.message;
@@ -196,6 +197,14 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     }
   };
 
+  const focusHeaderForTabFlow = () => {
+    shouldSkipOpenOnFocusRef.current = true;
+
+    requestAnimationFrame(() => {
+      headerRef.current?.focus();
+    });
+  };
+
   const handleSelect = (index: number) => {
     const item = displayedOptions[index];
     if (!item || item.allowSelect === false) return;
@@ -203,6 +212,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     onChange(item.value);
     onChangeOption?.(item);
     handleOpenList(false);
+    focusHeaderForTabFlow();
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -247,7 +257,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     }
   };
 
-  const handleBlur = (event: FocusEvent<HTMLButtonElement>) => {
+  const handleBlur = (event: FocusEvent<HTMLElement>) => {
     const nextFocus = event.relatedTarget as Node | null;
 
     const isInternalFocus =
@@ -285,8 +295,23 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           onKeyDown={(event) => {
             if (event.key === "ArrowDown") {
               event.preventDefault();
-              setFocusedIndex(getNextSelectableIndex(-1, 1));
-              headerRef.current?.focus();
+              event.stopPropagation();
+              setFocusedIndex((previous) => getNextSelectableIndex(previous, 1));
+            }
+
+            if (event.key === "ArrowUp") {
+              event.preventDefault();
+              event.stopPropagation();
+              setFocusedIndex((previous) => {
+                const start = previous < 0 ? displayedOptions.length : previous;
+                return getNextSelectableIndex(start, -1);
+              });
+            }
+
+            if (event.key === "Enter" && focusedIndex >= 0) {
+              event.preventDefault();
+              event.stopPropagation();
+              handleSelect(focusedIndex);
             }
           }}
           placeholder={
@@ -296,6 +321,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
               : "Pesquisar...")
           }
           autoComplete="off"
+          onBlur={handleBlur}
           wrapperClassName="w-full"
           className="pr-8"
         />
@@ -388,6 +414,17 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
         ref={headerRef}
         type="button"
         disabled={disabled}
+        onFocus={(event) => {
+          if (shouldSkipOpenOnFocusRef.current) {
+            shouldSkipOpenOnFocusRef.current = false;
+            return;
+          }
+
+          if (!disabled && event.currentTarget.matches(":focus-visible")) {
+            if (searchInput) shouldFocusSearchRef.current = true;
+            handleOpenList(true);
+          }
+        }}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         onMouseDown={(event) => {
