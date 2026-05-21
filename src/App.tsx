@@ -13,6 +13,7 @@ import { LoginPage } from "@/src/pages/login";
 import { LogDetailsPage } from "@/src/pages/logs/details";
 import { LogsPage } from "@/src/pages/logs";
 import { RecoverPasswordPage } from "@/src/pages/recover-password";
+import { UserDetailsPage } from "@/src/pages/users/details";
 import UsersPage from "@/src/pages/users";
 import {
   BrowserRouter,
@@ -37,6 +38,7 @@ function App() {
               <Route path="gamesystems" element={<GameSystemsPage />} />
               <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
               <Route path="users" element={<UsersPage />} />
+              <Route path="users/:id" element={<UserDetailsPage />} />
               <Route path="images" element={<ImagesPage />} />
               <Route path="logs" element={<LogsPage />} />
               <Route path="logs/:id" element={<LogDetailsPage />} />
