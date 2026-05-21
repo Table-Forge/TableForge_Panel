@@ -25,8 +25,7 @@ export function GameSystemsPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useGameSystemsMutation();
 
-  const { data, isLoading, isError, filters, setFilters } =
-    useAllGameSystems();
+  const { data, isLoading, isError, filters, setFilters } = useAllGameSystems();
 
   const imageIds = useMemo(
     () =>
@@ -94,20 +93,6 @@ export function GameSystemsPage() {
       ),
     },
     {
-      title: "Nome",
-      key: "name",
-      width: "240px",
-      normalCase: true,
-      render: (gameSystem) => gameSystem.name || "-",
-    },
-    {
-      title: "Descrição",
-      key: "description",
-      width: "320px",
-      normalCase: true,
-      render: (gameSystem) => gameSystem.description || "-",
-    },
-    {
       title: "Imagem",
       key: "imageId",
       width: "110px",
@@ -127,6 +112,20 @@ export function GameSystemsPage() {
           />
         );
       },
+    },
+    {
+      title: "Nome",
+      key: "name",
+      width: "240px",
+      normalCase: true,
+      render: (gameSystem) => gameSystem.name || "-",
+    },
+    {
+      title: "Descrição",
+      key: "description",
+      width: "320px",
+      normalCase: true,
+      render: (gameSystem) => gameSystem.description || "-",
     },
     {
       title: "Criado em",
