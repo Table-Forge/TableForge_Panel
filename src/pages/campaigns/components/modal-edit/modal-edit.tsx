@@ -270,10 +270,10 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       </InputGroup>
 
       <InputGroup className="basis-full">
+        <Label htmlFor="bannerContent">Banner</Label>
         <ControlledImageInput
           hookForm={form}
           name="bannerContent"
-          label="Banner"
           previewValue={selectedBannerSource}
           disabled={isLoading || isSubmitting}
           onClearImage={() => {

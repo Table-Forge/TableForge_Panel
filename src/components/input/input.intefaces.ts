@@ -79,9 +79,9 @@ export interface IControlledConfirmationInput<TFieldValues extends FieldValues =
 
 export interface IControlledImageInput<TFieldValues extends FieldValues = FieldValues>
   extends IControllerInput<TFieldValues> {
-  label?: string;
   previewValue?: string;
   fallbackPreview?: string;
+  canChangeImage?: boolean;
   onFileNameChange?: (name: string) => void;
   onClearImage?: () => void;
   existingImagePicker?: {

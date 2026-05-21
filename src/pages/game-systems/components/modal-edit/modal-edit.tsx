@@ -135,10 +135,10 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
       </InputGroup>
 
       <InputGroup className="basis-full">
+        <Label htmlFor="imageContent">Imagem</Label>
         <ControlledImageInput
           hookForm={form}
           name="imageContent"
-          label="Imagem"
           previewValue={selectedImageSource}
           disabled={isLoading || isPending}
           onClearImage={() => {

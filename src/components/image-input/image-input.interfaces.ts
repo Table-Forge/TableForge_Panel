@@ -7,9 +7,10 @@ export interface IImageInputValue {
 }
 
 export interface IImageInput {
-  label?: string;
+  inputId?: string;
   value?: string;
   disabled?: boolean;
+  canChangeImage?: boolean;
   error?: string;
   onChange: (value: IImageInputValue) => void;
   onClear?: () => void;
