@@ -6,11 +6,9 @@ import { ControlledImageInput } from "@/src/components/input/input.image.control
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { IMAGE_TYPE_OPTIONS } from "@/src/constants/select-options";
-import { useCampaignsSelect } from "@/src/features/campaigns/hooks/use-campaigns-select";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { type IImage } from "@/src/features/images/schemas/image.schema";
-import { useUsersSelect } from "@/src/features/users/hooks/use-users-select";
 import { useBoundStore } from "@/src/store";
 import { toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
@@ -38,26 +36,6 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
     mode: "onChange",
   });
 
-  const selectedType = form.watch("type");
-  const isUserProfileType = selectedType === "UserProfile";
-  const isCampaignBannerType = selectedType === "CampaignBanner";
-
-  const {
-    userOptions,
-    isLoadingUsersSelect,
-    onSearchUsers,
-  } = useUsersSelect({
-    enabled: isUserProfileType,
-  });
-
-  const {
-    campaignOptions,
-    isLoadingCampaignsSelect,
-    onSearchCampaigns,
-  } = useCampaignsSelect({
-    enabled: isCampaignBannerType,
-  });
-
   const {
     handleSubmit,
     reset,
@@ -69,24 +47,13 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  useEffect(() => {
-    if (!isUserProfileType) {
-      setValue("userId", undefined, { shouldDirty: false });
-    }
-  }, [isUserProfileType, setValue]);
-
-  useEffect(() => {
-    if (!isCampaignBannerType) {
-      setValue("campaignId", undefined, { shouldDirty: false });
-    }
-  }, [isCampaignBannerType, setValue]);
-
   const onSubmit = handleSubmit((values) => {
+    const { userId: _userId, campaignId: _campaignId, ...imageValues } = values;
     const payload: IImage = {
       ...defaultValues,
-      ...values,
-      userId: isUserProfileType ? values.userId : undefined,
-      campaignId: isCampaignBannerType ? values.campaignId : undefined,
+      ...imageValues,
+      userId: undefined,
+      campaignId: undefined,
     };
 
     if (payload.id) {
@@ -133,51 +100,13 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           />
         </InputGroup>
 
-        {isCampaignBannerType ? (
-          <InputGroup>
-            <Label htmlFor="campaignId" isRequired>
-              Campanha
-            </Label>
-            <Select
-              hookForm={form}
-              name="campaignId"
-              initialOptions={campaignOptions}
-              title="Selecione a campanha"
-              error={errors.campaignId?.message}
-              searchInput
-              onChangeInputSearch={onSearchCampaigns}
-              disabled={isSubmitting || isLoading || isLoadingCampaignsSelect}
-              isLoading={isLoadingCampaignsSelect}
-              searchPlaceholder="Digite 3 caracteres para pesquisar campanha"
-            />
-          </InputGroup>
-        ) : null}
-
-        {isUserProfileType ? (
-          <InputGroup>
-            <Label htmlFor="userId" isRequired>
-              Usuário
-            </Label>
-            <Select
-              hookForm={form}
-              name="userId"
-              initialOptions={userOptions}
-              title="Selecione o usuário"
-              error={errors.userId?.message}
-              searchInput
-              onChangeInputSearch={onSearchUsers}
-              disabled={isSubmitting || isLoading || isLoadingUsersSelect}
-              isLoading={isLoadingUsersSelect}
-              searchPlaceholder="Digite 3 caracteres para pesquisar usuário"
-            />
-          </InputGroup>
-        ) : null}
-
         <InputGroup className="basis-full">
+          <Label htmlFor="content" isRequired>
+            Conteúdo da imagem
+          </Label>
           <ControlledImageInput
             hookForm={form}
             name="content"
-            label="Conteúdo da imagem *"
             previewValue={toImageSource(dataEdit?.url)}
             disabled={isSubmitting || isLoading}
             error={errors.content?.message}
