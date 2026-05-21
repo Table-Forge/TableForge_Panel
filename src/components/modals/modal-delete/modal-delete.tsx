@@ -1,5 +1,6 @@
 import { Button } from "@/src/components/button/button";
 import { useBoundStore } from "@/src/store/use-bound-store";
+import { useState } from "react";
 import type { IModalDelete } from "./modal-delete.interface";
 
 export function ModalDelete<TID extends number | string>({
@@ -8,6 +9,14 @@ export function ModalDelete<TID extends number | string>({
   deleteMutation,
 }: IModalDelete<TID>) {
   const closeModal = useBoundStore((state) => state.closeModal);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = () => {
+    setIsDeleting(true);
+    deleteMutation.mutate(id, {
+      onSettled: () => setIsDeleting(false),
+    });
+  };
 
   return (
     <>
@@ -18,16 +27,16 @@ export function ModalDelete<TID extends number | string>({
       </div>
 
       <div className="flex w-full items-center justify-end gap-2">
-        <Button type="button" onClick={closeModal}>
+        <Button type="button" onClick={closeModal} disabled={isDeleting}>
           Cancelar
         </Button>
 
         <Button
           type="button"
-          onClick={() => deleteMutation.mutate(id)}
+          onClick={handleDelete}
           buttonStyle="danger"
-          isLoading={deleteMutation.isPending}
-          disabled={deleteMutation.isPending}
+          isLoading={isDeleting}
+          disabled={isDeleting}
         >
           Excluir
         </Button>
