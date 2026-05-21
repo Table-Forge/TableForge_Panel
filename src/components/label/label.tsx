@@ -1,8 +1,10 @@
 import React from "react";
+import { Info } from "@/src/components/info/info";
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   spaced?: boolean;
   isRequired?: boolean;
+  infoText?: string;
 }
 
 export const Label: React.FC<LabelProps> = ({
@@ -10,6 +12,7 @@ export const Label: React.FC<LabelProps> = ({
   htmlFor,
   spaced,
   isRequired = false,
+  infoText,
   className,
   ...props
 }) => {
@@ -23,6 +26,7 @@ export const Label: React.FC<LabelProps> = ({
     >
       {children}
       {isRequired ? <span className="text-danger">*</span> : null}
+      {infoText ? <Info text={infoText} /> : null}
     </label>
   );
 };
