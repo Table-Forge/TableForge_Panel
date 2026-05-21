@@ -9,7 +9,7 @@ import { useGameSystemById } from "@/src/features/game-systems/hooks/use-game-sy
 import { useGameSystemsMutation } from "@/src/features/game-systems/hooks/use-game-systems-mutations";
 import { type IGameSystem } from "@/src/features/game-systems/schemas/game-system.schema";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
-import { ImageService } from "@/src/features/images/services/images.services";
+import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
@@ -25,6 +25,8 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
   const { data: dataEdit, isLoading } = useGameSystemById(data?.id);
   const { createOrUpdate, isPending } = useGameSystemsMutation();
+  const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
+    useImagesMutation();
 
   const defaultValues = useMemo<IGameSystemForm>(
     () => ({
@@ -70,20 +72,20 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
 
     if (isImageDataUrl(_imageContent)) {
       try {
-        const imageResponse = await ImageService.create({
-          type: "GameSystem",
+        const imagePayload = {
+          type: "GameSystem" as const,
           name: `${gameSystemValues.name || "sistema"}-imagem`,
           content: _imageContent ?? "",
-        });
+        };
 
-        const uploadedImageId = getImageIdFromResponse(imageResponse);
+        const imageResponse = await createOrUpdateImage(imagePayload);
 
-        if (!uploadedImageId) {
+        if (!imageResponse.id) {
           addToast("error", "Não foi possível identificar a imagem enviada.");
           return;
         }
 
-        imageId = uploadedImageId;
+        imageId = Number(imageResponse.id);
       } catch {
         addToast("error", "Não foi possível enviar a imagem do sistema.");
         return;
@@ -140,7 +142,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           hookForm={form}
           name="imageContent"
           previewValue={selectedImageSource}
-          disabled={isLoading || isPending}
+          disabled={isLoading || isPending || isLoadingImage}
           onClearImage={() => {
             setValue("imageId", 0, {
               shouldDirty: true,
@@ -150,7 +152,9 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           }}
           existingImagePicker={{
             imageType: "GameSystem",
-            selectedImageId: selectedImageId ? Number(selectedImageId) : undefined,
+            selectedImageId: selectedImageId
+              ? Number(selectedImageId)
+              : undefined,
             emptyMessage: "Nenhuma imagem encontrada.",
             onSelect: (image) => {
               if (!image.id) return;
@@ -176,8 +180,8 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
         </Button>
         <Button
           type="submit"
-          isLoading={isPending}
-          disabled={!isDirty || isLoading || isPending}
+          isLoading={isPending || isLoadingImage}
+          disabled={!isDirty || isLoading || isPending || isLoadingImage}
         >
           {data?.id ? "Salvar alterações" : "Criar sistema"}
         </Button>
@@ -185,19 +189,3 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     </form>
   );
 };
-
-function getImageIdFromResponse(response: unknown) {
-  if (typeof response === "number") return response;
-
-  if (typeof response === "string") {
-    const parsed = Number(response);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-
-  if (response && typeof response === "object" && "id" in response) {
-    const parsed = Number((response as { id?: unknown }).id);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-
-  return undefined;
-}

@@ -15,10 +15,10 @@ import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
-import { ImageService } from "@/src/features/images/services/images.services";
+import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 type ICampaignForm = Partial<ICampaign> & {
@@ -41,8 +41,8 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
   const { data: dataEdit, isLoading } = useCampaignById(data?.id);
   const { createOrUpdate, isPending } = useCampaignsMutation();
-
-  const [isUploadingBanner, setIsUploadingBanner] = useState(false);
+  const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
+    useImagesMutation();
 
   const defaultValues = useMemo<ICampaignForm>(
     () => ({
@@ -96,26 +96,23 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
 
     if (isImageDataUrl(_bannerContent)) {
       try {
-        setIsUploadingBanner(true);
-        const imageResponse = await ImageService.create({
-          type: "CampaignBanner",
+        const imagePayload = {
+          type: "CampaignBanner" as const,
           name: `${campaignValues.title || "campanha"}-banner`,
           content: _bannerContent ?? "",
-        });
+        };
 
-        const uploadedBannerId = getImageIdFromResponse(imageResponse);
+        const imageResponse = await createOrUpdateImage(imagePayload);
 
-        if (!uploadedBannerId) {
+        if (!imageResponse.id) {
           addToast("error", "Não foi possível identificar o banner enviado.");
           return;
         }
 
-        bannerId = uploadedBannerId;
+        bannerId = Number(imageResponse.id);
       } catch {
         addToast("error", "Não foi possível enviar o banner da campanha.");
         return;
-      } finally {
-        setIsUploadingBanner(false);
       }
     }
 
@@ -139,7 +136,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     createOrUpdate(payload);
   });
 
-  const isSubmitting = isPending || isUploadingBanner;
+  const isSubmitting = isPending || isLoadingImage;
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -341,19 +338,3 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     </form>
   );
 };
-
-function getImageIdFromResponse(response: unknown) {
-  if (typeof response === "number") return response;
-
-  if (typeof response === "string") {
-    const parsed = Number(response);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-
-  if (response && typeof response === "object" && "id" in response) {
-    const parsed = Number((response as { id?: unknown }).id);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-
-  return undefined;
-}
