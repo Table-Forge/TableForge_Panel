@@ -1,24 +1,27 @@
+import { Button } from "@/src/components/button/button";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { useId, useRef } from "react";
 import { toImageSource } from "@/src/utils/image";
 import type { IImageInput } from "./image-input.interfaces";
 
 export const ImageInput: React.FC<IImageInput> = ({
-  label = "Imagem",
+  inputId,
   value,
   disabled,
+  canChangeImage = true,
   error,
   onChange,
   onClear,
   extraActions,
 }) => {
-  const inputId = useId();
+  const fallbackInputId = useId();
+  const resolvedInputId = inputId ?? fallbackInputId;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const previewSource = toImageSource(value);
 
   const handleOpenFileSelector = () => {
-    if (disabled) return;
+    if (disabled || !canChangeImage) return;
     inputRef.current?.click();
   };
 
@@ -43,19 +46,14 @@ export const ImageInput: React.FC<IImageInput> = ({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <label
-        htmlFor={inputId}
-        className="text-xs font-bold uppercase tracking-[0.2em] text-grays-100"
-      >
-        {label}
-      </label>
-
       <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-primary/60 p-3">
         <button
           type="button"
           onClick={handleOpenFileSelector}
           disabled={disabled}
-          className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-background/70 transition hover:border-secondary/50 disabled:cursor-not-allowed disabled:opacity-60"
+          className={`group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-background/70 transition disabled:cursor-not-allowed disabled:opacity-60 ${
+            canChangeImage ? "hover:border-secondary/50" : "cursor-default"
+          }`}
         >
           {previewSource ? (
             <img
@@ -74,34 +72,38 @@ export const ImageInput: React.FC<IImageInput> = ({
           </p>
 
           <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={handleOpenFileSelector}
-              disabled={disabled}
-              className="inline-flex items-center rounded-lg border border-secondary/40 bg-secondary/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white transition hover:bg-secondary/25 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {previewSource ? "Trocar imagem" : "Selecionar imagem"}
-            </button>
+            {canChangeImage ? (
+              <Button
+                type="button"
+                onClick={handleOpenFileSelector}
+                disabled={disabled}
+                buttonStyle="soft"
+                size="xs"
+              >
+                {previewSource ? "Trocar imagem" : "Selecionar imagem"}
+              </Button>
+            ) : null}
 
             {previewSource ? (
-              <button
+              <Button
                 type="button"
                 onClick={onClear}
                 disabled={disabled}
-                className="inline-flex items-center gap-1 rounded-lg border border-danger/40 bg-danger/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-danger transition hover:bg-danger/20 disabled:cursor-not-allowed disabled:opacity-60"
+                buttonStyle="softDanger"
+                size="xs"
               >
                 <Trash2 size={14} />
                 Remover
-              </button>
+              </Button>
             ) : null}
 
-            {extraActions}
+            {canChangeImage ? extraActions : null}
           </div>
         </div>
       </div>
 
       <input
-        id={inputId}
+        id={resolvedInputId}
         ref={inputRef}
         type="file"
         accept="image/*"

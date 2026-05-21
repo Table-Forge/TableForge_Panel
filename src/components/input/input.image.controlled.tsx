@@ -1,8 +1,10 @@
+import { Button } from "@/src/components/button/button";
 import { ImageInput } from "@/src/components/image-input/image-input";
 import { ModalExistingImagePicker } from "@/src/components/modals/modal-existing-image-picker/modal-existing-image-picker";
 import { useBoundStore } from "@/src/store";
 import { useController, type FieldValues } from "react-hook-form";
 import { isHttpUrl, isImageDataUrl } from "@/src/utils/image";
+import { useEffect, useState } from "react";
 import type { IControlledImageInput } from "./input.intefaces";
 
 export function ControlledImageInput<
@@ -10,9 +12,9 @@ export function ControlledImageInput<
 >({
   hookForm,
   name,
-  label,
   previewValue,
   fallbackPreview,
+  canChangeImage = true,
   onFileNameChange,
   onClearImage,
   existingImagePicker,
@@ -28,34 +30,44 @@ export function ControlledImageInput<
     control: hookForm.control,
   });
   const openModal = useBoundStore((state) => state.openModal);
+  const [ignoreExternalPreview, setIgnoreExternalPreview] = useState(false);
 
   const message = error ?? fieldError?.message;
   const fieldValue = typeof value === "string" ? value.trim() : "";
   const externalPreview = previewValue ?? fallbackPreview;
 
+  useEffect(() => {
+    setIgnoreExternalPreview(false);
+  }, [externalPreview]);
+
   const resolvedValue = fieldValue
     ? isImageDataUrl(fieldValue) || isHttpUrl(fieldValue)
       ? fieldValue
       : externalPreview || fieldValue
-    : externalPreview;
+    : ignoreExternalPreview
+      ? ""
+      : externalPreview;
 
   return (
     <ImageInput
-      label={label}
+      inputId={String(name)}
       value={resolvedValue}
       disabled={props.disabled || isLoading}
+      canChangeImage={canChangeImage}
       error={message}
       onChange={(imageValue) => {
+        setIgnoreExternalPreview(false);
         onChange(imageValue.content);
         onFileNameChange?.(imageValue.name);
       }}
       onClear={() => {
+        setIgnoreExternalPreview(true);
         onChange("");
         onClearImage?.();
       }}
       extraActions={
-        existingImagePicker ? (
-          <button
+        canChangeImage && existingImagePicker ? (
+          <Button
             type="button"
             disabled={props.disabled || isLoading}
             onClick={() =>
@@ -65,10 +77,11 @@ export function ControlledImageInput<
                 "md",
               )
             }
-            className="inline-flex items-center rounded-lg border border-secondary/40 bg-secondary/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white transition hover:bg-secondary/25 disabled:cursor-not-allowed disabled:opacity-60"
+            buttonStyle="soft"
+            size="xs"
           >
             {existingImagePicker.buttonLabel ?? "Usar imagem existente"}
-          </button>
+          </Button>
         ) : null
       }
     />

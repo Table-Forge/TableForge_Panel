@@ -36,6 +36,10 @@ export const Button: React.FC<IButton> = ({
     danger: "bg-danger border-danger text-white hover:brightness-110",
     hollow:
       "bg-transparent border-secondary text-secondary hover:bg-secondary/10",
+    soft:
+      "rounded-lg border-secondary/40 bg-secondary/15 text-white hover:bg-secondary/25",
+    softDanger:
+      "rounded-lg border-danger/40 bg-danger/10 text-danger hover:bg-danger/20",
   };
 
   const interactionStyles =
