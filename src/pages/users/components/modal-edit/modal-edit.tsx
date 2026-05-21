@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 
 export const ModalEdit = ({ data }: { data?: IUser }) => {
   const addToast = useBoundStore((state) => state.addToast);
+  const authUserId = useBoundStore((state) => state.authData?.user?.id);
   const closeModal = useBoundStore((state) => state.closeModal);
 
   const { data: dataEdit, isLoading } = useUserById(data?.id);
@@ -32,6 +33,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
   const { genderEnum, isLoadingGenderEnum } = useUserGenderEnum();
   const isCreateMode = !data?.id;
+  const editingUserId = dataEdit?.id ?? data?.id;
+  const canEditAvatar =
+    isCreateMode ||
+    (authUserId !== undefined &&
+      editingUserId !== undefined &&
+      Number(authUserId) === Number(editingUserId));
 
   const defaultValues = useMemo<IUser>(
     () => ({
@@ -243,10 +250,10 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           hookForm={form}
           name="avatarUrl"
           previewValue={toImageSource(dataEdit?.avatarUrl)}
-          canChangeImage={isCreateMode}
+          canChangeImage={canEditAvatar}
           disabled={isLoading || isPending || isLoadingImage}
           existingImagePicker={
-            isCreateMode
+            canEditAvatar
               ? {
                   imageType: "UserProfile",
                   selectedImageUrl: selectedAvatarSource,
