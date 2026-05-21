@@ -153,7 +153,11 @@ export default function UsersPage() {
 
       <UsersSearchFilters />
 
-      <Table tableContents={tableContents} bodyData={data?.items ?? []} />
+      <Table
+        tableContents={tableContents}
+        bodyData={data?.items ?? []}
+        detailsLink="/users"
+      />
 
       <Paginate
         paginationData={data?.pagination}
