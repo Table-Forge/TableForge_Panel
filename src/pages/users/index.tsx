@@ -24,8 +24,7 @@ export default function UsersPage() {
   const { deleteMutation } = useUsersMutation();
   const { statusEnum } = useUserStatusEnum();
 
-  const { data, isLoading, isError, filters, setFilters } =
-    useAllUsers();
+  const { data, isLoading, isError, filters, setFilters } = useAllUsers();
 
   const getMoreInfoOptions = (item: IUser): IMoreOptions[] => {
     const options = [
@@ -86,7 +85,7 @@ export default function UsersPage() {
       render: (user) => user.username || "-",
     },
     {
-      title: "Apelido",
+      title: "Nickname",
       key: "nickname",
       width: "220px",
       normalCase: true,
@@ -168,6 +167,3 @@ export default function UsersPage() {
     </>
   );
 }
-
-
-

@@ -1,8 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { Resolver } from "react-hook-form";
 import { Button } from "@/src/components/button/button";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
+import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { USER_TYPE_OPTIONS } from "@/src/constants/select-options";
@@ -10,7 +14,7 @@ import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutati
 import { useUserGenderEnum } from "@/src/features/users/hooks/enums/use-user-gender-enum";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
-import { type IUser } from "@/src/features/users/schemas/user.schema";
+import { type IUser, UserSchema } from "@/src/features/users/schemas/user.schema";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
@@ -31,6 +35,8 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
   const defaultValues = useMemo<IUser>(
     () => ({
+      password: "",
+      confirmPassword: "",
       ...(dataEdit ?? data),
     }),
     [data, dataEdit],
@@ -39,6 +45,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const form = useForm<IUser>({
     defaultValues,
     mode: "onChange",
+    resolver: zodResolver(UserSchema) as Resolver<IUser>,
   });
 
   const {
@@ -57,11 +64,14 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   }, [defaultValues, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    const { confirmPassword: _confirmPassword, ...userData } = formData;
     const payload: IUser = {
       ...defaultValues,
-      ...formData,
-      id: dataEdit?.id ?? data?.id ?? formData.id,
+      ...userData,
+      id: dataEdit?.id ?? data?.id ?? userData.id,
     };
+
+    delete payload.confirmPassword;
 
     const avatarContent = formData.avatarUrl ?? "";
 
@@ -73,9 +83,14 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           content: avatarContent,
         };
 
-        const imageUrl = await createOrUpdateImage(imagePayload);
+        const imageResponse = await createOrUpdateImage(imagePayload);
 
-        payload.avatarUrl = imageUrl;
+        if (!imageResponse.url) {
+          addToast("error", "Não foi possível identificar a URL da imagem.");
+          return;
+        }
+
+        payload.avatarUrl = imageResponse.url;
       } catch {
         addToast("error", "Não foi possível enviar a imagem do usuário.");
         return;
@@ -89,8 +104,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     <form onSubmit={onSubmit} className="space-y-4">
       <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="username" isRequired>
-            Usuário
+          <Label
+            htmlFor="username"
+            isRequired
+            infoText="O nome de usuário será usado para login e identificação no sistema."
+          >
+            Nome de Usuário
           </Label>
           <ControlledInput
             hookForm={form}
@@ -103,7 +122,11 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="nickname" isRequired>
+          <Label
+            htmlFor="nickname"
+            isRequired
+            infoText="O nickname é um apelido que pode ser usado para identificação em comunicações."
+          >
             Nickname
           </Label>
           <ControlledInput
@@ -116,7 +139,11 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="email" isRequired>
+          <Label
+            htmlFor="email"
+            isRequired
+            infoText="O e-mail é necessário para comunicação e recuperação de conta. Deve ser único."
+          >
             E-mail
           </Label>
           <ControlledInput
@@ -131,7 +158,55 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         </InputGroup>
       </FieldsWrapper>
 
+      {isCreateMode ? (
+        <FieldsWrapper>
+          <InputGroup>
+            <Label htmlFor="password" isRequired>
+              Senha
+            </Label>
+            <ControlledPasswordInput
+              hookForm={form}
+              name="password"
+              placeholder="Digite a senha"
+              error={errors.password?.message}
+              isLoading={isLoading}
+              removeSpaces
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label htmlFor="confirmPassword" isRequired>
+              Confirmar senha
+            </Label>
+            <ControlledPasswordInput
+              hookForm={form}
+              name="confirmPassword"
+              placeholder="Confirme a senha"
+              error={errors.confirmPassword?.message}
+              isLoading={isLoading}
+              removeSpaces
+            />
+          </InputGroup>
+        </FieldsWrapper>
+      ) : null}
+
       <FieldsWrapper>
+        <InputGroup>
+          <Label htmlFor="birthDate" isRequired={isCreateMode}>
+            Data de nascimento
+          </Label>
+          <DateInput
+            hookForm={form}
+            name="birthDate"
+            placeholder="DD/MM/AAAA"
+            error={errors.birthDate?.message}
+            isLoading={isLoading}
+            disabled={isPending || isLoadingImage}
+            showYearDropdown
+            maxDate={new Date()}
+          />
+        </InputGroup>
+
         <InputGroup>
           <Label htmlFor="gender">Gênero</Label>
           <Select
@@ -163,26 +238,31 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
       </FieldsWrapper>
 
       <InputGroup className="basis-full">
+        <Label htmlFor="avatarUrl">Avatar</Label>
         <ControlledImageInput
           hookForm={form}
           name="avatarUrl"
-          label="Avatar"
           previewValue={toImageSource(dataEdit?.avatarUrl)}
+          canChangeImage={isCreateMode}
           disabled={isLoading || isPending || isLoadingImage}
-          existingImagePicker={{
-            imageType: "UserProfile",
-            selectedImageUrl: selectedAvatarSource,
-            emptyMessage: "Nenhuma imagem de perfil encontrada.",
-            onSelect: (image) => {
-              if (!image.url) return;
+          existingImagePicker={
+            isCreateMode
+              ? {
+                  imageType: "UserProfile",
+                  selectedImageUrl: selectedAvatarSource,
+                  emptyMessage: "Nenhuma imagem de perfil encontrada.",
+                  onSelect: (image) => {
+                    if (!image.url) return;
 
-              setValue("avatarUrl", image.url, {
-                shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true,
-              });
-            },
-          }}
+                    setValue("avatarUrl", image.url, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    });
+                  },
+                }
+              : undefined
+          }
         />
       </InputGroup>
 

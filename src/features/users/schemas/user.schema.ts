@@ -19,11 +19,54 @@ const BaseUserSchema = z.object({
   gender: stringOptional,
   birthDate: dateOptional,
   avatarUrl: stringOptional,
+  password: stringOptional,
+  confirmPassword: stringOptional,
   createdAt: dateOptional,
   status: stringOptional,
 });
 
-export const UserSchema = BaseUserSchema;
+export const UserSchema = BaseUserSchema.superRefine((data, context) => {
+  if (data.id) return;
+
+  const password = data.password?.trim() ?? "";
+  const confirmPassword = data.confirmPassword?.trim() ?? "";
+
+  if (!data.birthDate) {
+    context.addIssue({
+      code: "custom",
+      message: "Campo obrigatório.",
+      path: ["birthDate"],
+    });
+  }
+
+  if (!password) {
+    context.addIssue({
+      code: "custom",
+      message: "Campo obrigatório.",
+      path: ["password"],
+    });
+  } else if (password.length < 6) {
+    context.addIssue({
+      code: "custom",
+      message: "A senha deve ter ao menos 6 caracteres.",
+      path: ["password"],
+    });
+  }
+
+  if (!confirmPassword) {
+    context.addIssue({
+      code: "custom",
+      message: "Campo obrigatório.",
+      path: ["confirmPassword"],
+    });
+  } else if (password !== confirmPassword) {
+    context.addIssue({
+      code: "custom",
+      message: "As senhas devem ser iguais.",
+      path: ["confirmPassword"],
+    });
+  }
+});
 
 export const UserCreateSchema = z
   .object({

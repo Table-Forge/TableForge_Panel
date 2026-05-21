@@ -24,12 +24,12 @@ export const ImageService = {
     return data;
   },
 
-  create: async (payload: IImage): Promise<string> => {
+  create: async (payload: IImage): Promise<IImage> => {
     const { data } = await api.post(ENDPOINT, payload);
     return data;
   },
 
-  update: async (payload: IImage): Promise<string> => {
+  update: async (payload: IImage): Promise<IImage> => {
     const { data } = await api.put(ENDPOINT, payload);
     return data;
   },

@@ -46,7 +46,7 @@ export const useImagesMutation = () => {
     onError: (error: Error) => handleError(error),
   });
 
-  const createOrUpdate = async (data: IImage): Promise<string> => {
+  const createOrUpdate = async (data: IImage): Promise<IImage> => {
     if (data.id) {
       return updateMutation.mutateAsync(data);
     }
