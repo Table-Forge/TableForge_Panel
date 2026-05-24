@@ -2,7 +2,11 @@ import { Button } from "@/src/components/button/button";
 import { ImageInput } from "@/src/components/image-input/image-input";
 import { ModalExistingImagePicker } from "@/src/components/modals/modal-existing-image-picker/modal-existing-image-picker";
 import { useBoundStore } from "@/src/store";
-import { useController, type FieldValues } from "react-hook-form";
+import {
+  useController,
+  type FieldValues,
+  type PathValue,
+} from "react-hook-form";
 import { isHttpUrl, isImageDataUrl } from "@/src/utils/image";
 import { useEffect, useState } from "react";
 import type { IControlledImageInput } from "./input.intefaces";
@@ -62,7 +66,11 @@ export function ControlledImageInput<
       }}
       onClear={() => {
         setIgnoreExternalPreview(true);
-        onChange("");
+        hookForm.setValue(name, "" as PathValue<TFieldValues, typeof name>, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
         onClearImage?.();
       }}
       extraActions={

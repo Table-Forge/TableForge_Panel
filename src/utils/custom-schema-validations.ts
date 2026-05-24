@@ -208,6 +208,11 @@ const stringOptional = z.preprocess((arg) => {
   return value === "" ? undefined : value;
 }, z.string().optional());
 
+const imageUrlOptional = z.preprocess((arg) => {
+  if (arg === null || arg === undefined) return undefined;
+  return String(arg).trim();
+}, z.string().optional());
+
 const dateOptional = z.preprocess((arg) => {
   if (typeof arg === "string" && arg.trim() === "") return undefined;
   if (arg === null || arg === undefined) return undefined;
@@ -234,6 +239,7 @@ export {
   fileListRequired,
   fileRequired,
   fileSchema,
+  imageUrlOptional,
   numberArrayOptional,
   numberArrayRequired,
   numberOptional,

@@ -25,6 +25,8 @@ export const UserService = {
   create: async (data: IUser) => api.post(`${ENDPOINT}`, data),
   update: async (data: IUser) => api.put(`${ENDPOINT}`, data),
   delete: async (id: number) => api.delete(`${ENDPOINT}/${id}`),
+  removeAvatar: async (userId: number) =>
+    api.delete(`${ENDPOINT}/${userId}/avatar/moderate`),
 
   updatePassword: async (params: IUpdatePassword) => {
     const { data } = await api.put(
