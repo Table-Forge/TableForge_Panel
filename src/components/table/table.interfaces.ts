@@ -10,7 +10,6 @@ interface ITableColumn<T> {
   show?: boolean;
   render?: (row: T) => ReactNode;
   normalCase?: boolean;
-  type?: "critical";
 }
 
 interface ITable<T extends { id?: number | string }> {
