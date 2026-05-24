@@ -2,6 +2,7 @@
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { LogIcon } from "@/src/components/logs-icons/logs-icons";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
 import { useAllLogs } from "@/src/features/logs/hooks/use-all-logs";
 import type { ILog } from "@/src/features/logs/schemas/log.schema";
@@ -9,10 +10,16 @@ import { cleanStringForKey, formatDate } from "@/src/utils/format";
 import { LogsSearchFilters } from "./components/search-filters/search-filters";
 
 export function LogsPage() {
-  const { data, isLoading, isError, filters, setFilters } =
-    useAllLogs();
+  const { data, isLoading, isError, filters, setFilters } = useAllLogs();
 
   const tableContents: ITableColumn<ILog>[] = [
+    {
+      title: "Tipo",
+      key: "type",
+      width: "50px",
+      align: "center",
+      render: (log) => <LogIcon type={log.type} />,
+    },
     {
       title: "ID",
       key: "id",
@@ -29,13 +36,6 @@ export function LogsPage() {
         const createdOn = log.dateCreated ?? log.createdAt;
         return createdOn ? formatDate(createdOn, true) : "-";
       },
-    },
-    {
-      title: "Tipo",
-      key: "type",
-      width: "150px",
-      normalCase: true,
-      render: (log) => log.type || "-",
     },
     {
       title: "Código",
@@ -111,6 +111,3 @@ export function LogsPage() {
     </>
   );
 }
-
-
-
