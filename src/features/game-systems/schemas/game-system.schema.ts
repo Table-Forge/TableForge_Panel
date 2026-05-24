@@ -1,5 +1,6 @@
 import {
   dateOptional,
+  imageUrlOptional,
   numberOptional,
   stringOptional,
   stringRequired,
@@ -11,6 +12,7 @@ export const GameSystemSchema = z.object({
   name: stringRequired,
   description: stringOptional,
   imageId: z.coerce.number().min(0),
+  imageContent: imageUrlOptional,
   createdAt: dateOptional,
   updatedAt: dateOptional,
 });

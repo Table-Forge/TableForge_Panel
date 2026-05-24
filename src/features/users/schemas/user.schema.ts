@@ -3,6 +3,7 @@ import {
   dateRequired,
   emailOptional,
   emailRequired,
+  imageUrlOptional,
   numberOptional,
   numberRequired,
   stringOptional,
@@ -18,7 +19,7 @@ const BaseUserSchema = z.object({
   email: emailOptional,
   gender: stringOptional,
   birthDate: dateOptional,
-  avatarUrl: stringOptional,
+  avatarUrl: imageUrlOptional,
   password: stringOptional,
   confirmPassword: stringOptional,
   createdAt: dateOptional,
@@ -76,7 +77,7 @@ export const UserCreateSchema = z
     email: emailRequired,
     gender: stringOptional,
     birthDate: dateRequired,
-    avatarUrl: stringOptional,
+    avatarUrl: imageUrlOptional,
     password: z
       .string()
       .trim()

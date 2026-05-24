@@ -26,7 +26,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
 
   const { data: dataEdit, isLoading } = useUserById(data?.id);
-  const { createOrUpdate, isPending } = useUsersMutation();
+  const { createOrUpdate, isPending, removeAvatarMutation } = useUsersMutation();
 
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
@@ -81,6 +81,9 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     delete payload.confirmPassword;
 
     const avatarContent = formData.avatarUrl ?? "";
+    const previousAvatar = defaultValues.avatarUrl ?? "";
+    const shouldRemoveAvatar =
+      Boolean(payload.id) && Boolean(previousAvatar) && avatarContent === "";
 
     if (isImageDataUrl(avatarContent)) {
       try {
@@ -100,6 +103,14 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         payload.avatarUrl = imageResponse.url;
       } catch {
         addToast("error", "Não foi possível enviar a imagem do usuário.");
+        return;
+      }
+    }
+
+    if (shouldRemoveAvatar && payload.id) {
+      try {
+        await removeAvatarMutation.mutateAsync(Number(payload.id));
+      } catch {
         return;
       }
     }

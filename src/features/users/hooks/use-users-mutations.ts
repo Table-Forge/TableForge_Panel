@@ -45,6 +45,15 @@ export const useUsersMutation = () => {
     onError: (error: Error) => handleError(error),
   });
 
+  const removeAvatarMutation = useMutation({
+    mutationFn: (userId: number) => UserService.removeAvatar(userId),
+    onSuccess: (_data, userId) => {
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.detail(userId) });
+    },
+    onError: (error: Error) => handleError(error),
+  });
+
   const createOrUpdate = (data: IUser) => {
     if (data.id) {
       return updateMutation.mutate(data);
@@ -67,11 +76,13 @@ export const useUsersMutation = () => {
     createMutation,
     updateMutation,
     deleteMutation,
+    removeAvatarMutation,
     createOrUpdate,
     isPending:
       createMutation.isPending ||
       updateMutation.isPending ||
-      deleteMutation.isPending,
+      deleteMutation.isPending ||
+      removeAvatarMutation.isPending,
 
     updatePasswordMutation,
     isUpdatingPassword: updatePasswordMutation.isPending,

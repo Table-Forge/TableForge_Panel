@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  imageUrlOptional,
   numberOptional,
   stringRequired,
 } from "@/src/utils/custom-schema-validations";
@@ -17,6 +18,7 @@ export const CampaignSchema = z.object({
   locationId: z.coerce.number().min(0),
   bannerId: z.coerce.number().min(0),
   gameSystemId: z.coerce.number().min(0),
+  bannerContent: imageUrlOptional,
 });
 
 export type ICampaign = z.infer<typeof CampaignSchema>;
