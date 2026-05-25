@@ -4,7 +4,9 @@ import { EnvFlag } from "@/src/components/env-flag/env-flag";
 import { ToastContainer } from "@/src/components/toast/toast-container";
 import { AuthProvider } from "@/src/context/auth";
 import { useAuth } from "@/src/context/use-auth";
+import { CampaignDetailsPage } from "@/src/pages/campaigns/details";
 import { CampaignsPage } from "@/src/pages/campaigns";
+import { ClassesPage } from "@/src/pages/classes";
 import { DashboardPage } from "@/src/pages/dashboard";
 import { GameSystemDetailsPage } from "@/src/pages/game-systems/details";
 import { GameSystemsPage } from "@/src/pages/game-systems";
@@ -12,6 +14,7 @@ import ImagesPage from "@/src/pages/images";
 import { LoginPage } from "@/src/pages/login";
 import { LogDetailsPage } from "@/src/pages/logs/details";
 import { LogsPage } from "@/src/pages/logs";
+import { RacesPage } from "@/src/pages/races";
 import { RecoverPasswordPage } from "@/src/pages/recover-password";
 import { UserDetailsPage } from "@/src/pages/users/details";
 import UsersPage from "@/src/pages/users";
@@ -35,8 +38,11 @@ function App() {
             <Route element={<AdminLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="campaigns" element={<CampaignsPage />} />
+              <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
               <Route path="gamesystems" element={<GameSystemsPage />} />
               <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
+              <Route path="classes" element={<ClassesPage />} />
+              <Route path="races" element={<RacesPage />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="users/:id" element={<UserDetailsPage />} />
               <Route path="images" element={<ImagesPage />} />
