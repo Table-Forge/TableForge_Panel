@@ -25,7 +25,7 @@ export const getTextareaClasses = (
   disabled?: boolean,
 ) => {
   const base =
-    "flex min-h-28 max-h-40 w-full min-w-[80px] items-start overflow-hidden rounded-2xl border bg-transparent transition";
+    "relative flex min-h-28 max-h-40 w-full min-w-[80px] items-start overflow-hidden rounded-2xl border bg-transparent transition";
   const border = error
     ? "border-danger focus-within:ring-2 focus-within:ring-danger/20"
     : "border-white/35 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/25";
@@ -39,3 +39,6 @@ export const getTextareaClasses = (
 
 export const textareaInnerClasses =
   "h-32 max-h-40 w-full resize-none overflow-y-auto border-none bg-transparent px-3 py-2.5 text-sm font-medium leading-5 text-white placeholder:font-normal placeholder:text-white/35 focus:outline-none disabled:cursor-not-allowed";
+
+export const textareaCounterClasses =
+  "pointer-events-none absolute bottom-1.5 right-3 text-[10px] font-medium text-grays-100";

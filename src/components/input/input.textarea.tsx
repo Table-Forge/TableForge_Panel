@@ -1,7 +1,17 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import type { ITextarea } from "./input.intefaces";
-import { getTextareaClasses, textareaInnerClasses } from "./input.styles";
+import {
+  getTextareaClasses,
+  textareaCounterClasses,
+  textareaInnerClasses,
+} from "./input.styles";
+
+const getTextareaValueLength = (value: unknown) => {
+  if (value === null || value === undefined) return 0;
+  if (Array.isArray(value)) return value.join("").length;
+  return String(value).length;
+};
 
 export const Textarea = forwardRef<HTMLTextAreaElement, ITextarea>(
   (
@@ -20,6 +30,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, ITextarea>(
     },
     ref,
   ) => {
+    const hasCounter = typeof props.maxLength === "number";
+    const [currentLength, setCurrentLength] = useState(() =>
+      getTextareaValueLength(props.value ?? props.defaultValue),
+    );
+
+    useEffect(() => {
+      if (props.value !== undefined) {
+        setCurrentLength(getTextareaValueLength(props.value));
+      }
+    }, [props.value]);
+
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       let inputValue = event.target.value;
 
@@ -33,6 +54,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, ITextarea>(
         event.target.value = inputValue;
       }
 
+      setCurrentLength(inputValue.length);
       onChange?.(event);
     };
 
@@ -49,9 +71,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, ITextarea>(
               ref={ref}
               disabled={disabled}
               onChange={handleChange}
-              className={`${textareaInnerClasses} ${uppercase ? "uppercase" : ""} ${className ?? ""}`}
+              className={`${textareaInnerClasses} ${hasCounter ? "pb-6" : ""} ${uppercase ? "uppercase" : ""} ${className ?? ""}`}
             />
           )}
+
+          {!isLoading && hasCounter ? (
+            <span className={textareaCounterClasses}>
+              {currentLength}/{props.maxLength} caracteres
+            </span>
+          ) : null}
         </div>
 
         {error ? <ErrorMessage>{error}</ErrorMessage> : null}
