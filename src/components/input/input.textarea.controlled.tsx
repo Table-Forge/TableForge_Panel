@@ -1,7 +1,11 @@
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { useController, type FieldValues } from "react-hook-form";
 import type { IControllerTextarea } from "./input.intefaces";
-import { getTextareaClasses, textareaInnerClasses } from "./input.styles";
+import {
+  getTextareaClasses,
+  textareaCounterClasses,
+  textareaInnerClasses,
+} from "./input.styles";
 
 export function ControlledTextarea<
   TFieldValues extends FieldValues = FieldValues,
@@ -22,6 +26,8 @@ export function ControlledTextarea<
     name,
     control: hookForm.control,
   });
+  const hasCounter = typeof props.maxLength === "number";
+  const currentLength = String(value ?? "").length;
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     let inputValue = event.target.value;
@@ -56,9 +62,15 @@ export function ControlledTextarea<
             value={(value ?? "") as string}
             onChange={handleChange}
             onBlur={onBlur}
-            className={`${textareaInnerClasses} ${uppercase ? "uppercase" : ""} ${props.className ?? ""}`}
+            className={`${textareaInnerClasses} ${hasCounter ? "pb-6" : ""} ${uppercase ? "uppercase" : ""} ${props.className ?? ""}`}
           />
         )}
+
+        {!isLoading && hasCounter ? (
+          <span className={textareaCounterClasses}>
+            {currentLength}/{props.maxLength} caracteres
+          </span>
+        ) : null}
       </div>
       {error?.message ? <ErrorMessage>{error.message}</ErrorMessage> : null}
     </div>
