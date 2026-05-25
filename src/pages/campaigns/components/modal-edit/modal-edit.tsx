@@ -23,7 +23,7 @@ import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
-type ICampaignForm = Partial<ICampaign> & {
+type ICampaignForm = Omit<Partial<ICampaign>, "latitude" | "longitude"> & {
   title: string;
   description: string;
   difficulty: string;
