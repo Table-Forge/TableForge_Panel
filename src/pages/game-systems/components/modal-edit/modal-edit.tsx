@@ -8,7 +8,6 @@ import { Label } from "@/src/components/label/label";
 import { useGameSystemById } from "@/src/features/game-systems/hooks/use-game-system-by-id";
 import { useGameSystemsMutation } from "@/src/features/game-systems/hooks/use-game-systems-mutations";
 import { type IGameSystem } from "@/src/features/game-systems/schemas/game-system.schema";
-import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
@@ -32,7 +31,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     () => ({
       name: "",
       description: "",
-      imageId: 0,
+      imageId: undefined,
       imageContent: "",
       ...(dataEdit ?? data),
     }),
@@ -52,14 +51,10 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     formState: { errors, isDirty },
   } = form;
 
-  const selectedImageId = useWatch({ control, name: "imageId" });
   const currentImageContent = useWatch({ control, name: "imageContent" });
-  const { data: currentImage } = useImageById(
-    selectedImageId ? Number(selectedImageId) : undefined,
-  );
 
   const selectedImageSource = toImageSource(
-    currentImage?.url || currentImageContent,
+    currentImageContent || dataEdit?.imageUrl || data?.imageUrl,
   );
 
   useEffect(() => {
@@ -68,7 +63,9 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
 
   const onSubmit = handleSubmit(async (values) => {
     const { imageContent: _imageContent, ...gameSystemValues } = values;
-    let imageId = Number(gameSystemValues.imageId ?? 0);
+    let imageId = gameSystemValues.imageId
+      ? Number(gameSystemValues.imageId)
+      : undefined;
 
     if (isImageDataUrl(_imageContent)) {
       try {
@@ -100,6 +97,9 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     };
 
     delete (payload as IGameSystem & { imageContent?: string }).imageContent;
+    delete (payload as IGameSystem & { imageUrl?: string }).imageUrl;
+    delete (payload as IGameSystem & { createdAt?: Date }).createdAt;
+    delete (payload as IGameSystem & { updatedAt?: Date }).updatedAt;
 
     if (!payload.id) {
       delete (payload as { id?: number }).id;
@@ -133,6 +133,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           placeholder="Descrição do sistema de jogo"
           error={errors.description?.message}
           isLoading={isLoading}
+          maxLength={200}
         />
       </InputGroup>
 
@@ -144,32 +145,11 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           previewValue={selectedImageSource}
           disabled={isLoading || isPending || isLoadingImage}
           onClearImage={() => {
-            setValue("imageId", 0, {
+            setValue("imageId", undefined, {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true,
             });
-          }}
-          existingImagePicker={{
-            imageType: "GameSystem",
-            selectedImageId: selectedImageId
-              ? Number(selectedImageId)
-              : undefined,
-            emptyMessage: "Nenhuma imagem encontrada.",
-            onSelect: (image) => {
-              if (!image.id) return;
-
-              setValue("imageId", Number(image.id), {
-                shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true,
-              });
-              setValue("imageContent", image.url ?? "", {
-                shouldDirty: false,
-                shouldTouch: false,
-                shouldValidate: false,
-              });
-            },
           }}
         />
       </InputGroup>

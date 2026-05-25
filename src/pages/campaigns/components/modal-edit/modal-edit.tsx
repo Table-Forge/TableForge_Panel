@@ -6,6 +6,7 @@ import { ControlledInput } from "@/src/components/input/input.default.controlled
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
 import { Label } from "@/src/components/label/label";
+import { ControlledLocationAutocomplete } from "@/src/components/location-autocomplete/location-autocomplete.controlled";
 import { Select } from "@/src/components/select/select";
 import {
   CAMPAIGN_DIFFICULTY_OPTIONS,
@@ -14,8 +15,9 @@ import {
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
-import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
+import { useGameSystemsSelect } from "@/src/features/game-systems/hooks/use-game-systems-select";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
+import { useUsersSelect } from "@/src/features/users/hooks/use-users-select";
 import { useBoundStore } from "@/src/store";
 import { isImageDataUrl, toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
@@ -30,37 +32,51 @@ type ICampaignForm = Partial<ICampaign> & {
   isPrivate: boolean;
   isChatEnabled: boolean;
   creatorId: number;
-  locationId: number;
-  bannerId: number;
-  gameSystemId: number;
+  locationName?: string;
+  address?: string;
+  latitude?: number | string;
+  longitude?: number | string;
+  creationLatitude?: number;
+  creationLongitude?: number;
+  bannerId?: number;
+  gameSystemId?: number;
   bannerContent?: string;
 };
 
 export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const addToast = useBoundStore((state) => state.addToast);
+  const authUserId = useBoundStore((state) => state.authData?.user?.id);
   const closeModal = useBoundStore((state) => state.closeModal);
   const { data: dataEdit, isLoading } = useCampaignById(data?.id);
   const { createOrUpdate, isPending } = useCampaignsMutation();
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
+  const { userOptions, isLoadingUsersSelect, onSearchUsers } = useUsersSelect();
+  const { gameSystemOptions, isLoadingGameSystemsSelect } =
+    useGameSystemsSelect();
 
   const defaultValues = useMemo<ICampaignForm>(
     () => ({
       title: "",
       description: "",
-      difficulty: "None",
-      playersLimit: 0,
-      status: "None",
+      difficulty: "Low",
+      playersLimit: 1,
+      status: "Draft",
       isPrivate: false,
       isChatEnabled: true,
-      creatorId: 0,
-      locationId: 0,
-      bannerId: 0,
-      gameSystemId: 0,
+      creatorId: Number(authUserId ?? 0),
+      locationName: "",
+      address: "",
+      latitude: "",
+      longitude: "",
+      creationLatitude: undefined,
+      creationLongitude: undefined,
+      bannerId: undefined,
+      gameSystemId: undefined,
       bannerContent: "",
       ...(dataEdit ?? data),
     }),
-    [data, dataEdit],
+    [authUserId, data, dataEdit],
   );
 
   const form = useForm<ICampaignForm>({
@@ -76,14 +92,13 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     formState: { errors, isDirty },
   } = form;
 
-  const selectedBannerId = useWatch({ control, name: "bannerId" });
   const currentBannerContent = useWatch({ control, name: "bannerContent" });
-  const { data: currentBanner } = useImageById(
-    selectedBannerId ? Number(selectedBannerId) : undefined,
-  );
+  const currentAddress = useWatch({ control, name: "address" });
+  const currentLatitude = useWatch({ control, name: "latitude" });
+  const currentLongitude = useWatch({ control, name: "longitude" });
 
   const selectedBannerSource = toImageSource(
-    currentBanner?.url || currentBannerContent,
+    currentBannerContent || dataEdit?.bannerUrl || data?.bannerUrl,
   );
 
   useEffect(() => {
@@ -92,7 +107,32 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
 
   const onSubmit = handleSubmit(async (values) => {
     const { bannerContent: _bannerContent, ...campaignValues } = values;
-    let bannerId = Number(campaignValues.bannerId ?? 0);
+    const hasSelectedLocation =
+      Boolean(campaignValues.locationName?.trim()) &&
+      Boolean(campaignValues.address?.trim()) &&
+      Number.isFinite(Number(campaignValues.latitude)) &&
+      Number.isFinite(Number(campaignValues.longitude));
+
+    if (!hasSelectedLocation) {
+      addToast("error", "Selecione uma sugestão de localização válida.");
+      return;
+    }
+
+    let currentLocation: GeolocationPosition;
+
+    try {
+      currentLocation = await getCurrentLocation();
+    } catch {
+      addToast(
+        "error",
+        "Permita o acesso à localização para criar a campanha.",
+      );
+      return;
+    }
+
+    let bannerId = campaignValues.bannerId
+      ? Number(campaignValues.bannerId)
+      : undefined;
 
     if (isImageDataUrl(_bannerContent)) {
       try {
@@ -121,13 +161,23 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       ...campaignValues,
       playersLimit: Number(campaignValues.playersLimit ?? 0),
       creatorId: Number(campaignValues.creatorId ?? 0),
-      locationId: Number(campaignValues.locationId ?? 0),
+      latitude: Number(campaignValues.latitude),
+      longitude: Number(campaignValues.longitude),
+      creationLatitude: currentLocation.coords.latitude,
+      creationLongitude: currentLocation.coords.longitude,
       bannerId,
-      gameSystemId: Number(campaignValues.gameSystemId ?? 0),
+      gameSystemId: campaignValues.gameSystemId
+        ? Number(campaignValues.gameSystemId)
+        : undefined,
       id: dataEdit?.id ?? data?.id ?? values.id,
     };
 
     delete (payload as ICampaign & { bannerContent?: string }).bannerContent;
+    delete (payload as ICampaign & { bannerUrl?: string }).bannerUrl;
+    delete (payload as ICampaign & { creatorUsername?: string }).creatorUsername;
+    delete (payload as ICampaign & { gameSystemName?: string }).gameSystemName;
+    delete (payload as ICampaign & { createdAt?: Date }).createdAt;
+    delete (payload as ICampaign & { updatedAt?: Date }).updatedAt;
 
     if (!payload.id) {
       delete (payload as { id?: number }).id;
@@ -137,6 +187,11 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   });
 
   const isSubmitting = isPending || isLoadingImage;
+  const locationSelectionError =
+    Boolean(currentAddress || currentLatitude || currentLongitude) &&
+    (!currentAddress ||
+      !Number.isFinite(Number(currentLatitude)) ||
+      !Number.isFinite(Number(currentLongitude)));
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -196,9 +251,9 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
             hookForm={form}
             name="playersLimit"
             type="number"
-            min={0}
+            min={1}
             step={1}
-            placeholder="0"
+            placeholder="1"
             disabled={isLoading || isSubmitting}
           />
         </InputGroup>
@@ -207,54 +262,77 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       <FieldsWrapper>
         <InputGroup>
           <Label htmlFor="creatorId" isRequired>
-            ID do criador
+            Criador
           </Label>
-          <ControlledInput
+          <Select
             hookForm={form}
             name="creatorId"
-            type="number"
-            min={0}
-            step={1}
-            placeholder="0"
+            initialOptions={userOptions}
+            title="Selecione o criador"
+            error={errors.creatorId?.message}
+            searchInput
+            searchPlaceholder="Buscar usuário"
+            onChangeInputSearch={onSearchUsers}
+            isLoading={isLoadingUsersSelect}
             disabled={isLoading || isSubmitting}
           />
         </InputGroup>
 
-        <InputGroup>
-          <Label htmlFor="locationId" isRequired>
-            ID da localização
+        <InputGroup className="basis-full">
+          <Label htmlFor="locationName" isRequired>
+            Localização
           </Label>
-          <ControlledInput
+          <ControlledLocationAutocomplete
             hookForm={form}
-            name="locationId"
-            type="number"
-            min={0}
-            step={1}
-            placeholder="0"
+            name="locationName"
+            hasSelectionError={locationSelectionError}
             disabled={isLoading || isSubmitting}
+            onClearSelection={() => {
+              setValue("address", "", { shouldValidate: false });
+              setValue("latitude", "", { shouldValidate: false });
+              setValue("longitude", "", { shouldValidate: false });
+            }}
+            onSelectLocation={(location) => {
+              setValue("address", location.address, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("latitude", location.latitude, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("longitude", location.longitude, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+            }}
           />
         </InputGroup>
       </FieldsWrapper>
 
       <FieldsWrapper>
         <InputGroup>
-          <Label htmlFor="gameSystemId" isRequired>
-            ID do sistema de jogo
+          <Label htmlFor="gameSystemId">
+            Sistema de jogo
           </Label>
-          <ControlledInput
+          <Select
             hookForm={form}
             name="gameSystemId"
-            type="number"
-            min={0}
-            step={1}
-            placeholder="0"
+            initialOptions={gameSystemOptions}
+            title="Selecione o sistema de jogo"
+            error={errors.gameSystemId?.message}
+            searchInput
+            isLoading={isLoadingGameSystemsSelect}
             disabled={isLoading || isSubmitting}
           />
         </InputGroup>
       </FieldsWrapper>
 
       <InputGroup className="basis-full">
-        <Label htmlFor="description" isRequired>
+        <Label htmlFor="description">
           Descrição
         </Label>
         <ControlledTextarea
@@ -263,6 +341,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           placeholder="Descrição da campanha"
           error={errors.description?.message}
           isLoading={isLoading}
+          maxLength={200}
         />
       </InputGroup>
 
@@ -274,34 +353,11 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           previewValue={selectedBannerSource}
           disabled={isLoading || isSubmitting}
           onClearImage={() => {
-            setValue("bannerId", 0, {
+            setValue("bannerId", undefined, {
               shouldDirty: true,
               shouldTouch: true,
               shouldValidate: true,
             });
-          }}
-          existingImagePicker={{
-            imageType: "CampaignBanner",
-            selectedImageId: selectedBannerId
-              ? Number(selectedBannerId)
-              : undefined,
-            title: "Selecionar banner existente",
-            searchPlaceholder: "Buscar banner por nome",
-            emptyMessage: "Nenhum banner encontrado.",
-            onSelect: (image) => {
-              if (!image.id) return;
-
-              setValue("bannerId", Number(image.id), {
-                shouldDirty: true,
-                shouldTouch: true,
-                shouldValidate: true,
-              });
-              setValue("bannerContent", image.url ?? "", {
-                shouldDirty: false,
-                shouldTouch: false,
-                shouldValidate: false,
-              });
-            },
           }}
         />
       </InputGroup>
@@ -338,3 +394,14 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     </form>
   );
 };
+
+function getCurrentLocation() {
+  return new Promise<GeolocationPosition>((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocalização indisponível."));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}

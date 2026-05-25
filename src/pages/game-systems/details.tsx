@@ -10,7 +10,6 @@ import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useGameSystemById } from "@/src/features/game-systems/hooks/use-game-system-by-id";
-import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { formatDate } from "@/src/utils/format";
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,7 +24,6 @@ export function GameSystemDetailsPage() {
   }, [id]);
 
   const { data, isLoading, isError } = useGameSystemById(gameSystemId);
-  const { data: image } = useImageById(data?.imageId);
 
   if (isLoading) return <SkeletonTable />;
   if (isError || !data) return <InfoNotFound />;
@@ -88,12 +86,12 @@ export function GameSystemDetailsPage() {
       </CardBox>
 
       <CardBox title="Imagem">
-        {image?.url ? (
+        {data.imageUrl ? (
           <Thumbnail
-            image={image}
+            image={data.imageUrl}
             width={200}
             height={150}
-            alt={image.name || data.name || "Imagem"}
+            alt={data.name || "Imagem"}
           />
         ) : (
           <CardValue className="mt-1 block break-all">
