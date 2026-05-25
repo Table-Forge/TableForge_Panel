@@ -22,6 +22,8 @@ export const ImageSchema = z.object({
   createdAt: dateOptional,
   updatedAt: dateOptional,
   url: stringOptional,
+  status: stringOptional,
+  version: numberOptional,
 });
 
 export type IImage = z.infer<typeof ImageSchema>;

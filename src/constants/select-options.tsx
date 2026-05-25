@@ -18,11 +18,17 @@ export const USER_TYPE_OPTIONS: TSelectOptions[] = [
 ];
 
 export const CAMPAIGN_DIFFICULTY_OPTIONS: TSelectOptions[] = [
-  { value: "None", name: "Nenhuma" },
+  { value: "Low", name: "Baixo" },
+  { value: "Medium", name: "Moderado" },
+  { value: "High", name: "Alto" },
+  { value: "Insane", name: "Insano" },
 ];
 
 export const CAMPAIGN_STATUS_OPTIONS: TSelectOptions[] = [
-  { value: "None", name: "Nenhum" },
+  { value: "Draft", name: "Rascunho" },
+  { value: "Active", name: "Ativo" },
+  { value: "Frozen", name: "Congelado" },
+  { value: "Closed", name: "Fechado" },
 ];
 
 export const PAGE_SIZE: TSelectOptions<number>[] = [

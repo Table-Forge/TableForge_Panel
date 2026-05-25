@@ -10,12 +10,8 @@ import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useAllCampaigns } from "@/src/features/campaigns/hooks/use-all-campaigns";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import type { ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
-import { IMAGE_KEYS } from "@/src/features/images/hooks/query-key";
-import { ImageService } from "@/src/features/images/services/images.services";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
-import { useQueries } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { CampaignsSearchFilters } from "./components/search-filters/search-filters";
@@ -26,32 +22,6 @@ export function CampaignsPage() {
 
   const { data, isLoading, isError, filters, setFilters } =
     useAllCampaigns();
-
-  const bannerIds = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          (data?.items ?? [])
-            .map((campaign) => campaign.bannerId)
-            .filter((bannerId) => Boolean(bannerId)),
-        ),
-      ),
-    [data?.items],
-  );
-
-  const bannerQueries = useQueries({
-    queries: bannerIds.map((bannerId) => ({
-      queryKey: IMAGE_KEYS.detail(bannerId),
-      queryFn: () => ImageService.getById(bannerId),
-    })),
-  });
-
-  const bannersById = new Map(
-    bannerQueries
-      .map((query) => query.data)
-      .filter((image) => image?.id)
-      .map((image) => [image!.id!, image!]),
-  );
 
   const getMoreInfoOptions = (item: ICampaign): IMoreOptions[] => {
     const options = [
@@ -94,24 +64,18 @@ export function CampaignsPage() {
     },
     {
       title: "Banner",
-      key: "bannerId",
+      key: "bannerUrl",
       width: "100px",
       align: "center",
       normalCase: true,
-      render: (campaign) => {
-        const image = campaign.bannerId
-          ? bannersById.get(campaign.bannerId)
-          : undefined;
-
-        return (
-          <Thumbnail
-            image={image}
-            width={40}
-            height={40}
-            alt={image?.name || campaign.title || "Banner"}
-          />
-        );
-      },
+      render: (campaign) => (
+        <Thumbnail
+          image={campaign.bannerUrl}
+          width={40}
+          height={40}
+          alt={campaign.title || "Banner"}
+        />
+      ),
     },
     {
       title: "Título",
@@ -119,6 +83,13 @@ export function CampaignsPage() {
       width: "220px",
       normalCase: true,
       render: (campaign) => campaign.title || "-",
+    },
+    {
+      title: "Sistema",
+      key: "gameSystemName",
+      width: "180px",
+      normalCase: true,
+      render: (campaign) => campaign.gameSystemName || "-",
     },
     {
       title: "Status",
@@ -148,14 +119,6 @@ export function CampaignsPage() {
       align: "center",
       normalCase: true,
       render: (campaign) => (campaign.isPrivate ? "Sim" : "Não"),
-    },
-    {
-      title: "Chat",
-      key: "isChatEnabled",
-      width: "110px",
-      align: "center",
-      normalCase: true,
-      render: (campaign) => (campaign.isChatEnabled ? "Sim" : "Não"),
     },
     {
       title: "Descrição",
@@ -210,6 +173,7 @@ export function CampaignsPage() {
         tableContents={tableContents}
         bodyData={data?.items ?? []}
         bodyHeight="100%"
+        detailsLink="/campaigns"
       />
 
       <Paginate
