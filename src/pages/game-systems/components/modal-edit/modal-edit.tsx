@@ -133,7 +133,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
           placeholder="Descrição do sistema de jogo"
           error={errors.description?.message}
           isLoading={isLoading}
-          maxLength={200}
+          maxLength={500}
         />
       </InputGroup>
 

@@ -86,7 +86,7 @@ export const ModalEdit = ({ data }: { data?: IClass }) => {
           placeholder="Descrição da classe"
           error={errors.description?.message}
           isLoading={isLoading}
-          maxLength={200}
+          maxLength={500}
         />
       </InputGroup>
 

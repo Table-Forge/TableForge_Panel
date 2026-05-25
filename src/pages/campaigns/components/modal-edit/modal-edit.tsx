@@ -341,7 +341,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           placeholder="Descrição da campanha"
           error={errors.description?.message}
           isLoading={isLoading}
-          maxLength={200}
+          maxLength={500}
         />
       </InputGroup>
 
