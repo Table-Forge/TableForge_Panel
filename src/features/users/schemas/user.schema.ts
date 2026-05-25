@@ -23,6 +23,8 @@ const BaseUserSchema = z.object({
   password: stringOptional,
   confirmPassword: stringOptional,
   createdAt: dateOptional,
+  updatedAt: dateOptional,
+  lastAccess: dateOptional,
   status: stringOptional,
 });
 

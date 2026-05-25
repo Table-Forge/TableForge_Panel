@@ -1,7 +1,4 @@
-import { Button } from "@/src/components/button/button";
 import { ImageInput } from "@/src/components/image-input/image-input";
-import { ModalExistingImagePicker } from "@/src/components/modals/modal-existing-image-picker/modal-existing-image-picker";
-import { useBoundStore } from "@/src/store";
 import {
   useController,
   type FieldValues,
@@ -21,7 +18,6 @@ export function ControlledImageInput<
   canChangeImage = true,
   onFileNameChange,
   onClearImage,
-  existingImagePicker,
   error,
   isLoading,
   ...props
@@ -33,7 +29,6 @@ export function ControlledImageInput<
     name,
     control: hookForm.control,
   });
-  const openModal = useBoundStore((state) => state.openModal);
   const [ignoreExternalPreview, setIgnoreExternalPreview] = useState(false);
 
   const message = error ?? fieldError?.message;
@@ -73,25 +68,6 @@ export function ControlledImageInput<
         });
         onClearImage?.();
       }}
-      extraActions={
-        canChangeImage && existingImagePicker ? (
-          <Button
-            type="button"
-            disabled={props.disabled || isLoading}
-            onClick={() =>
-              openModal(
-                existingImagePicker.title ?? "Selecionar imagem existente",
-                <ModalExistingImagePicker {...existingImagePicker} />,
-                "md",
-              )
-            }
-            buttonStyle="soft"
-            size="xs"
-          >
-            {existingImagePicker.buttonLabel ?? "Usar imagem existente"}
-          </Button>
-        ) : null
-      }
     />
   );
 }

@@ -26,7 +26,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
 
   const { data: dataEdit, isLoading } = useUserById(data?.id);
-  const { createOrUpdate, isPending, removeAvatarMutation } = useUsersMutation();
+  const {
+    createOrUpdate,
+    isPending,
+    removeAvatarMutation,
+    updateAvatarMutation,
+  } = useUsersMutation();
 
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
@@ -58,13 +63,8 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const {
     handleSubmit,
     reset,
-    setValue,
-    watch,
     formState: { errors, isDirty },
   } = form;
-
-  const currentAvatar = watch("avatarUrl");
-  const selectedAvatarSource = toImageSource(currentAvatar);
 
   useEffect(() => {
     reset(defaultValues);
@@ -85,7 +85,18 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     const shouldRemoveAvatar =
       Boolean(payload.id) && Boolean(previousAvatar) && avatarContent === "";
 
-    if (isImageDataUrl(avatarContent)) {
+    if (isImageDataUrl(avatarContent) && payload.id) {
+      try {
+        await updateAvatarMutation.mutateAsync({
+          id: Number(payload.id),
+          content: avatarContent,
+        });
+      } catch {
+        return;
+      }
+
+      delete payload.avatarUrl;
+    } else if (isImageDataUrl(avatarContent)) {
       try {
         const imagePayload = {
           type: "UserProfile" as const,
@@ -105,6 +116,8 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         addToast("error", "Não foi possível enviar a imagem do usuário.");
         return;
       }
+    } else if (payload.id) {
+      delete payload.avatarUrl;
     }
 
     if (shouldRemoveAvatar && payload.id) {
@@ -113,6 +126,14 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
       } catch {
         return;
       }
+    }
+
+    if (payload.id) {
+      delete payload.password;
+      delete payload.type;
+      delete payload.createdAt;
+      delete payload.updatedAt;
+      delete payload.lastAccess;
     }
 
     createOrUpdate(payload);
@@ -263,24 +284,6 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           previewValue={toImageSource(dataEdit?.avatarUrl)}
           canChangeImage={canEditAvatar}
           disabled={isLoading || isPending || isLoadingImage}
-          existingImagePicker={
-            canEditAvatar
-              ? {
-                  imageType: "UserProfile",
-                  selectedImageUrl: selectedAvatarSource,
-                  emptyMessage: "Nenhuma imagem de perfil encontrada.",
-                  onSelect: (image) => {
-                    if (!image.url) return;
-
-                    setValue("avatarUrl", image.url, {
-                      shouldDirty: true,
-                      shouldTouch: true,
-                      shouldValidate: true,
-                    });
-                  },
-                }
-              : undefined
-          }
         />
       </InputGroup>
 
