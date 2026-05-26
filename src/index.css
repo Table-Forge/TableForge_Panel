@@ -72,6 +72,18 @@
     opacity: 1;
   }
 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus {
+    caret-color: var(--color-white);
+    -webkit-text-fill-color: var(--color-white);
+    -webkit-background-clip: text;
+    transition: background-color 999999s ease-in-out 0s;
+  }
+
   .tf-datepicker-popper {
     z-index: 1400 !important;
   }
