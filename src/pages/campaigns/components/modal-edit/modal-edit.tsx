@@ -8,10 +8,8 @@ import { ControlledTextarea } from "@/src/components/input/input.textarea.contro
 import { Label } from "@/src/components/label/label";
 import { ControlledLocationAutocomplete } from "@/src/components/location-autocomplete/location-autocomplete.controlled";
 import { Select } from "@/src/components/select/select";
-import {
-  CAMPAIGN_DIFFICULTY_OPTIONS,
-  CAMPAIGN_STATUS_OPTIONS,
-} from "@/src/constants/select-options";
+import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
+import { useCampaignStatusEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-status-enum";
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
@@ -51,6 +49,10 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const { createOrUpdate, isPending } = useCampaignsMutation();
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } =
     useImagesMutation();
+  const { difficultyLevelEnum, isLoadingDifficultyLevelEnum } =
+    useCampaignDifficultyLevelEnum();
+  const { campaignStatusEnum, isLoadingCampaignStatusEnum } =
+    useCampaignStatusEnum();
   const { userOptions, isLoadingUsersSelect, onSearchUsers } = useUsersSelect();
   const { gameSystemOptions, isLoadingGameSystemsSelect } =
     useGameSystemsSelect();
@@ -216,12 +218,12 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           <Select
             hookForm={form}
             name="difficulty"
-            initialOptions={CAMPAIGN_DIFFICULTY_OPTIONS}
+            initialOptions={difficultyLevelEnum}
             title="Selecione a dificuldade"
             error={errors.difficulty?.message}
             searchInput={false}
-            disabled={isLoading}
-            isLoading={isLoading}
+            disabled={isLoading || isLoadingDifficultyLevelEnum}
+            isLoading={isLoading || isLoadingDifficultyLevelEnum}
           />
         </InputGroup>
       </FieldsWrapper>
@@ -234,12 +236,12 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           <Select
             hookForm={form}
             name="status"
-            initialOptions={CAMPAIGN_STATUS_OPTIONS}
+            initialOptions={campaignStatusEnum}
             title="Selecione o status"
             error={errors.status?.message}
             searchInput={false}
-            disabled={isLoading}
-            isLoading={isLoading}
+            disabled={isLoading || isLoadingCampaignStatusEnum}
+            isLoading={isLoading || isLoadingCampaignStatusEnum}
           />
         </InputGroup>
 

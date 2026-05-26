@@ -15,13 +15,15 @@ import { useBoundStore } from "@/src/store";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { CampaignsSearchFilters } from "./components/search-filters/search-filters";
+import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
 
 export function CampaignsPage() {
   const openModal = useBoundStore((state) => state.openModal);
   const { deleteMutation } = useCampaignsMutation();
 
-  const { data, isLoading, isError, filters, setFilters } =
-    useAllCampaigns();
+  const { data, isLoading, isError, filters, setFilters } = useAllCampaigns();
+
+  const { difficultyLevelEnum } = useCampaignDifficultyLevelEnum();
 
   const getMoreInfoOptions = (item: ICampaign): IMoreOptions[] => {
     const options = [
@@ -103,7 +105,9 @@ export function CampaignsPage() {
       key: "difficulty",
       width: "180px",
       normalCase: true,
-      render: (campaign) => campaign.difficulty || "-",
+      render: (campaign) =>
+        difficultyLevelEnum.find((opt) => opt.value === campaign.difficulty)
+          ?.name || "-",
     },
     {
       title: "Limite",
@@ -188,6 +192,3 @@ export function CampaignsPage() {
     </>
   );
 }
-
-
-

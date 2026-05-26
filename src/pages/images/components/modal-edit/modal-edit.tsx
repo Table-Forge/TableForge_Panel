@@ -5,7 +5,7 @@ import { ControlledInput } from "@/src/components/input/input.default.controlled
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
-import { IMAGE_TYPE_OPTIONS } from "@/src/constants/select-options";
+import { useImageTypeEnum } from "@/src/features/images/hooks/enums/use-image-type-enum";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { type IImage } from "@/src/features/images/schemas/image.schema";
@@ -19,6 +19,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
 
   const { data: dataEdit, isLoading } = useImageById(data?.id);
   const { createMutation, updateMutation } = useImagesMutation();
+  const { imageTypeEnum, isLoadingImageTypeEnum } = useImageTypeEnum();
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   const defaultValues = useMemo<IImage>(
@@ -78,12 +79,12 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           <Select
             hookForm={form}
             name="type"
-            initialOptions={IMAGE_TYPE_OPTIONS}
+            initialOptions={imageTypeEnum}
             title="Selecione o tipo"
             error={errors.type?.message}
             searchInput={false}
-            disabled={isSubmitting || isLoading}
-            isLoading={isSubmitting || isLoading}
+            disabled={isSubmitting || isLoading || isLoadingImageTypeEnum}
+            isLoading={isSubmitting || isLoading || isLoadingImageTypeEnum}
           />
         </InputGroup>
 

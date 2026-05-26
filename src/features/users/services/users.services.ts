@@ -56,4 +56,8 @@ export const UserService = {
     const { data } = await api.get(`${ENDPOINT}/enums/delivery-method`);
     return data;
   },
+  getTypeEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/user-type`);
+    return data;
+  },
 };
