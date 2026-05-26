@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useController, type FieldValues } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import type { IControllerInput } from "./input.intefaces";
 import { getInputClasses, inputInnerClasses } from "./input.styles";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
@@ -50,13 +51,14 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
         </div>
 
         {!isLoading ? (
-          <button
-            type="button"
+          <ButtonIcon
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-grays-100 transition hover:text-tertiary"
+            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            size="28px"
+            className="absolute right-2 top-1/2 -translate-y-1/2 hover:text-tertiary"
           >
             {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-          </button>
+          </ButtonIcon>
         ) : null}
       </div>
 

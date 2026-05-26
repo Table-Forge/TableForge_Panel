@@ -1,5 +1,6 @@
 import { CheckCircle2, Info, TriangleAlert, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import type { ToastProps } from "./toast.interfaces";
 
 const DURATION = 3000;
@@ -83,13 +84,14 @@ export const Toast: React.FC<ToastProps> = ({ id, type, message, onClose }) => {
           </p>
           <p className="text-sm font-semibold text-white">{message}</p>
         </div>
-        <button
+        <ButtonIcon
           onClick={() => onClose(id)}
-          className="text-white/70 transition hover:text-white"
           aria-label="Fechar notificação"
+          size="24px"
+          className="text-white/70 hover:text-white"
         >
           <X size={15} />
-        </button>
+        </ButtonIcon>
       </div>
 
       <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/10">

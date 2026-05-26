@@ -1,5 +1,8 @@
-﻿import { BrandName } from "@/src/components/ui/brand-name";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
+import { BrandName } from "@/src/components/ui/brand-name";
 import {
+  ChevronDown,
+  ChevronUp,
   FileText,
   Gamepad2,
   Image,
@@ -9,6 +12,7 @@ import {
   Sparkles,
   Swords,
 } from "lucide-react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
@@ -23,21 +27,44 @@ const navItems = [
 ];
 
 export function NavMenu() {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   return (
-    <aside className="border-b border-white/10 bg-primary/85 p-5 lg:border-b-0 lg:border-r">
-      <div className="rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5">
+    <aside className="border-b border-white/10 bg-primary/85 p-3 lg:border-b-0 lg:border-r lg:p-5">
+      <div className="flex items-center justify-between gap-3 lg:hidden">
+        <BrandName sizeClassName="text-xl" />
+
+        <ButtonIcon
+          aria-expanded={isMobileOpen}
+          aria-label={isMobileOpen ? "Recolher menu" : "Expandir menu"}
+          onClick={() => setIsMobileOpen((current) => !current)}
+          hasHoverEffect
+          isHighlighted
+          size="40px"
+          className="border border-secondary/25 text-white hover:border-secondary/45"
+        >
+          {isMobileOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </ButtonIcon>
+      </div>
+
+      <div
+        className={`${isMobileOpen ? "mt-3 block" : "hidden"} rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5 lg:mt-0 lg:block`}
+      >
         <BrandName sizeClassName="text-2xl" className="text-center" />
         <p className="mt-2 text-center text-xs text-grays-100">
           Painel administrativo do TableForge
         </p>
       </div>
 
-      <nav className="mt-6 flex flex-col gap-2">
+      <nav
+        className={`${isMobileOpen ? "mt-3 flex" : "hidden"} flex-col gap-2 lg:mt-6 lg:flex`}
+      >
         {navItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
+            onClick={() => setIsMobileOpen(false)}
             className={({ isActive }) =>
               [
                 "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-semibold uppercase tracking-wide transition",

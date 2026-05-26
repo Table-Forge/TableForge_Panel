@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import type { IPaginateProps, IPages } from "./paginate.interface";
 
 export const Paginate: React.FC<IPaginateProps> = ({
@@ -86,15 +87,18 @@ export const Paginate: React.FC<IPaginateProps> = ({
 
       {pages.length > 0 ? (
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <ButtonIcon
             onClick={() => handleChangePage(safePage - 1)}
             disabled={safePage <= 1}
             title="Anterior"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-primary text-tertiary transition hover:border-tertiary/50 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Página anterior"
+            color="var(--color-tertiary)"
+            hasHoverEffect
+            size="32px"
+            className="rounded-lg border border-white/15 bg-primary hover:border-tertiary/50"
           >
             <ChevronLeft size={14} />
-          </button>
+          </ButtonIcon>
 
           <div className="flex items-center gap-1">
             {pages.map((item) => {
@@ -116,15 +120,18 @@ export const Paginate: React.FC<IPaginateProps> = ({
             })}
           </div>
 
-          <button
-            type="button"
+          <ButtonIcon
             onClick={() => handleChangePage(safePage + 1)}
             disabled={safePage >= totalPages || totalPages === 0}
             title="Próximo"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-primary text-tertiary transition hover:border-tertiary/50 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Próxima página"
+            color="var(--color-tertiary)"
+            hasHoverEffect
+            size="32px"
+            className="rounded-lg border border-white/15 bg-primary hover:border-tertiary/50"
           >
             <ChevronRight size={14} />
-          </button>
+          </ButtonIcon>
         </div>
       ) : null}
     </footer>
