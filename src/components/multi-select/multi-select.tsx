@@ -4,6 +4,7 @@ import { type FieldValues, useController } from "react-hook-form";
 import { Check, ChevronDown, Plus, Search, X } from "lucide-react";
 import type { FocusEvent, KeyboardEvent } from "react";
 
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import { ERROR_MESSAGE } from "@/src/components/error-message/error-message.constants";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { getInputClasses } from "@/src/components/input/input.styles";
@@ -455,17 +456,17 @@ export function MultiSelect<TFieldValues extends FieldValues>({
         wrapperClassName="flex-1"
         error={newOptionError || undefined}
       />
-      <button
-        type="button"
+      <ButtonIcon
         onMouseDown={(event) => {
           event.preventDefault();
           event.stopPropagation();
           handleAddOption();
         }}
-        className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-secondary bg-secondary text-white"
+        size="48px"
+        className="border border-secondary bg-secondary text-white"
       >
         <Plus size={18} />
-      </button>
+      </ButtonIcon>
     </div>
   ) : null;
 

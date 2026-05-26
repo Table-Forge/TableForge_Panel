@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { memo, useEffect, useRef } from "react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import type { IModalInstance } from "@/src/store/types";
 import type { TModalSize } from "@/src/components/modals/modal.interface";
 import { useBoundStore } from "@/src/store/use-bound-store";
@@ -135,15 +136,16 @@ const ModalItem = memo(
               {modal.title}
             </h3>
 
-            <button
-              type="button"
+            <ButtonIcon
               onClick={closeModal}
               disabled={!isTopMost}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-0 bg-transparent text-white/80 transition hover:bg-white/10 hover:text-tertiary disabled:pointer-events-none disabled:opacity-40"
               aria-label="Fechar modal"
+              hasHoverEffect
+              size="32px"
+              className="text-white/80 hover:text-tertiary disabled:pointer-events-none disabled:opacity-40"
             >
               <X size={22} />
-            </button>
+            </ButtonIcon>
           </header>
 
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto px-8 py-4 text-sm text-white/90 max-[992px]:px-2.5 max-[992px]:py-2.5">

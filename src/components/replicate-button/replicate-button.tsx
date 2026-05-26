@@ -1,4 +1,5 @@
 import { CopyPlus } from "lucide-react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 
 interface ReplicateButtonProps {
   index: number;
@@ -14,13 +15,14 @@ export const ReplicateButton = ({
   if (index !== 0) return null;
 
   return (
-    <button
-      type="button"
+    <ButtonIcon
       onClick={onReplicate}
-      className="cursor-pointer text-grays-100 transition hover:scale-105 hover:text-tertiary active:scale-95"
+      hasHoverEffect
+      size="28px"
       title={title}
+      aria-label={title}
     >
       <CopyPlus size={18} />
-    </button>
+    </ButtonIcon>
   );
 };

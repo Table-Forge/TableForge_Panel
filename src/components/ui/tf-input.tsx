@@ -6,6 +6,7 @@ import {
   type ForwardedRef,
   type InputHTMLAttributes,
 } from "react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 
 interface TFInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -59,12 +60,12 @@ function TFInputComponent(
         />
 
         {isPassword ? (
-          <button
-            type="button"
+          <ButtonIcon
             onClick={() => setShowPassword((value) => !value)}
             disabled={disabled}
-            className="ml-2 cursor-pointer rounded-md p-1 text-white/80 transition hover:text-white disabled:cursor-not-allowed disabled:text-white/35"
             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            size="28px"
+            className="ml-2 text-white/80 hover:text-white disabled:text-white/35"
           >
             {disabled ? (
               <Lock size={18} />
@@ -73,7 +74,7 @@ function TFInputComponent(
             ) : (
               <EyeOff size={18} />
             )}
-          </button>
+          </ButtonIcon>
         ) : null}
       </span>
 

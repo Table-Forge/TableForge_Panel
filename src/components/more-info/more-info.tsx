@@ -1,4 +1,5 @@
 import { Ellipsis } from "lucide-react";
+import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import {
   useCallback,
   useEffect,
@@ -176,17 +177,20 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
         className={options.length > 0 ? "cursor-pointer" : "cursor-default"}
       >
         {children ?? (
-          <button
-            type="button"
+          <ButtonIcon
             aria-label="Mais opções"
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border transition ${
+            hasHoverEffect
+            isActive={isOpen}
+            isHighlighted={isOpen}
+            size="36px"
+            className={`border ${
               isOpen
-                ? "border-secondary/40 bg-secondary/15 text-white"
-                : "border-white/10 bg-primary/80 text-grays-100 hover:border-secondary/30 hover:text-white"
+                ? "border-secondary/40 text-white"
+                : "border-white/10 bg-primary/80 hover:border-secondary/30 hover:text-white"
             }`}
           >
             <Ellipsis size={18} />
-          </button>
+          </ButtonIcon>
         )}
       </div>
 
