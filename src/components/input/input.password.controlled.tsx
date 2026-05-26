@@ -56,6 +56,7 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
             size="28px"
             className="absolute right-2 top-1/2 -translate-y-1/2 hover:text-tertiary"
+            style={{ position: "absolute" }}
           >
             {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
           </ButtonIcon>
