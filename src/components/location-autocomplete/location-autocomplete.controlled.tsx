@@ -15,6 +15,7 @@ interface ControlledLocationAutocompleteProps<
   disabled?: boolean;
   hasSelectionError?: boolean;
   hookForm: UseFormReturn<TFieldValues>;
+  isSelectionValid?: boolean;
   name: Path<TFieldValues>;
   onClearSelection: () => void;
   onSelectLocation: (location: SelectedLocation) => void;
@@ -26,6 +27,7 @@ export function ControlledLocationAutocomplete<
   disabled,
   hasSelectionError,
   hookForm,
+  isSelectionValid,
   name,
   onClearSelection,
   onSelectLocation,
@@ -43,6 +45,7 @@ export function ControlledLocationAutocomplete<
       disabled={disabled}
       error={error?.message}
       hasSelectionError={hasSelectionError}
+      isSelectionValid={isSelectionValid}
       value={value?.toString() ?? ""}
       onChangeText={onChange}
       onClearSelection={onClearSelection}
