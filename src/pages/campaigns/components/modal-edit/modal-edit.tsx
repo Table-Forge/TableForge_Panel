@@ -97,6 +97,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   const currentBannerContent = useWatch({ control, name: "bannerContent" });
   const currentAddress = useWatch({ control, name: "address" });
   const currentLatitude = useWatch({ control, name: "latitude" });
+  const currentLocationName = useWatch({ control, name: "locationName" });
   const currentLongitude = useWatch({ control, name: "longitude" });
 
   const selectedBannerSource = toImageSource(
@@ -109,11 +110,19 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
 
   const onSubmit = handleSubmit(async (values) => {
     const { bannerContent: _bannerContent, ...campaignValues } = values;
+    const hasLocationLatitude =
+      campaignValues.latitude !== "" &&
+      campaignValues.latitude != null &&
+      Number.isFinite(Number(campaignValues.latitude));
+    const hasLocationLongitude =
+      campaignValues.longitude !== "" &&
+      campaignValues.longitude != null &&
+      Number.isFinite(Number(campaignValues.longitude));
     const hasSelectedLocation =
       Boolean(campaignValues.locationName?.trim()) &&
       Boolean(campaignValues.address?.trim()) &&
-      Number.isFinite(Number(campaignValues.latitude)) &&
-      Number.isFinite(Number(campaignValues.longitude));
+      hasLocationLatitude &&
+      hasLocationLongitude;
 
     if (!hasSelectedLocation) {
       addToast("error", "Selecione uma sugestão de localização válida.");
@@ -189,11 +198,22 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   });
 
   const isSubmitting = isPending || isLoadingImage;
+  const hasLocationLatitude =
+    currentLatitude !== "" &&
+    currentLatitude != null &&
+    Number.isFinite(Number(currentLatitude));
+  const hasLocationLongitude =
+    currentLongitude !== "" &&
+    currentLongitude != null &&
+    Number.isFinite(Number(currentLongitude));
+  const isLocationSelectionValid =
+    Boolean(currentLocationName?.trim()) &&
+    Boolean(currentAddress?.trim()) &&
+    hasLocationLatitude &&
+    hasLocationLongitude;
   const locationSelectionError =
     Boolean(currentAddress || currentLatitude || currentLongitude) &&
-    (!currentAddress ||
-      !Number.isFinite(Number(currentLatitude)) ||
-      !Number.isFinite(Number(currentLongitude)));
+    !isLocationSelectionValid;
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -288,6 +308,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
             hookForm={form}
             name="locationName"
             hasSelectionError={locationSelectionError}
+            isSelectionValid={isLocationSelectionValid}
             disabled={isLoading || isSubmitting}
             onClearSelection={() => {
               setValue("address", "", { shouldValidate: false });

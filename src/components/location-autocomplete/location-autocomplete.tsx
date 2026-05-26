@@ -1,10 +1,12 @@
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { useEffect, useState } from "react";
 import { getInputClasses, inputInnerClasses } from "../input/input.styles";
+import { Check, LoaderCircle, X } from "lucide-react";
 
 const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY as
   | string
   | undefined;
+const LOCATION_SEARCH_DEBOUNCE_MS = 800;
 const LOCATION_SUGGESTIONS_RADIUS_METERS = 50000;
 
 export type SelectedLocation = {
@@ -34,6 +36,7 @@ interface LocationAutocompleteProps {
   disabled?: boolean;
   error?: string;
   hasSelectionError?: boolean;
+  isSelectionValid?: boolean;
   onChangeText: (value: string) => void;
   onClearSelection: () => void;
   onSelectLocation: (location: SelectedLocation) => void;
@@ -44,6 +47,7 @@ export function LocationAutocomplete({
   disabled,
   error,
   hasSelectionError = false,
+  isSelectionValid = false,
   onChangeText,
   onClearSelection,
   onSelectLocation,
@@ -160,7 +164,7 @@ export function LocationAutocomplete({
           setIsLoadingSuggestions(false);
         }
       }
-    }, 300);
+    }, LOCATION_SEARCH_DEBOUNCE_MS);
 
     return () => {
       abortController.abort();
@@ -190,6 +194,8 @@ export function LocationAutocomplete({
     });
   };
 
+  const hasTypedLocation = Boolean(search.trim());
+  const showSelectionFeedback = hasTypedLocation && !isLoadingSuggestions;
   const showSuggestions = isFocused && suggestions.length > 0;
 
   return (
@@ -198,7 +204,7 @@ export function LocationAutocomplete({
         <div
           className={getInputClasses(
             error || hasSelectionError ? "Erro" : undefined,
-            isLoadingSuggestions,
+            false,
             disabled,
           )}
         >
@@ -210,8 +216,32 @@ export function LocationAutocomplete({
             onFocus={() => setIsFocused(true)}
             disabled={disabled}
             placeholder="Digite o nome ou endereço do local"
-            className={inputInnerClasses}
+            className={`${inputInnerClasses} pr-10`}
           />
+
+          {isLoadingSuggestions ? (
+            <LoaderCircle
+              size={18}
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-secondary"
+              aria-hidden="true"
+            />
+          ) : null}
+
+          {showSelectionFeedback ? (
+            isSelectionValid ? (
+              <Check
+                size={18}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-emerald-400"
+                aria-hidden="true"
+              />
+            ) : (
+              <X
+                size={18}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-danger"
+                aria-hidden="true"
+              />
+            )
+          ) : null}
         </div>
 
         {showSuggestions ? (
@@ -220,6 +250,7 @@ export function LocationAutocomplete({
               <button
                 key={suggestion.place_id}
                 type="button"
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => handleSelectSuggestion(suggestion)}
                 className="flex w-full flex-col gap-1 border-b border-white/10 px-3 py-2 text-left last:border-b-0 hover:bg-white/10"
               >
