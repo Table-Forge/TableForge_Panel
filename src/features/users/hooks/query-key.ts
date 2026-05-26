@@ -10,4 +10,5 @@ export const USER_KEYS = {
   genderEnum: () => [...USER_KEYS.enums(), "gender"] as const,
   statusEnum: () => [...USER_KEYS.enums(), "status"] as const,
   deliveryMethodEnum: () => [...USER_KEYS.enums(), "deliveryMethod"] as const,
+  typeEnum: () => [...USER_KEYS.enums(), "type"] as const,
 };

@@ -7,4 +7,7 @@ export const IMAGE_KEYS = {
   details: () => [...IMAGE_KEYS.all, "detail"] as const,
   detail: (id?: number) => [...IMAGE_KEYS.details(), id] as const,
   byUuid: (uuid?: string) => [...IMAGE_KEYS.details(), "uuid", uuid] as const,
+  enums: () => [...IMAGE_KEYS.all, "enums"] as const,
+  imageTypeEnum: () => [...IMAGE_KEYS.enums(), "image-type"] as const,
+  imageStatusEnum: () => [...IMAGE_KEYS.enums(), "image-status"] as const,
 };

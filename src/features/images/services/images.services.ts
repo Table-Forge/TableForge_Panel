@@ -1,4 +1,5 @@
 ﻿import { api } from "@/src/features/api";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { type IImage } from "@/src/features/images/schemas/image.schema";
 import type { IGetAllImagesResponse, IGetImages } from "../hooks/types";
 
@@ -36,6 +37,14 @@ export const ImageService = {
 
   delete: async (id: number) => {
     const { data } = await api.delete(`${ENDPOINT}/${id}`);
+    return data;
+  },
+  getImageTypeEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/image-type`);
+    return data;
+  },
+  getImageStatusEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/image-status`);
     return data;
   },
 };

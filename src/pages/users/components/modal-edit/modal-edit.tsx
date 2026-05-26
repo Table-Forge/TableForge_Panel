@@ -9,9 +9,9 @@ import { ControlledInput } from "@/src/components/input/input.default.controlled
 import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
-import { USER_TYPE_OPTIONS } from "@/src/constants/select-options";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useUserGenderEnum } from "@/src/features/users/hooks/enums/use-user-gender-enum";
+import { useUserTypeEnum } from "@/src/features/users/hooks/enums/use-user-type-enum";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import { type IUser, UserSchema } from "@/src/features/users/schemas/user.schema";
@@ -37,6 +37,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     useImagesMutation();
 
   const { genderEnum, isLoadingGenderEnum } = useUserGenderEnum();
+  const { typeEnum, isLoadingTypeEnum } = useUserTypeEnum();
   const isCreateMode = !data?.id;
   const editingUserId = dataEdit?.id ?? data?.id;
   const canEditAvatar =
@@ -267,11 +268,18 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           <Select
             hookForm={form}
             name="type"
-            initialOptions={USER_TYPE_OPTIONS}
+            initialOptions={typeEnum}
             title="Selecione o tipo"
             error={errors.type?.message}
             searchInput={false}
-            disabled={!isCreateMode || isPending || isLoadingImage || isLoading}
+            disabled={
+              !isCreateMode ||
+              isPending ||
+              isLoadingImage ||
+              isLoading ||
+              isLoadingTypeEnum
+            }
+            isLoading={isLoadingTypeEnum}
           />
         </InputGroup>
       </FieldsWrapper>

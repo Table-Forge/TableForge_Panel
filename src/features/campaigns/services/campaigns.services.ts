@@ -1,4 +1,5 @@
 ﻿import { api } from "@/src/features/api";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
 import type { IGetAllCampaignsResponse, IGetCampaigns } from "../hooks/types";
 
@@ -23,4 +24,12 @@ export const CampaignService = {
   create: async (payload: ICampaign) => api.post(ENDPOINT, payload),
   update: async (payload: ICampaign) => api.put(ENDPOINT, payload),
   delete: async (id: number) => api.delete(`${ENDPOINT}/${id}`),
+  getDifficultyLevelEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/difficulty-level`);
+    return data;
+  },
+  getCampaignStatusEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/campaign-status`);
+    return data;
+  },
 };
