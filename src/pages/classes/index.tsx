@@ -11,7 +11,6 @@ import { useClassesMutation } from "@/src/features/classes/hooks/use-classes-mut
 import type { IClass } from "@/src/features/classes/schemas/class.schema";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
-import { formatDate } from "@/src/utils/format";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { ClassesSearchFilters } from "./components/search-filters/search-filters";
@@ -72,13 +71,6 @@ export function ClassesPage() {
       width: "320px",
       normalCase: true,
       render: (item) => item.description || "-",
-    },
-    {
-      title: "Criado em",
-      key: "createdAt",
-      width: "150px",
-      align: "center",
-      render: (item) => (item.createdAt ? formatDate(item.createdAt, true) : "-"),
     },
     {
       title: "",

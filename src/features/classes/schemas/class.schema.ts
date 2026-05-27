@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-  dateOptional,
   numberOptional,
   stringOptional,
   stringRequired,
@@ -8,8 +7,6 @@ import {
 
 export const ClassSchema = z.object({
   id: numberOptional,
-  createdAt: dateOptional,
-  updatedAt: dateOptional,
   name: stringRequired,
   description: stringOptional,
 });
