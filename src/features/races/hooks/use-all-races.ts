@@ -1,5 +1,6 @@
 import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 import { RaceService } from "@/src/features/races/services/races.services";
+import { useDebouncedCallback } from "@/src/hooks/utils/useDebouncedCallback";
 import type { IGetPaginatedParams } from "@/src/interfaces";
 import { useComponentStore } from "@/src/store";
 import { useQuery } from "@tanstack/react-query";
@@ -13,6 +14,8 @@ export const INITIAL_RACES_FILTERS: IGetPaginatedParams = {
   ...INITIAL_PAGINATE,
   search: "",
 };
+
+const SEARCH_DEBOUNCE_MS = 500;
 
 export function useAllRaces(params?: IGetRaces) {
   const storedFilters = useComponentStore(
@@ -54,10 +57,15 @@ export function useAllRaces(params?: IGetRaces) {
     }
   }, [filters, setFilters, storedFilters]);
 
+  const onSearchChange = useDebouncedCallback((value: string) => {
+    setFilters({ ...filters, page: 1, search: value });
+  }, SEARCH_DEBOUNCE_MS);
+
   return {
     ...query,
     filters,
     setFilters,
     resetFilters,
+    onSearchChange,
   };
 }

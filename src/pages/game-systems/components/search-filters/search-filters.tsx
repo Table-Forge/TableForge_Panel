@@ -9,6 +9,7 @@ import { PAGE_SIZE } from "@/src/constants/select-options";
 import {
   GAME_SYSTEMS_COMPONENT_FILTER_KEY,
   INITIAL_GAME_SYSTEMS_FILTERS,
+  useAllGameSystems,
 } from "@/src/features/game-systems/hooks/use-all-game-systems";
 import type { IGetPaginatedParams } from "@/src/interfaces";
 import { useComponentStore } from "@/src/store";
@@ -79,26 +80,30 @@ function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
 }
 
 export function GameSystemsSearchFilters() {
-  const setFiltersGlobal = useComponentStore((state) => state.setFilters);
-  const filters = useComponentStore(
-    (state) =>
-      (state.states[GAME_SYSTEMS_COMPONENT_FILTER_KEY]?.filters as
-        | IGetPaginatedParams
-        | undefined) ?? INITIAL_GAME_SYSTEMS_FILTERS,
-  );
+  const { filters, onSearchChange } = useAllGameSystems();
+
+  const form = useForm<{ search: string }>({
+    defaultValues: { search: String(filters.search ?? "") },
+  });
+
+  const watchedSearch = form.watch("search");
+
+  useEffect(() => {
+    onSearchChange(watchedSearch);
+  }, [watchedSearch, onSearchChange]);
+
+  useEffect(() => {
+    const next = String(filters.search ?? "");
+    if (next !== form.getValues("search")) {
+      form.setValue("search", next);
+    }
+  }, [filters.search, form]);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="w-full flex flex-row gap-3 items-center rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
-          value={String(filters.search ?? "")}
-          onChange={(event) => {
-            setFiltersGlobal(GAME_SYSTEMS_COMPONENT_FILTER_KEY, {
-              ...filters,
-              page: 1,
-              search: event.target.value,
-            });
-          }}
+          {...form.register("search")}
           placeholder="Buscar sistema de jogo por nome"
           wrapperClassName="w-full"
         />

@@ -4,6 +4,7 @@ import type { IGetPaginatedParams } from "@/src/interfaces";
 import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 import { useComponentStore } from "@/src/store";
 import { LogService } from "@/src/features/logs/services/logs.services";
+import { useDebouncedCallback } from "@/src/hooks/utils/useDebouncedCallback";
 import { LOG_KEYS } from "./query-key";
 import type { IGetAllLogsResponse, IGetLogs } from "./types";
 import dayjs from "dayjs";
@@ -16,6 +17,8 @@ export const INITIAL_LOGS_FILTERS: IGetPaginatedParams = {
   startDate: dayjs().subtract(7, "days").format("YYYY-MM-DD"),
   endDate: dayjs().format("YYYY-MM-DD"),
 };
+
+const SEARCH_DEBOUNCE_MS = 500;
 
 export function useAllLogs(params?: IGetLogs) {
   const storedFilters = useComponentStore(
@@ -57,10 +60,15 @@ export function useAllLogs(params?: IGetLogs) {
     }
   }, [filters, setFilters, storedFilters]);
 
+  const onSearchChange = useDebouncedCallback((value: string) => {
+    setFilters({ ...filters, page: 1, search: value });
+  }, SEARCH_DEBOUNCE_MS);
+
   return {
     ...query,
     filters,
     setFilters,
     resetFilters,
+    onSearchChange,
   };
 }
