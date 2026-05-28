@@ -1,4 +1,4 @@
-﻿import { Button } from "@/src/components/button/button";
+import { Button } from "@/src/components/button/button";
 import { Filters } from "@/src/components/filters/filters";
 import { Input } from "@/src/components/input/input.default";
 import { DateInput } from "@/src/components/input/input.date.controlled";
@@ -12,6 +12,7 @@ import { PAGE_SIZE } from "@/src/constants/select-options";
 import {
   INITIAL_LOGS_FILTERS,
   LOGS_COMPONENT_FILTER_KEY,
+  useAllLogs,
 } from "@/src/features/logs/hooks/use-all-logs";
 import { useLogTypeEnum } from "@/src/features/logs/hooks/enums/use-log-type-enum";
 import type { IGetPaginatedParams } from "@/src/interfaces";
@@ -135,26 +136,30 @@ function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
 }
 
 export function LogsSearchFilters() {
-  const setFiltersGlobal = useComponentStore((state) => state.setFilters);
-  const filters = useComponentStore(
-    (state) =>
-      (state.states[LOGS_COMPONENT_FILTER_KEY]?.filters as
-        | IGetPaginatedParams
-        | undefined) ?? INITIAL_LOGS_FILTERS,
-  );
+  const { filters, onSearchChange } = useAllLogs();
+
+  const form = useForm<{ search: string }>({
+    defaultValues: { search: String(filters.search ?? "") },
+  });
+
+  const watchedSearch = form.watch("search");
+
+  useEffect(() => {
+    onSearchChange(watchedSearch);
+  }, [watchedSearch, onSearchChange]);
+
+  useEffect(() => {
+    const next = String(filters.search ?? "");
+    if (next !== form.getValues("search")) {
+      form.setValue("search", next);
+    }
+  }, [filters.search, form]);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="w-full flex flex-row gap-3 items-center rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
-          value={String(filters.search ?? "")}
-          onChange={(event) => {
-            setFiltersGlobal(LOGS_COMPONENT_FILTER_KEY, {
-              ...filters,
-              page: 1,
-              search: event.target.value,
-            });
-          }}
+          {...form.register("search")}
           placeholder="Buscar por código, endpoint, tipo ou mensagem"
           wrapperClassName="w-full"
         />

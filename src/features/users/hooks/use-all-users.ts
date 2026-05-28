@@ -4,6 +4,7 @@ import type { IGetPaginatedParams } from "@/src/interfaces";
 import { INITIAL_PAGINATE } from "@/src/constants/paginate";
 import { useComponentStore } from "@/src/store";
 import { UserService } from "@/src/features/users/services/users.services";
+import { useDebouncedCallback } from "@/src/hooks/utils/useDebouncedCallback";
 import { USER_KEYS } from "./query-key";
 import type { IGetAllUsersResponse, IGetUsers } from "./types";
 
@@ -13,6 +14,8 @@ export const INITIAL_USERS_FILTERS: IGetPaginatedParams = {
   ...INITIAL_PAGINATE,
   search: "",
 };
+
+const SEARCH_DEBOUNCE_MS = 500;
 
 export function useAllUsers(params?: IGetUsers) {
   const storedFilters = useComponentStore(
@@ -54,10 +57,15 @@ export function useAllUsers(params?: IGetUsers) {
     }
   }, [filters, setFilters, storedFilters]);
 
+  const onSearchChange = useDebouncedCallback((value: string) => {
+    setFilters({ ...filters, page: 1, search: value });
+  }, SEARCH_DEBOUNCE_MS);
+
   return {
     ...query,
     filters,
     setFilters,
     resetFilters,
+    onSearchChange,
   };
 }
