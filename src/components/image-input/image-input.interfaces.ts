@@ -12,6 +12,8 @@ export interface IImageInput {
   disabled?: boolean;
   canChangeImage?: boolean;
   error?: string;
+  maxSizeBytes?: number;
+  acceptedTypes?: string[];
   onChange: (value: IImageInputValue) => void;
   onClear?: () => void;
   extraActions?: ReactNode;

@@ -81,6 +81,8 @@ export interface IControlledImageInput<TFieldValues extends FieldValues = FieldV
   previewValue?: string;
   fallbackPreview?: string;
   canChangeImage?: boolean;
+  maxSizeBytes?: number;
+  acceptedTypes?: string[];
   onFileNameChange?: (name: string) => void;
   onClearImage?: () => void;
 }
