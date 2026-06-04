@@ -28,6 +28,9 @@ const getStatusCode = (error: any, payload: any) =>
   payload?.code ??
   500;
 
+const PAYLOAD_TOO_LARGE_MESSAGE =
+  "Imagem muito grande. O tamanho máximo é de 8 MB (2 MB para avatar).";
+
 export const handleError = (error: unknown): IError => {
   let finalError: IError = {
     status: 500,
@@ -69,6 +72,10 @@ export const handleError = (error: unknown): IError => {
           "Erro processado pelo servidor",
       title: pickString(payload?.Title, payload?.title) || "Aviso do Sistema",
     };
+  }
+
+  if (finalError.status === 413) {
+    finalError.message = PAYLOAD_TOO_LARGE_MESSAGE;
   }
 
   const { addToast } = useBoundStore.getState();

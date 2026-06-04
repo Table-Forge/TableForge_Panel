@@ -1,7 +1,12 @@
 import { Button } from "@/src/components/button/button";
 import { ImagePlus, Trash2 } from "lucide-react";
-import { useId, useRef } from "react";
-import { toImageSource } from "@/src/utils/image";
+import { useId, useRef, useState } from "react";
+import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  MAX_IMAGE_SIZE_BYTES,
+  toImageSource,
+  validateImageFile,
+} from "@/src/utils/image";
 import type { IImageInput } from "./image-input.interfaces";
 
 export const ImageInput: React.FC<IImageInput> = ({
@@ -10,6 +15,8 @@ export const ImageInput: React.FC<IImageInput> = ({
   disabled,
   canChangeImage = true,
   error,
+  maxSizeBytes = MAX_IMAGE_SIZE_BYTES,
+  acceptedTypes = ACCEPTED_IMAGE_MIME_TYPES,
   onChange,
   onClear,
   extraActions,
@@ -17,6 +24,7 @@ export const ImageInput: React.FC<IImageInput> = ({
   const fallbackInputId = useId();
   const resolvedInputId = inputId ?? fallbackInputId;
   const inputRef = useRef<HTMLInputElement>(null);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
 
   const previewSource = toImageSource(value);
 
@@ -28,6 +36,19 @@ export const ImageInput: React.FC<IImageInput> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    const validationError = validateImageFile(file, {
+      maxSize: maxSizeBytes,
+      acceptedTypes,
+    });
+
+    if (validationError) {
+      setSelectionError(validationError);
+      event.target.value = "";
+      return;
+    }
+
+    setSelectionError(null);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -111,9 +132,9 @@ export const ImageInput: React.FC<IImageInput> = ({
         className="hidden"
       />
 
-      {error ? (
+      {error ?? selectionError ? (
         <p className="px-1 text-[10px] font-medium uppercase tracking-wider text-danger">
-          {error}
+          {error ?? selectionError}
         </p>
       ) : null}
     </div>

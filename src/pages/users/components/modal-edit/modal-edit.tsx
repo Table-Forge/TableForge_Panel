@@ -16,7 +16,11 @@ import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import { type IUser, UserSchema } from "@/src/features/users/schemas/user.schema";
 import { useBoundStore } from "@/src/store";
-import { isImageDataUrl, toImageSource } from "@/src/utils/image";
+import {
+  MAX_AVATAR_SIZE_BYTES,
+  isImageDataUrl,
+  toImageSource,
+} from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -291,6 +295,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           name="avatarUrl"
           previewValue={toImageSource(dataEdit?.avatarUrl)}
           canChangeImage={canEditAvatar}
+          maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
           disabled={isLoading || isPending || isLoadingImage}
         />
       </InputGroup>

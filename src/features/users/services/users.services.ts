@@ -4,6 +4,7 @@ import {
   type IUpdatePassword,
   type IUser,
 } from "@/src/features/users/schemas/user.schema";
+import { dataUrlToFile } from "@/src/utils/image";
 import type { IGetAllUsersResponse, IGetUsers } from "../hooks/types";
 
 const ENDPOINT = "/users";
@@ -25,8 +26,13 @@ export const UserService = {
   create: async (data: IUser) => api.post(`${ENDPOINT}`, data),
   update: async (data: IUser) => api.put(`${ENDPOINT}`, data),
   delete: async (id: number) => api.delete(`${ENDPOINT}/${id}`),
-  updateAvatar: async (data: { id: number; content: string }) =>
-    api.put(`${ENDPOINT}/avatar`, data),
+  updateAvatar: async (data: { id: number; content: string }) => {
+    const formData = new FormData();
+    formData.append("Id", String(data.id));
+    formData.append("File", dataUrlToFile(data.content, `avatar-${data.id}`));
+
+    return api.put(`${ENDPOINT}/avatar`, formData);
+  },
   removeAvatar: async (userId: number) =>
     api.delete(`${ENDPOINT}/${userId}/avatar/moderate`),
 

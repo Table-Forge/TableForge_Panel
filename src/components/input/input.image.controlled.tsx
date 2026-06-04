@@ -16,6 +16,8 @@ export function ControlledImageInput<
   previewValue,
   fallbackPreview,
   canChangeImage = true,
+  maxSizeBytes,
+  acceptedTypes,
   onFileNameChange,
   onClearImage,
   error,
@@ -53,6 +55,8 @@ export function ControlledImageInput<
       value={resolvedValue}
       disabled={props.disabled || isLoading}
       canChangeImage={canChangeImage}
+      maxSizeBytes={maxSizeBytes}
+      acceptedTypes={acceptedTypes}
       error={message}
       onChange={(imageValue) => {
         setIgnoreExternalPreview(false);
