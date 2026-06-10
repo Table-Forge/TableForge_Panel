@@ -12,7 +12,6 @@ import { useGameSystemsMutation } from "@/src/features/game-systems/hooks/use-ga
 import type { IGameSystem } from "@/src/features/game-systems/schemas/game-system.schema";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
-import { formatDate } from "@/src/utils/format";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { GameSystemsSearchFilters } from "./components/search-filters/search-filters";
@@ -92,14 +91,6 @@ export function GameSystemsPage() {
       width: "320px",
       normalCase: true,
       render: (gameSystem) => gameSystem.description || "-",
-    },
-    {
-      title: "Criado em",
-      key: "createdAt",
-      width: "150px",
-      align: "center",
-      render: (gameSystem) =>
-        gameSystem.createdAt ? formatDate(gameSystem.createdAt, true) : "-",
     },
     {
       title: "",
