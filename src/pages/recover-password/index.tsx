@@ -7,6 +7,7 @@ import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
+import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
 import { BrandName } from "@/src/components/ui/brand-name";
 import {
@@ -15,10 +16,19 @@ import {
   type IPasswordRecoveryForm,
 } from "@/src/features/auth/schemas/auth.schema";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
+import { useCountdown } from "@/src/hooks/utils/use-countdown";
 import { useBoundStore } from "@/src/store";
+
+const RESEND_COOLDOWN_SECONDS = 120;
 
 const normalizeCode = (value: string) =>
   value.replace(/\D/g, "").slice(0, RECOVERY_CODE_LENGTH);
+
+const formatCooldown = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  return `${minutes}:${String(remaining).padStart(2, "0")}`;
+};
 
 export function RecoverPasswordPage() {
   const navigate = useNavigate();
@@ -32,6 +42,8 @@ export function RecoverPasswordPage() {
   const [isCodeInvalid, setIsCodeInvalid] = useState(false);
   const [shakeTick, setShakeTick] = useState(0);
   const [lastAttemptedCode, setLastAttemptedCode] = useState("");
+
+  const resendCooldown = useCountdown();
 
   const codeInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -136,10 +148,29 @@ export function RecoverPasswordPage() {
         setValue("code", "", { shouldDirty: true, shouldTouch: true });
         clearErrors(["code", "newPassword", "confirmPassword"]);
         addToast("success", "Código enviado para o e-mail informado.");
+        resendCooldown.start(RESEND_COOLDOWN_SECONDS);
         window.setTimeout(() => codeInputRefs.current[0]?.focus(), 50);
       },
     });
   });
+
+  const onResendCode = () => {
+    if (resendCooldown.isActive) return;
+
+    resendCooldown.start(RESEND_COOLDOWN_SECONDS);
+    sendRecoveryCodeMutation.mutate(email.trim(), {
+      onSuccess: () => {
+        addToast("success", "Código reenviado para o e-mail informado.");
+      },
+      onError: (error) => {
+        const status = (error as { response?: { status?: number } })?.response
+          ?.status;
+        if (status === 400) {
+          resendCooldown.reset();
+        }
+      },
+    });
+  };
 
   const onSavePassword = handleSubmit(async () => {
     setValue("step", 3, { shouldDirty: false, shouldTouch: false });
@@ -245,7 +276,8 @@ export function RecoverPasswordPage() {
         <div className="mb-6 flex items-center justify-center gap-2">
           {[1, 2, 3].map((item, index) => {
             const isActive = step === item;
-            const isDone = (step === 2 && item === 1) || (step === 3 && item !== 3);
+            const isDone =
+              (step === 2 && item === 1) || (step === 3 && item !== 3);
             return (
               <span
                 key={item}
@@ -257,7 +289,10 @@ export function RecoverPasswordPage() {
           })}
         </div>
 
-        <form onSubmit={(event) => event.preventDefault()} className="space-y-5">
+        <form
+          onSubmit={(event) => event.preventDefault()}
+          className="space-y-5"
+        >
           {step === 1 ? (
             <>
               <p className="text-sm text-grays-100">
@@ -295,7 +330,7 @@ export function RecoverPasswordPage() {
 
           {step === 2 ? (
             <>
-              <p className="text-sm text-grays-100">
+              <p className="text-sm text-grays-100 text-center">
                 Digite os {RECOVERY_CODE_LENGTH} dígitos enviados para{" "}
                 <strong className="text-white">{email}</strong>.
               </p>
@@ -343,29 +378,36 @@ export function RecoverPasswordPage() {
               </div>
 
               <div className="flex items-center justify-between text-xs">
-                <button
+                <Button
                   type="button"
+                  buttonStyle="hollow"
+                  size="xs"
+                  disabled={isBusy}
                   onClick={(event) => {
                     event.preventDefault();
-                    setValue("step", 1, { shouldDirty: false, shouldTouch: false });
+                    setValue("step", 1, {
+                      shouldDirty: false,
+                      shouldTouch: false,
+                    });
                   }}
-                  className="text-grays-100 transition hover:text-white"
-                  disabled={isBusy}
                 >
                   Alterar e-mail
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
+                  buttonStyle="soft"
+                  size="xs"
+                  disabled={isBusy || resendCooldown.isActive}
                   onClick={(event) => {
                     event.preventDefault();
-                    sendRecoveryCodeMutation.mutate(email.trim());
+                    onResendCode();
                   }}
-                  className="text-secondary transition hover:brightness-110"
-                  disabled={isBusy}
                 >
-                  Reenviar código
-                </button>
+                  {resendCooldown.isActive
+                    ? `Reenviar em ${formatCooldown(resendCooldown.secondsLeft)}`
+                    : "Reenviar código"}
+                </Button>
               </div>
 
               {validateRecoveryCodeMutation.isPending ? (
@@ -390,8 +432,10 @@ export function RecoverPasswordPage() {
                   placeholder="Digite a nova senha"
                   autoComplete="new-password"
                   disabled={isBusy}
+                  sanitizePassword
                   error={errors.newPassword?.message}
                 />
+                <PasswordRequirements value={watch("newPassword")} />
               </InputGroup>
 
               <InputGroup>
@@ -402,6 +446,7 @@ export function RecoverPasswordPage() {
                   placeholder="Repita a nova senha"
                   autoComplete="new-password"
                   disabled={isBusy}
+                  sanitizePassword
                   error={errors.confirmPassword?.message}
                 />
               </InputGroup>

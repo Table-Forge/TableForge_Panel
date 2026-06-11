@@ -15,6 +15,7 @@ export interface IControllerInput<TFieldValues extends FieldValues = FieldValues
   name: Path<TFieldValues>;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
+  sanitizePassword?: boolean;
 }
 
 export interface IMaskedControllerInput<TFieldValues extends FieldValues = FieldValues>

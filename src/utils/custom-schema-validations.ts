@@ -251,3 +251,51 @@ export {
   stringOrStringArrayRequired,
   stringRequired,
 };
+
+export const PASSWORD_MIN_LENGTH = 6;
+
+export const sanitizePasswordValue = (value: string) =>
+  value.replace(/[^\x21-\x7E]/g, "");
+
+export const PASSWORD_RULES: {
+  label: string;
+  message: string;
+  test: (value: string) => boolean;
+}[] = [
+  {
+    label: `Pelo menos ${PASSWORD_MIN_LENGTH} caracteres`,
+    message: `A senha deve ter pelo menos ${PASSWORD_MIN_LENGTH} caracteres.`,
+    test: (value) => value.length >= PASSWORD_MIN_LENGTH,
+  },
+  {
+    label: "Uma letra maiúscula (A-Z)",
+    message: "A senha deve conter ao menos uma letra maiúscula.",
+    test: (value) => /[A-Z]/.test(value),
+  },
+  {
+    label: "Uma letra minúscula (a-z)",
+    message: "A senha deve conter ao menos uma letra minúscula.",
+    test: (value) => /[a-z]/.test(value),
+  },
+  {
+    label: "Um número (0-9)",
+    message: "A senha deve conter ao menos um número.",
+    test: (value) => /[0-9]/.test(value),
+  },
+  {
+    label: "Um caractere especial (ex.: ! @ # $ %)",
+    message: "A senha deve conter ao menos um caractere especial (ex.: ! @ # $ %).",
+    test: (value) => /[^A-Za-z0-9\s]/.test(value),
+  },
+];
+
+export const getPasswordError = (value: string): string | null =>
+  PASSWORD_RULES.find((rule) => !rule.test(value))?.message ?? null;
+
+export const createPasswordSchema = () =>
+  z.string().superRefine((value, ctx) => {
+    const message = getPasswordError(value ?? "");
+    if (message) {
+      ctx.addIssue({ code: "custom", message });
+    }
+  });

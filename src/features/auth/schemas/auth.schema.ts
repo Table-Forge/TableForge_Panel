@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { emailRequired, stringRequired } from "@/src/utils/custom-schema-validations";
+import {
+  emailRequired,
+  getPasswordError,
+  stringRequired,
+} from "@/src/utils/custom-schema-validations";
 import { UserSchema } from "@/src/features/users/schemas/user.schema";
 
 export const LoginRequestSchema = z.object({
@@ -56,12 +60,15 @@ export const PasswordRecoveryFormSchema = z
           message: "Campo obrigatório.",
           path: ["newPassword"],
         });
-      } else if (normalizedPassword.length < 6) {
-        context.addIssue({
-          code: "custom",
-          message: "A senha deve ter ao menos 6 caracteres",
-          path: ["newPassword"],
-        });
+      } else {
+        const passwordError = getPasswordError(normalizedPassword);
+        if (passwordError) {
+          context.addIssue({
+            code: "custom",
+            message: passwordError,
+            path: ["newPassword"],
+          });
+        }
       }
 
       if (!normalizedConfirmPassword) {
