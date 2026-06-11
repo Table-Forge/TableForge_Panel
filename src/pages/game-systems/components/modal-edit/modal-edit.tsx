@@ -70,6 +70,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     if (isImageDataUrl(_imageContent)) {
       try {
         const imagePayload = {
+          id: imageId,
           type: "GameSystem" as const,
           name: `${gameSystemValues.name || "sistema"}-imagem`,
           content: _imageContent ?? "",
