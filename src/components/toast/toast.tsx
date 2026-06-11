@@ -7,7 +7,7 @@ const DURATION = 3000;
 
 const typeConfigs = {
   success: {
-    icon: <CheckCircle2 size={20} />,
+    icon: <CheckCircle2 size={16} />,
     colorClass: "text-green-400",
     bgClass: "bg-primary",
     borderClass: "border-green-500/30",
@@ -15,7 +15,7 @@ const typeConfigs = {
     title: "Sucesso",
   },
   error: {
-    icon: <TriangleAlert size={20} />,
+    icon: <TriangleAlert size={16} />,
     colorClass: "text-danger",
     bgClass: "bg-primary",
     borderClass: "border-danger/40",
@@ -23,7 +23,7 @@ const typeConfigs = {
     title: "Erro",
   },
   info: {
-    icon: <Info size={20} />,
+    icon: <Info size={16} />,
     colorClass: "text-secondary",
     bgClass: "bg-primary",
     borderClass: "border-secondary/40",
@@ -74,27 +74,27 @@ export const Toast: React.FC<ToastProps> = ({ id, type, message, onClose }) => {
     <div
       onMouseEnter={pauseTimer}
       onMouseLeave={startTimer}
-      className={`relative min-w-[300px] max-w-[380px] overflow-hidden rounded-2xl z-[9999] border p-3 shadow-xl ${config.bgClass} ${config.borderClass}`}
+      className={`relative min-w-50 max-w-65 overflow-hidden rounded-lg z-9999 border p-2 shadow-xl ${config.bgClass} ${config.borderClass}`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2">
         <div className={config.colorClass}>{config.icon}</div>
         <div className="flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-grays-100">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-grays-100">
             {config.title}
           </p>
-          <p className="text-sm font-semibold text-white">{message}</p>
+          <p className="text-xs font-semibold text-white">{message}</p>
         </div>
         <ButtonIcon
           onClick={() => onClose(id)}
           aria-label="Fechar notificação"
-          size="24px"
+          size="20px"
           className="text-white/70 hover:text-white"
         >
-          <X size={15} />
+          <X size={13} />
         </ButtonIcon>
       </div>
 
-      <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/10">
+      <div className="absolute bottom-0 left-0 h-0.5 w-full bg-white/10">
         <div
           className={`h-full ${config.barClass}`}
           style={{ width: `${progress}%`, transition: "width 50ms linear" }}
