@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useController, type FieldValues } from "react-hook-form";
+import { type FieldValues } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import { sanitizePasswordValue } from "@/src/utils/custom-schema-validations";
@@ -7,49 +7,50 @@ import type { IControllerInput } from "./input.intefaces";
 import { getInputClasses, inputInnerClasses } from "./input.styles";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 
-export function ControlledPasswordInput<TFieldValues extends FieldValues = FieldValues>({
+export function PasswordInput<TFieldValues extends FieldValues = FieldValues>({
   name,
   hookForm,
-  removeSpaces = false,
-  sanitizePassword = false,
   isLoading,
+  error,
   ...props
 }: IControllerInput<TFieldValues>) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    field: { value, onChange, onBlur, ref },
-    fieldState: { error },
-  } = useController({
-    name,
-    control: hookForm.control,
-  });
+  const { onChange: registerOnChange, ...registration } =
+    hookForm.register(name);
+  const fieldError = hookForm.getFieldState(name, hookForm.formState).error;
+  const message = error ?? fieldError?.message;
 
   return (
     <div className="flex w-full flex-col gap-1">
       <div className="relative w-full">
-        <div className={getInputClasses(error?.message, isLoading, props.disabled)}>
+        <div className={getInputClasses(message, isLoading, props.disabled)}>
           {isLoading ? (
             <div className="px-3 text-xs text-grays-100">Carregando...</div>
           ) : (
             <input
-              {...props}
-              id={name}
-              ref={ref}
-              type={showPassword ? "text" : "password"}
-              value={(value ?? "") as string}
-              onChange={(event) => {
-                let inputValue = event.target.value;
-                if (sanitizePassword) {
-                  inputValue = sanitizePasswordValue(inputValue);
-                } else if (removeSpaces) {
-                  inputValue = inputValue.replace(/\s+/g, "");
-                }
-                onChange(inputValue);
-              }}
-              onBlur={onBlur}
               autoComplete="current-password"
               maxLength={100}
+              {...props}
+              {...registration}
+              id={name}
+              type={showPassword ? "text" : "password"}
+              onInput={(event) => {
+                const input = event.currentTarget;
+                const cursorStart = input.selectionStart ?? 0;
+                const filtered = sanitizePasswordValue(input.value);
+
+                if (input.value !== filtered) {
+                  input.value = filtered;
+                }
+
+                registerOnChange(event);
+
+                window.setTimeout(
+                  () => input.setSelectionRange(cursorStart, cursorStart),
+                  0,
+                );
+              }}
               className={`${inputInnerClasses} pr-11`}
             />
           )}
@@ -68,7 +69,7 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
         ) : null}
       </div>
 
-      {error?.message ? <ErrorMessage>{error.message}</ErrorMessage> : null}
+      {message ? <ErrorMessage>{message}</ErrorMessage> : null}
     </div>
   );
 }

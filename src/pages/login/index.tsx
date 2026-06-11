@@ -7,7 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
-import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
+import { PasswordInput } from "@/src/components/input/input.password";
 import { BrandName } from "@/src/components/ui/brand-name";
 import { useAuth } from "@/src/context/use-auth";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
@@ -93,12 +93,11 @@ export function LoginPage() {
           <InputGroup>
             <Label htmlFor="password">Senha</Label>
 
-            <ControlledPasswordInput<ILoginRequest>
+            <PasswordInput<ILoginRequest>
               hookForm={form}
               name="password"
               placeholder="Digite sua senha"
               autoComplete="current-password"
-              removeSpaces
               maxLength={100}
               disabled={isLoadingLoginMutation}
             />

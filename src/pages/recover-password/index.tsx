@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
-import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
+import { PasswordInput } from "@/src/components/input/input.password";
 import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
 import { BrandName } from "@/src/components/ui/brand-name";
@@ -426,13 +426,12 @@ export function RecoverPasswordPage() {
 
               <InputGroup>
                 <Label htmlFor="newPassword">Nova senha</Label>
-                <ControlledPasswordInput<IPasswordRecoveryForm>
+                <PasswordInput<IPasswordRecoveryForm>
                   hookForm={form}
                   name="newPassword"
                   placeholder="Digite a nova senha"
                   autoComplete="new-password"
                   disabled={isBusy}
-                  sanitizePassword
                   error={errors.newPassword?.message}
                 />
                 <PasswordRequirements value={watch("newPassword")} />
@@ -440,13 +439,12 @@ export function RecoverPasswordPage() {
 
               <InputGroup>
                 <Label htmlFor="confirmPassword">Confirmar senha</Label>
-                <ControlledPasswordInput<IPasswordRecoveryForm>
+                <PasswordInput<IPasswordRecoveryForm>
                   hookForm={form}
                   name="confirmPassword"
                   placeholder="Repita a nova senha"
                   autoComplete="new-password"
                   disabled={isBusy}
-                  sanitizePassword
                   error={errors.confirmPassword?.message}
                 />
               </InputGroup>

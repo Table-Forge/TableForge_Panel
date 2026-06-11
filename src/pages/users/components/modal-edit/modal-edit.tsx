@@ -6,7 +6,7 @@ import { InputGroup } from "@/src/components/input-group/input-group";
 import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
-import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
+import { PasswordInput } from "@/src/components/input/input.password";
 import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
@@ -212,13 +212,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
             <Label htmlFor="password" isRequired>
               Senha
             </Label>
-            <ControlledPasswordInput
+            <PasswordInput
               hookForm={form}
               name="password"
               placeholder="Digite a senha"
               error={errors.password?.message}
               isLoading={isLoading}
-              sanitizePassword
             />
             <PasswordRequirements value={passwordValue} />
           </InputGroup>
@@ -227,13 +226,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
             <Label htmlFor="confirmPassword" isRequired>
               Confirmar senha
             </Label>
-            <ControlledPasswordInput
+            <PasswordInput
               hookForm={form}
               name="confirmPassword"
               placeholder="Confirme a senha"
               error={errors.confirmPassword?.message}
               isLoading={isLoading}
-              sanitizePassword
             />
           </InputGroup>
         </FieldsWrapper>
