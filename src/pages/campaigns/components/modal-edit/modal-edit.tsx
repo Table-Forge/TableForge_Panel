@@ -95,13 +95,15 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
   } = form;
 
   const currentBannerContent = useWatch({ control, name: "bannerContent" });
+  const currentBannerId = useWatch({ control, name: "bannerId" });
   const currentAddress = useWatch({ control, name: "address" });
   const currentLatitude = useWatch({ control, name: "latitude" });
   const currentLocationName = useWatch({ control, name: "locationName" });
   const currentLongitude = useWatch({ control, name: "longitude" });
 
   const selectedBannerSource = toImageSource(
-    currentBannerContent || dataEdit?.bannerUrl || data?.bannerUrl,
+    currentBannerContent ||
+      (currentBannerId ? dataEdit?.bannerUrl || data?.bannerUrl : undefined),
   );
 
   useEffect(() => {
