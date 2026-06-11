@@ -52,9 +52,11 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
   } = form;
 
   const currentImageContent = useWatch({ control, name: "imageContent" });
+  const currentImageId = useWatch({ control, name: "imageId" });
 
   const selectedImageSource = toImageSource(
-    currentImageContent || dataEdit?.imageUrl || data?.imageUrl,
+    currentImageContent ||
+      (currentImageId ? dataEdit?.imageUrl || data?.imageUrl : undefined),
   );
 
   useEffect(() => {
