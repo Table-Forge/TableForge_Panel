@@ -148,6 +148,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     if (isImageDataUrl(_bannerContent)) {
       try {
         const imagePayload = {
+          id: bannerId,
           type: "CampaignBanner" as const,
           name: `${campaignValues.title || "campanha"}-banner`,
           content: _bannerContent ?? "",
