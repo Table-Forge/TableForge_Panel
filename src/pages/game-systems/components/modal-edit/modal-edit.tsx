@@ -65,6 +65,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
 
   const onSubmit = handleSubmit(async (values) => {
     const { imageContent: _imageContent, ...gameSystemValues } = values;
+    const existingImageId = dataEdit?.imageId ?? data?.imageId;
     let imageId = gameSystemValues.imageId
       ? Number(gameSystemValues.imageId)
       : undefined;
@@ -72,7 +73,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
     if (isImageDataUrl(_imageContent)) {
       try {
         const imagePayload = {
-          id: imageId,
+          id: existingImageId,
           type: "GameSystem" as const,
           name: `${gameSystemValues.name || "sistema"}-imagem`,
           content: _imageContent ?? "",

@@ -143,6 +143,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       return;
     }
 
+    const existingBannerId = dataEdit?.bannerId ?? data?.bannerId;
     let bannerId = campaignValues.bannerId
       ? Number(campaignValues.bannerId)
       : undefined;
@@ -150,7 +151,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     if (isImageDataUrl(_bannerContent)) {
       try {
         const imagePayload = {
-          id: bannerId,
+          id: existingBannerId,
           type: "CampaignBanner" as const,
           name: `${campaignValues.title || "campanha"}-banner`,
           content: _bannerContent ?? "",
