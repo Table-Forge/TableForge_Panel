@@ -30,6 +30,9 @@ export const ImageInput: React.FC<IImageInput> = ({
 
   const handleOpenFileSelector = () => {
     if (disabled || !canChangeImage) return;
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
     inputRef.current?.click();
   };
 
