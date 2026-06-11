@@ -63,6 +63,11 @@
     animation: recovery-shake 0.28s ease-in-out;
   }
 
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+
   input[type="date"] {
     color-scheme: dark;
   }
