@@ -10,11 +10,15 @@ import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
+import { useBoundStore } from "@/src/store";
 import { useMemo } from "react";
+import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
+import { ModalEdit } from "./components/modal-edit/modal-edit";
 
 export function CampaignDetailsPage() {
   const navigate = useNavigate();
+  const openModal = useBoundStore((state) => state.openModal);
   const { id } = useParams();
 
   const campaignId = useMemo(() => {
@@ -39,13 +43,25 @@ export function CampaignDetailsPage() {
           </p>
         </div>
 
-        <Button
-          buttonStyle="hollow"
-          size="sm"
-          onClick={() => navigate("/campaigns")}
-        >
-          Voltar
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            buttonStyle="primary"
+            size="sm"
+            onClick={() =>
+              openModal("Editar Campanha", <ModalEdit data={data} />, "md")
+            }
+          >
+            <MdModeEdit />
+            Editar
+          </Button>
+          <Button
+            buttonStyle="hollow"
+            size="sm"
+            onClick={() => navigate("/campaigns")}
+          >
+            Voltar
+          </Button>
+        </div>
       </header>
 
       <CardBox title="Informações Gerais">

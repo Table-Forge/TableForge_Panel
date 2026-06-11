@@ -12,12 +12,16 @@ import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { UserStatus } from "@/src/components/user-status/user-status";
 import { useUserStatusEnum } from "@/src/features/users/hooks/enums/use-user-status-enum";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
+import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
 import { useMemo } from "react";
+import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
+import { ModalEdit } from "./components/modal-edit/modal-edit";
 
 export function UserDetailsPage() {
   const navigate = useNavigate();
+  const openModal = useBoundStore((state) => state.openModal);
   const { id } = useParams();
   const { statusEnum } = useUserStatusEnum();
 
@@ -43,9 +47,25 @@ export function UserDetailsPage() {
           </p>
         </div>
 
-        <Button buttonStyle="hollow" size="sm" onClick={() => navigate("/users")}>
-          Voltar
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            buttonStyle="primary"
+            size="sm"
+            onClick={() =>
+              openModal("Editar Usuário", <ModalEdit data={data} />, "md")
+            }
+          >
+            <MdModeEdit />
+            Editar
+          </Button>
+          <Button
+            buttonStyle="hollow"
+            size="sm"
+            onClick={() => navigate("/users")}
+          >
+            Voltar
+          </Button>
+        </div>
       </header>
 
       <CardBox title="Informações Gerais">
