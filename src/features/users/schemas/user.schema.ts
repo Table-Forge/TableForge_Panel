@@ -1,8 +1,10 @@
 import {
+  createPasswordSchema,
   dateOptional,
   dateRequired,
   emailOptional,
   emailRequired,
+  getPasswordError,
   imageUrlOptional,
   numberOptional,
   numberRequired,
@@ -48,12 +50,15 @@ export const UserSchema = BaseUserSchema.superRefine((data, context) => {
       message: "Campo obrigatório.",
       path: ["password"],
     });
-  } else if (password.length < 6) {
-    context.addIssue({
-      code: "custom",
-      message: "A senha deve ter ao menos 6 caracteres.",
-      path: ["password"],
-    });
+  } else {
+    const passwordError = getPasswordError(password);
+    if (passwordError) {
+      context.addIssue({
+        code: "custom",
+        message: passwordError,
+        path: ["password"],
+      });
+    }
   }
 
   if (!confirmPassword) {
@@ -80,10 +85,7 @@ export const UserCreateSchema = z
     gender: stringOptional,
     birthDate: dateRequired,
     avatarUrl: imageUrlOptional,
-    password: z
-      .string()
-      .trim()
-      .min(6, "A senha deve ter ao menos 6 caracteres"),
+    password: createPasswordSchema(),
     confirmPassword: stringRequired,
   })
   .superRefine((data, context) => {
@@ -108,10 +110,7 @@ export const UpdatePasswordSchema = z
   .object({
     userId: numberRequired,
     currentPassword: stringRequired,
-    newPassword: z
-      .string()
-      .trim()
-      .min(6, "Nova senha deve ter ao menos 6 caracteres"),
+    newPassword: createPasswordSchema(),
     confirmPassword: stringRequired,
   })
   .superRefine(({ newPassword, confirmPassword }, context) => {

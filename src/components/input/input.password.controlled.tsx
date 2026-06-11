@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useController, type FieldValues } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
+import { sanitizePasswordValue } from "@/src/utils/custom-schema-validations";
 import type { IControllerInput } from "./input.intefaces";
 import { getInputClasses, inputInnerClasses } from "./input.styles";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
@@ -10,6 +11,7 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
   name,
   hookForm,
   removeSpaces = false,
+  sanitizePassword = false,
   isLoading,
   ...props
 }: IControllerInput<TFieldValues>) {
@@ -37,9 +39,12 @@ export function ControlledPasswordInput<TFieldValues extends FieldValues = Field
               type={showPassword ? "text" : "password"}
               value={(value ?? "") as string}
               onChange={(event) => {
-                const inputValue = removeSpaces
-                  ? event.target.value.replace(/\s+/g, "")
-                  : event.target.value;
+                let inputValue = event.target.value;
+                if (sanitizePassword) {
+                  inputValue = sanitizePasswordValue(inputValue);
+                } else if (removeSpaces) {
+                  inputValue = inputValue.replace(/\s+/g, "");
+                }
                 onChange(inputValue);
               }}
               onBlur={onBlur}

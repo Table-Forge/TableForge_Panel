@@ -7,6 +7,7 @@ import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { ControlledPasswordInput } from "@/src/components/input/input.password.controlled";
+import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
@@ -22,7 +23,7 @@ import {
   toImageSource,
 } from "@/src/utils/image";
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 export const ModalEdit = ({ data }: { data?: IUser }) => {
   const addToast = useBoundStore((state) => state.addToast);
@@ -68,8 +69,11 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
   const {
     handleSubmit,
     reset,
+    control,
     formState: { errors, isDirty },
   } = form;
+
+  const passwordValue = useWatch({ control, name: "password" });
 
   useEffect(() => {
     reset(defaultValues);
@@ -214,8 +218,9 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
               placeholder="Digite a senha"
               error={errors.password?.message}
               isLoading={isLoading}
-              removeSpaces
+              sanitizePassword
             />
+            <PasswordRequirements value={passwordValue} />
           </InputGroup>
 
           <InputGroup>
@@ -228,7 +233,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
               placeholder="Confirme a senha"
               error={errors.confirmPassword?.message}
               isLoading={isLoading}
-              removeSpaces
+              sanitizePassword
             />
           </InputGroup>
         </FieldsWrapper>
