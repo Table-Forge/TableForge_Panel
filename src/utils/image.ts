@@ -1,3 +1,5 @@
+import imageCompression from "browser-image-compression";
+
 const normalizeImageValue = (value?: string) => {
   if (!value) return "";
 
@@ -55,6 +57,25 @@ export const dataUrlToFile = (dataUrl: string, filename: string): File => {
   }
 
   return new File([bytes], filename, { type: mime });
+};
+
+export const dataUrlToCompressedFile = async (dataUrl: string, filename: string): Promise<File> => {
+  const file = dataUrlToFile(dataUrl, filename);
+  
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1, // Limite de ~1MB
+      maxWidthOrHeight: 1920, // Resolução máxima comum
+      useWebWorker: true,
+      fileType: "image/webp" // Convertendo para WEBP para otimizar espaço
+    });
+    
+    // browser-image-compression não preserva o nome original em todas as conversões de tipo, vamos garantir o nome.
+    return new File([compressedFile], filename.replace(/\.[^/.]+$/, "") + ".webp", { type: "image/webp" });
+  } catch (error) {
+    console.error("Error compressing image:", error);
+    return file; // Retorna o arquivo original caso falhe
+  }
 };
 
 export const validateImageFile = (

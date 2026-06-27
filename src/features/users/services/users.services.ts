@@ -1,10 +1,10 @@
-﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { api } from "@/src/features/api";
 import {
   type IUpdatePassword,
   type IUser,
 } from "@/src/features/users/schemas/user.schema";
-import { dataUrlToFile } from "@/src/utils/image";
+import { dataUrlToCompressedFile } from "@/src/utils/image";
 import type { IGetAllUsersResponse, IGetUsers } from "../hooks/types";
 
 const ENDPOINT = "/users";
@@ -29,7 +29,7 @@ export const UserService = {
   updateAvatar: async (data: { id: number; content: string }) => {
     const formData = new FormData();
     formData.append("Id", String(data.id));
-    formData.append("File", dataUrlToFile(data.content, `avatar-${data.id}`));
+    formData.append("File", await dataUrlToCompressedFile(data.content, `avatar-${data.id}`));
 
     return api.put(`${ENDPOINT}/avatar`, formData);
   },
