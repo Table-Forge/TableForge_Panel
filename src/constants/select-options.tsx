@@ -1,9 +1,10 @@
-﻿import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 
 export const IMAGE_TYPE_VALUES = [
   "CampaignBanner",
   "UserProfile",
   "GameSystem",
+  "CharacterAvatar",
 ] as const;
 
 export const PAGE_SIZE: TSelectOptions<number>[] = [
