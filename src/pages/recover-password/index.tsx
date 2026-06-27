@@ -100,7 +100,17 @@ export function RecoverPasswordPage() {
         code,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data: { isValid?: boolean }) => {
+          if (data && data.isValid === false) {
+            setIsCodeInvalid(true);
+            setShakeTick((prev) => prev + 1);
+            setError("code", {
+              type: "manual",
+              message: "Código inválido. Verifique e tente novamente.",
+            });
+            return;
+          }
+
           setIsCodeInvalid(false);
           clearErrors("code");
           setValue("step", 3, { shouldDirty: false, shouldTouch: false });
