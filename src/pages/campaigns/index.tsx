@@ -1,4 +1,4 @@
-﻿import { Button } from "@/src/components/button/button";
+import { Button } from "@/src/components/button/button";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -110,11 +110,11 @@ export function CampaignsPage() {
           ?.name || "-",
     },
     {
-      title: "Limite",
+      title: "Membros / Limite",
       key: "playersLimit",
       width: "110px",
       align: "center",
-      render: (campaign) => campaign.playersLimit ?? 0,
+      render: (campaign) => `${campaign.membersCount ?? 0} / ${campaign.playersLimit ?? 0}`,
     },
     {
       title: "Privada",

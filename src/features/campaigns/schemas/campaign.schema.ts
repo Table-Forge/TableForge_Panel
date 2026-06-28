@@ -31,6 +31,7 @@ export const CampaignSchema = z.object({
   gameSystemId: numberOptional,
   gameSystemName: stringOptional,
   bannerContent: imageUrlOptional,
+  membersCount: numberOptional,
 });
 
 export type ICampaign = z.infer<typeof CampaignSchema>;
