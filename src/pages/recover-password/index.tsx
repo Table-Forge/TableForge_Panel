@@ -269,11 +269,11 @@ export function RecoverPasswordPage() {
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(126,135,226,0.28),transparent_42%),radial-gradient(circle_at_80%_0%,rgba(251,69,1,0.24),transparent_46%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,36,0,0.28),transparent_42%),radial-gradient(circle_at_80%_0%,rgba(255,36,0,0.24),transparent_46%)]" />
 
       <div className="relative w-full max-w-md rounded-3xl border border-secondary/25 bg-primary/80 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur">
         <header className="mb-6 flex flex-col items-center">
-          <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-tertiary bg-primary shadow-[0_0_20px_rgba(251,69,1,0.35)]">
+          <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-tertiary bg-primary shadow-[0_0_20px_rgba(255,36,0,0.35)]">
             <Shield className="text-tertiary" size={44} />
           </div>
 

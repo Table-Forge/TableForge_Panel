@@ -5,13 +5,13 @@
     "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
 
-  --color-background: #0a0a1b;
-  --color-primary: #1a1a2e;
-  --color-secondary: #7e87e2;
-  --color-tertiary: #fb4501;
-  --color-danger: #ff4d4d;
+  --color-background: #000000;
+  --color-primary: #3a3a3a;
+  --color-secondary: #ff2400;
+  --color-tertiary: #ff2400;
+  --color-danger: #ff2400;
 
-  --color-white: #f8f8f8;
+  --color-white: #faf3e0;
   --color-black: #000000;
   --color-grays-50: #f1f1f1;
   --color-grays-100: #d1d1d1;
@@ -115,15 +115,15 @@
   .tf-datepicker-calendar-container .react-datepicker {
     border: 1px solid rgb(255 255 255 / 0.15);
     border-radius: 14px;
-    background-color: #151527 !important;
+    background-color: #2d2d2d !important;
     background-image: none !important;
-    color: #f8f8f8 !important;
+    color: #faf3e0 !important;
     box-shadow: 0 12px 30px rgb(0 0 0 / 0.35);
     overflow: hidden;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__header {
-    background-color: #1d1d34 !important;
+    background-color: #3a3a3a !important;
     background-image: none !important;
     border-bottom: 1px solid rgb(255 255 255 / 0.1);
     padding: 14px 12px 10px;
@@ -138,7 +138,7 @@
   .tf-datepicker-calendar-container .react-datepicker__month,
   .tf-datepicker-calendar-container .react-datepicker__week,
   .tf-datepicker-calendar-container .react-datepicker__day-names {
-    background-color: #151527;
+    background-color: #2d2d2d;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day-names {
@@ -157,7 +157,7 @@
   .tf-datepicker-calendar-container .react-datepicker__day,
   .tf-datepicker-calendar-container .react-datepicker__time-name,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item {
-    color: #f8f8f8 !important;
+    color: #faf3e0 !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__current-month {
@@ -170,7 +170,7 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day-name {
-    color: rgb(248 248 248 / 0.78) !important;
+    color: rgb(250 243 224 / 0.78) !important;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -187,7 +187,7 @@
 
   .tf-datepicker-calendar-container .react-datepicker__day:hover,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item:hover {
-    background: rgb(126 135 226 / 0.32) !important;
+    background: rgb(255 36 0 / 0.32) !important;
     color: #ffffff !important;
   }
 
@@ -201,7 +201,7 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--today {
-    outline: 1px solid rgb(126 135 226 / 0.5);
+    outline: 1px solid rgb(255 36 0 / 0.5);
     outline-offset: -1px;
     font-weight: 700;
     color: #ffffff !important;
@@ -209,18 +209,18 @@
 
   .tf-datepicker-calendar-container .react-datepicker__day--in-range,
   .tf-datepicker-calendar-container .react-datepicker__day--in-selecting-range {
-    background: rgb(126 135 226 / 0.18) !important;
+    background: rgb(255 36 0 / 0.18) !important;
     color: var(--color-white) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--outside-month {
-    color: rgb(248 248 248 / 0.34) !important;
+    color: rgb(250 243 224 / 0.34) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--disabled,
   .tf-datepicker-calendar-container
     .react-datepicker__time-list-item--disabled {
-    color: rgb(248 248 248 / 0.3) !important;
+    color: rgb(250 243 224 / 0.3) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__navigation-icon::before {
@@ -236,9 +236,9 @@
     display: block;
     width: 100%;
     padding: 10px 12px;
-    background-color: #16162b !important;
+    background-color: #2d2d2d !important;
     border-top: 1px solid rgb(255 255 255 / 0.1);
-    color: #f8f8f8 !important;
+    color: #faf3e0 !important;
     text-align: center;
     line-height: 1.2;
     letter-spacing: 0.02em;
@@ -250,7 +250,7 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__today-button:hover {
-    background-color: #20203a !important;
+    background-color: #4a4a4a !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__time-container {
@@ -259,7 +259,7 @@
 
   .tf-datepicker-calendar-container .react-datepicker__time-box,
   .tf-datepicker-calendar-container .react-datepicker__time-list {
-    background-color: #151527;
+    background-color: #2d2d2d;
   }
 
   .tf-masonry-grid {
