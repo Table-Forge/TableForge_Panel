@@ -69,7 +69,7 @@ export function NavMenu() {
               [
                 "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-semibold uppercase tracking-wide transition",
                 isActive
-                  ? "border-tertiary bg-tertiary/15 text-white shadow-[0_0_0_1px_rgba(251,69,1,0.28)]"
+                  ? "border-tertiary bg-tertiary/15 text-white shadow-[0_0_0_1px_rgba(255,36,0,0.28)]"
                   : "border-secondary/20 bg-secondary/10 text-grays-100 hover:border-secondary/40 hover:text-white",
               ].join(" ")
             }
