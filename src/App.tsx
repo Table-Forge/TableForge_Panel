@@ -11,6 +11,7 @@ import { DashboardPage } from "@/src/pages/dashboard";
 import { GameSystemDetailsPage } from "@/src/pages/game-systems/details";
 import { GameSystemsPage } from "@/src/pages/game-systems";
 import ImagesPage from "@/src/pages/images";
+import { ImageDetailsPage } from "@/src/pages/images/details";
 import { LoginPage } from "@/src/pages/login";
 import { LogDetailsPage } from "@/src/pages/logs/details";
 import { LogsPage } from "@/src/pages/logs";
@@ -46,6 +47,7 @@ function App() {
               <Route path="users" element={<UsersPage />} />
               <Route path="users/:id" element={<UserDetailsPage />} />
               <Route path="images" element={<ImagesPage />} />
+              <Route path="images/:id" element={<ImageDetailsPage />} />
               <Route path="logs" element={<LogsPage />} />
               <Route path="logs/:id" element={<LogDetailsPage />} />
             </Route>
