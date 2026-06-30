@@ -1,4 +1,4 @@
-﻿import { Button } from "@/src/components/button/button";
+import { Button } from "@/src/components/button/button";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -141,7 +141,11 @@ export default function ImagesPage() {
 
       <ImagesSearchFilters />
 
-      <Table tableContents={tableContents} bodyData={data?.items ?? []} />
+      <Table
+        tableContents={tableContents}
+        bodyData={data?.items ?? []}
+        detailsLink="/images"
+      />
 
       <Paginate
         paginationData={data?.pagination}
