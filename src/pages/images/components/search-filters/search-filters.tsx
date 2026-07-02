@@ -5,7 +5,8 @@ import { InputGroup } from "@/src/components/input-group/input-group";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { useFilterContext } from "@/src/components/filters/filters.context";
-import { PAGE_SIZE } from "@/src/constants/select-options";
+import { EMPTY_OPTION, PAGE_SIZE } from "@/src/constants/select-options";
+import { useImageTypeEnum } from "@/src/features/images/hooks/enums/use-image-type-enum";
 import {
   IMAGES_COMPONENT_FILTER_KEY,
   INITIAL_IMAGES_FILTERS,
@@ -20,10 +21,12 @@ function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
   const { close } = useFilterContext();
   const setFiltersGlobal = useComponentStore((state) => state.setFilters);
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
+  const { imageTypeEnum, isLoadingImageTypeEnum } = useImageTypeEnum();
 
   const defaultValues: IGetPaginatedParams = {
     ...filters,
     size: filters.size ?? INITIAL_IMAGES_FILTERS.size,
+    type: filters.type ?? "",
   };
 
   const form = useForm<IGetPaginatedParams>({
@@ -54,6 +57,18 @@ function AdvancedFiltersContent({ filters }: { filters: IGetPaginatedParams }) {
       onSubmit={form.handleSubmit(handleApplyFilters)}
       className="space-y-4"
     >
+      <InputGroup>
+        <Label htmlFor="type">Tipo</Label>
+        <Select
+          initialOptions={[EMPTY_OPTION, ...(imageTypeEnum || [])]}
+          title="Todos"
+          name="type"
+          hookForm={form}
+          isLoading={isLoadingImageTypeEnum}
+          disabled={isLoadingImageTypeEnum}
+        />
+      </InputGroup>
+
       <InputGroup>
         <Label htmlFor="size">Itens por página</Label>
         <Select
