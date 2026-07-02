@@ -1,5 +1,4 @@
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
-import { BrandName } from "@/src/components/ui/brand-name";
 import {
   ChevronDown,
   ChevronUp,
@@ -32,7 +31,13 @@ export function NavMenu() {
   return (
     <aside className="border-b border-white/10 bg-primary/85 p-3 lg:border-b-0 lg:border-r lg:p-5">
       <div className="flex items-center justify-between gap-3 lg:hidden">
-        <BrandName sizeClassName="text-xl" />
+        <img
+          src="/logo/logo-h-white.png"
+          alt="TableForge Logo"
+          width={140}
+          height={140}
+          className="object-contain"
+        />
 
         <ButtonIcon
           aria-expanded={isMobileOpen}
@@ -50,7 +55,13 @@ export function NavMenu() {
       <div
         className={`${isMobileOpen ? "mt-3 block" : "hidden"} rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5 lg:mt-0 lg:block`}
       >
-        <BrandName sizeClassName="text-2xl" className="text-center" />
+        <img
+          src="/logo/logo-h-black.png"
+          alt="TableForge Logo"
+          width={220}
+          height={220}
+          className="object-contain"
+        />
         <p className="mt-2 text-center text-xs text-grays-100">
           Painel administrativo do TableForge
         </p>
