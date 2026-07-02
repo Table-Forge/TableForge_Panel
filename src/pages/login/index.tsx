@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shield } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +7,6 @@ import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { PasswordInput } from "@/src/components/input/input.password";
-import { BrandName } from "@/src/components/ui/brand-name";
 import { useAuth } from "@/src/context/use-auth";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
 import {
@@ -65,11 +63,16 @@ export function LoginPage() {
 
       <div className="relative w-full max-w-md rounded-3xl border border-secondary/25 bg-primary/80 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur">
         <header className="mb-8 flex flex-col items-center">
-          <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-tertiary bg-primary shadow-[0_0_20px_rgba(255,36,0,0.35)]">
-            <Shield className="text-tertiary" size={44} />
+          <div className="flex items-center justify-center ">
+            <img
+              src="/logo/logo-v-black.png"
+              alt="TableForge Logo"
+              width={240}
+              height={240}
+              className="object-contain"
+            />
           </div>
 
-          <BrandName />
           <p className="mt-2 max-w-[260px] text-center text-sm text-grays-100">
             Acesse o painel administrativo do TableForge.
           </p>

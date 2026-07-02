@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shield } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +8,6 @@ import { ControlledInput } from "@/src/components/input/input.default.controlled
 import { PasswordInput } from "@/src/components/input/input.password";
 import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
-import { BrandName } from "@/src/components/ui/brand-name";
 import {
   PasswordRecoveryFormSchema,
   RECOVERY_CODE_LENGTH,
@@ -273,11 +271,16 @@ export function RecoverPasswordPage() {
 
       <div className="relative w-full max-w-md rounded-3xl border border-secondary/25 bg-primary/80 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur">
         <header className="mb-6 flex flex-col items-center">
-          <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-tertiary bg-primary shadow-[0_0_20px_rgba(255,36,0,0.35)]">
-            <Shield className="text-tertiary" size={44} />
+          <div className="mb-4 flex items-center justify-center ">
+            <img
+              src="/logo/logo-v-black.png"
+              alt="TableForge Logo"
+              width={180}
+              height={180}
+              className="object-contain"
+            />
           </div>
 
-          <BrandName />
           <p className="mt-2 max-w-[280px] text-center text-sm text-grays-100">
             Recuperação de senha em 3 etapas.
           </p>
@@ -291,9 +294,8 @@ export function RecoverPasswordPage() {
             return (
               <span
                 key={item}
-                className={`h-2 w-16 rounded-full transition ${
-                  isActive || isDone ? "bg-secondary" : "bg-white/15"
-                } ${index === 2 ? "mr-0" : ""}`}
+                className={`h-2 w-16 rounded-full transition ${isActive || isDone ? "bg-secondary" : "bg-white/15"
+                  } ${index === 2 ? "mr-0" : ""}`}
               />
             );
           })}
@@ -371,11 +373,10 @@ export function RecoverPasswordPage() {
                           event.clipboardData.getData("text"),
                         );
                       }}
-                      className={`h-14 w-12 rounded-xl border bg-background/50 text-center text-2xl font-bold outline-none transition ${
-                        isCodeInvalid
-                          ? "border-danger text-danger"
-                          : "border-white/20 text-white focus:border-secondary"
-                      }`}
+                      className={`h-14 w-12 rounded-xl border bg-background/50 text-center text-2xl font-bold outline-none transition ${isCodeInvalid
+                        ? "border-danger text-danger"
+                        : "border-white/20 text-white focus:border-secondary"
+                        }`}
                     />
                   ))}
                 </div>
