@@ -24,7 +24,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
 
   const defaultValues = useMemo<IImage>(
     () => ({
-      type: "CampaignBanner",
+      type: 1,
       name: "",
       content: "",
       ...(dataEdit ?? data),

@@ -29,7 +29,7 @@ export const ImageService = {
   create: async (payload: IImage): Promise<IImage> => {
     const formData = new FormData();
     formData.append("File", await dataUrlToCompressedFile(payload.content, payload.name));
-    formData.append("Type", payload.type);
+    formData.append("Type", payload.type.toString());
     formData.append("Name", payload.name);
 
     const { data } = await api.post(ENDPOINT, formData);
@@ -39,7 +39,7 @@ export const ImageService = {
   update: async (payload: IImage): Promise<IImage> => {
     const formData = new FormData();
     formData.append("Id", String(payload.id));
-    formData.append("Type", payload.type);
+    formData.append("Type", payload.type.toString());
     formData.append("Name", payload.name);
 
     if (isImageDataUrl(payload.content)) {

@@ -74,7 +74,7 @@ export const ModalEdit = ({ data }: { data?: IGameSystem }) => {
       try {
         const imagePayload = {
           id: existingImageId,
-          type: "GameSystem" as const,
+          type: 3,
           name: `${gameSystemValues.name || "sistema"}-imagem`,
           content: _imageContent ?? "",
         };

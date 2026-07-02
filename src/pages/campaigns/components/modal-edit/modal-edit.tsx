@@ -152,7 +152,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       try {
         const imagePayload = {
           id: existingBannerId,
-          type: "CampaignBanner" as const,
+          type: 1,
           name: `${campaignValues.title || "campanha"}-banner`,
           content: _bannerContent ?? "",
         };

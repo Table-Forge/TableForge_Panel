@@ -108,7 +108,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     } else if (isImageDataUrl(avatarContent)) {
       try {
         const imagePayload = {
-          type: "UserProfile" as const,
+          type: 2,
           name: `${payload.username ?? payload.nickname ?? "usuario"}-avatar`,
           content: avatarContent,
         };
