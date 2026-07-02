@@ -273,7 +273,7 @@ export function RecoverPasswordPage() {
         <header className="mb-6 flex flex-col items-center">
           <div className="mb-4 flex items-center justify-center ">
             <img
-              src="/logo/logo-v-black.png"
+              src="/logo/logo-v-white.png"
               alt="TableForge Logo"
               width={180}
               height={180}

@@ -56,7 +56,7 @@ export function NavMenu() {
         className={`${isMobileOpen ? "mt-3 block" : "hidden"} rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5 lg:mt-0 lg:block`}
       >
         <img
-          src="/logo/logo-h-black.png"
+          src="/logo/logo-h-white.png"
           alt="TableForge Logo"
           width={220}
           height={220}

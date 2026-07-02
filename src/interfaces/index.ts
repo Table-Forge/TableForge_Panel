@@ -3,6 +3,7 @@ interface IBaseParams {
   logType?: string;
   startDate?: Date | string;
   endDate?: Date | string;
+  type?: number | string;
 }
 
 export type IGetParams = IBaseParams;
