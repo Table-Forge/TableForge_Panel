@@ -38,7 +38,7 @@ export function Thumbnail({
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        openModal("Visualização", <ModalImage alt={finalAlt} src={source} />, "lg");
+        openModal("Visualização", <ModalImage alt={finalAlt} src={source} />, "md");
       }}
       role="button"
       className={`cursor-pointer rounded-lg border border-white/15 object-contain p-0.5 hover:border-white/40 transition-colors ${className}`}
