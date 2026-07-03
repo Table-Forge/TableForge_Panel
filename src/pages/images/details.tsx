@@ -15,6 +15,7 @@ import { formatDate } from "@/src/utils/format";
 import { useMemo } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
+import { CopyButton } from "@/src/components/copy-button/copy-button";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 
 export function ImageDetailsPage() {
@@ -103,7 +104,10 @@ export function ImageDetailsPage() {
       <CardBox title="Visualização e Link">
         <div className="flex flex-col gap-6">
           <div>
-            <CardLabel>URL do recurso</CardLabel>
+            <div className="flex items-center gap-2">
+              <CardLabel>URL do recurso</CardLabel>
+              {data.url && <CopyButton text={data.url} />}
+            </div>
             <CardValue className="mt-1 block break-all font-semibold text-primary">
               <a href={data.url} target="_blank" rel="noreferrer">
                 {data.url ?? "-"}
