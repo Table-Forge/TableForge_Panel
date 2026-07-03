@@ -65,7 +65,7 @@ export function LoginPage() {
         <header className="mb-8 flex flex-col items-center">
           <div className="flex items-center justify-center ">
             <img
-              src="/logo/logo-v-white.png"
+              src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
               alt="TableForge Logo"
               width={240}
               height={240}

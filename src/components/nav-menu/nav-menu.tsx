@@ -32,7 +32,7 @@ export function NavMenu() {
     <aside className="border-b border-white/10 bg-primary/85 p-3 lg:border-b-0 lg:border-r lg:p-5">
       <div className="flex items-center justify-between gap-3 lg:hidden">
         <img
-          src="/logo/logo-h-white.png"
+          src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/0b85dfdf-3c07-4aad-b8fe-0c88e2bbfa3f.webp?v=1"
           alt="TableForge Logo"
           width={140}
           height={140}
@@ -56,7 +56,7 @@ export function NavMenu() {
         className={`${isMobileOpen ? "mt-3 block" : "hidden"} rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5 lg:mt-0 lg:block`}
       >
         <img
-          src="/logo/logo-h-white.png"
+          src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
           alt="TableForge Logo"
           width={220}
           height={220}
