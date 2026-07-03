@@ -14,6 +14,7 @@ import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { CopyButton } from "@/src/components/copy-button/copy-button";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { ImagesSearchFilters } from "./components/search-filters/search-filters";
 
@@ -85,11 +86,21 @@ export default function ImagesPage() {
       render: (image) => image.name || "-",
     },
     {
-      title: "UUID",
-      key: "uuid",
+      title: "Link",
+      key: "link",
       width: "240px",
       normalCase: true,
-      render: (image) => image.uuid || "-",
+      render: (image) =>
+        image.url ? (
+          <div className="flex items-center gap-2">
+            <span className="truncate max-w-[180px]" title={image.url}>
+              {image.url}
+            </span>
+            <CopyButton text={image.url} title="Copiar link" />
+          </div>
+        ) : (
+          "-"
+        ),
     },
     {
       title: "Criado em",
