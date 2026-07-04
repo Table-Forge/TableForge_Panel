@@ -10,6 +10,7 @@ import { ClassesPage } from "@/src/pages/classes";
 import { DashboardPage } from "@/src/pages/dashboard";
 import { GameSystemDetailsPage } from "@/src/pages/game-systems/details";
 import { GameSystemsPage } from "@/src/pages/game-systems";
+import { BannersPage } from "@/src/pages/banners";
 import ImagesPage from "@/src/pages/images";
 import { ImageDetailsPage } from "@/src/pages/images/details";
 import { LoginPage } from "@/src/pages/login";
@@ -42,6 +43,7 @@ function App() {
               <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
               <Route path="gamesystems" element={<GameSystemsPage />} />
               <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
+              <Route path="banners" element={<BannersPage />} />
               <Route path="classes" element={<ClassesPage />} />
               <Route path="races" element={<RacesPage />} />
               <Route path="users" element={<UsersPage />} />

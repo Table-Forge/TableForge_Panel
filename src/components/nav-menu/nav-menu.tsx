@@ -18,6 +18,7 @@ const navItems = [
   { to: "/", label: "Painel", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/gamesystems", label: "Sistemas", icon: Gamepad2 },
+  { to: "/banners", label: "Banners", icon: Image },
   { to: "/classes", label: "Classes", icon: Swords },
   { to: "/races", label: "Raças", icon: Sparkles },
   { to: "/users", label: "Usuários", icon: ShieldUser },
