@@ -1,4 +1,4 @@
-﻿import { api } from "@/src/features/api";
+import { api } from "@/src/features/api";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { type ICampaign } from "@/src/features/campaigns/schemas/campaign.schema";
 import type { IGetAllCampaignsResponse, IGetCampaigns } from "../hooks/types";
@@ -30,6 +30,10 @@ export const CampaignService = {
   },
   getCampaignStatusEnum: async (): Promise<TSelectOptions[]> => {
     const { data } = await api.get(`${ENDPOINT}/enums/campaign-status`);
+    return data;
+  },
+  getCampaignFrequencyEnum: async (): Promise<TSelectOptions[]> => {
+    const { data } = await api.get(`${ENDPOINT}/enums/frequency`);
     return data;
   },
 };

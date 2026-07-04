@@ -14,6 +14,7 @@ export const CampaignSchema = z.object({
   title: stringRequired,
   description: stringOptional,
   difficulty: stringRequired,
+  frequency: stringOptional,
   playersLimit: z.coerce.number().min(0),
   status: stringRequired,
   isPrivate: z.coerce.boolean(),

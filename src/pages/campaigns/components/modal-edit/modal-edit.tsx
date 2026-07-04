@@ -9,6 +9,7 @@ import { Label } from "@/src/components/label/label";
 import { ControlledLocationAutocomplete } from "@/src/components/location-autocomplete/location-autocomplete.controlled";
 import { Select } from "@/src/components/select/select";
 import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
+import { useCampaignFrequencyEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-frequency-enum";
 import { useCampaignStatusEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-status-enum";
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useCampaignsMutation } from "@/src/features/campaigns/hooks/use-campaigns-mutations";
@@ -25,6 +26,7 @@ type ICampaignForm = Omit<Partial<ICampaign>, "latitude" | "longitude"> & {
   title: string;
   description: string;
   difficulty: string;
+  frequency?: string;
   playersLimit: number;
   status: string;
   isPrivate: boolean;
@@ -51,6 +53,8 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
     useImagesMutation();
   const { difficultyLevelEnum, isLoadingDifficultyLevelEnum } =
     useCampaignDifficultyLevelEnum();
+  const { frequencyEnum, isLoadingFrequencyEnum } =
+    useCampaignFrequencyEnum();
   const { campaignStatusEnum, isLoadingCampaignStatusEnum } =
     useCampaignStatusEnum();
   const { userOptions, isLoadingUsersSelect, onSearchUsers } = useUsersSelect();
@@ -62,6 +66,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
       title: "",
       description: "",
       difficulty: "Low",
+      frequency: undefined,
       playersLimit: 1,
       status: "Draft",
       isPrivate: false,
@@ -248,6 +253,22 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
             searchInput={false}
             disabled={isLoading || isLoadingDifficultyLevelEnum}
             isLoading={isLoading || isLoadingDifficultyLevelEnum}
+          />
+        </InputGroup>
+
+        <InputGroup>
+          <Label htmlFor="frequency">
+            Frequência
+          </Label>
+          <Select
+            hookForm={form}
+            name="frequency"
+            initialOptions={frequencyEnum}
+            title="Selecione a frequência (opcional)"
+            error={errors.frequency?.message}
+            searchInput={false}
+            disabled={isLoading || isLoadingFrequencyEnum}
+            isLoading={isLoading || isLoadingFrequencyEnum}
           />
         </InputGroup>
       </FieldsWrapper>
