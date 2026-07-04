@@ -15,6 +15,7 @@ import { useBoundStore } from "@/src/store";
 import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
 import { CampaignsSearchFilters } from "./components/search-filters/search-filters";
+import { useCampaignStatusEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-status-enum";
 import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
 
 export function CampaignsPage() {
@@ -23,6 +24,7 @@ export function CampaignsPage() {
 
   const { data, isLoading, isError, filters, setFilters } = useAllCampaigns();
 
+  const { campaignStatusEnum } = useCampaignStatusEnum();
   const { difficultyLevelEnum } = useCampaignDifficultyLevelEnum();
 
   const getMoreInfoOptions = (item: ICampaign): IMoreOptions[] => {
@@ -98,7 +100,7 @@ export function CampaignsPage() {
       key: "status",
       width: "180px",
       normalCase: true,
-      render: (campaign) => campaign.status || "-",
+      render: (campaign) => campaign.status ? campaignStatusEnum.find(o => o.value === campaign.status)?.name || campaign.status : "-",
     },
     {
       title: "Dificuldade",

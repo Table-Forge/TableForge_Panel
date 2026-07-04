@@ -9,6 +9,9 @@ import {
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
+import { useCampaignStatusEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-status-enum";
+import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
+import { useCampaignFrequencyEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-frequency-enum";
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useBoundStore } from "@/src/store";
 import { useMemo } from "react";
@@ -25,6 +28,10 @@ export function CampaignDetailsPage() {
     const parsed = Number(id);
     return Number.isFinite(parsed) ? parsed : undefined;
   }, [id]);
+
+  const { campaignStatusEnum } = useCampaignStatusEnum();
+  const { difficultyLevelEnum } = useCampaignDifficultyLevelEnum();
+  const { frequencyEnum } = useCampaignFrequencyEnum();
 
   const { data, isLoading, isError } = useCampaignById(campaignId);
 
@@ -81,13 +88,19 @@ export function CampaignDetailsPage() {
           <InfoBox>
             <CardLabel>Status</CardLabel>
             <CardValue className="mt-1 block break-all">
-              {data.status ?? "-"}
+              {data.status ? campaignStatusEnum.find(o => o.value === data.status)?.name || data.status : "-"}
             </CardValue>
           </InfoBox>
           <InfoBox>
             <CardLabel>Dificuldade</CardLabel>
             <CardValue className="mt-1 block break-all">
-              {data.difficulty ?? "-"}
+              {data.difficulty ? difficultyLevelEnum.find(o => o.value === data.difficulty)?.name || data.difficulty : "-"}
+            </CardValue>
+          </InfoBox>
+          <InfoBox>
+            <CardLabel>Frequência</CardLabel>
+            <CardValue className="mt-1 block break-all">
+              {data.frequency ? frequencyEnum.find(o => o.value === data.frequency)?.name || data.frequency : "-"}
             </CardValue>
           </InfoBox>
           <InfoBox>
