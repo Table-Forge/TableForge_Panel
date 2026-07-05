@@ -11,6 +11,9 @@ const __dirname = path.dirname(__filename);
 // https://vite.dev/config/
 export default defineConfig({
   envPrefix: ["VITE_", "EXPO_PUBLIC_"],
+  build: {
+    chunkSizeWarningLimit: 2000,
+  },
   resolve: {
     alias: {
       "@/src": path.resolve(__dirname, "src"),
