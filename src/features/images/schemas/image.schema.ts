@@ -1,4 +1,4 @@
-﻿import {
+import {
   dateOptional,
   numberOptional,
   numberRequired,
@@ -20,6 +20,7 @@ export const ImageSchema = z.object({
   url: stringOptional,
   status: stringOptional,
   version: numberOptional,
+  optimize: z.boolean().optional(),
 });
 
 export type IImage = z.infer<typeof ImageSchema>;

@@ -1,7 +1,7 @@
 import { api } from "@/src/features/api";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { type IImage } from "@/src/features/images/schemas/image.schema";
-import { dataUrlToCompressedFile, isImageDataUrl } from "@/src/utils/image";
+import { dataUrlToCompressedFile, dataUrlToFile, isImageDataUrl } from "@/src/utils/image";
 import type { IGetAllImagesResponse, IGetImages } from "../hooks/types";
 
 const ENDPOINT = "/images";
@@ -28,7 +28,12 @@ export const ImageService = {
 
   create: async (payload: IImage): Promise<IImage> => {
     const formData = new FormData();
-    formData.append("File", await dataUrlToCompressedFile(payload.content, payload.name));
+
+    const file = payload.optimize !== false
+      ? await dataUrlToCompressedFile(payload.content, payload.name)
+      : dataUrlToFile(payload.content, payload.name);
+
+    formData.append("File", file);
     formData.append("Type", payload.type.toString());
     formData.append("Name", payload.name);
 
@@ -43,7 +48,10 @@ export const ImageService = {
     formData.append("Name", payload.name);
 
     if (isImageDataUrl(payload.content)) {
-      formData.append("File", await dataUrlToCompressedFile(payload.content, payload.name));
+      const file = payload.optimize !== false
+        ? await dataUrlToCompressedFile(payload.content, payload.name)
+        : dataUrlToFile(payload.content, payload.name);
+      formData.append("File", file);
     }
 
     const { data } = await api.put(ENDPOINT, formData);

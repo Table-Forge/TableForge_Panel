@@ -3,6 +3,7 @@ import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
+import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { useImageTypeEnum } from "@/src/features/images/hooks/enums/use-image-type-enum";
@@ -27,6 +28,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
       type: 1,
       name: "",
       content: "",
+      optimize: true,
       ...(dataEdit ?? data),
     }),
     [data, dataEdit],
@@ -116,6 +118,16 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
                 setValue("name", fileName, { shouldDirty: true });
               }
             }}
+          />
+        </InputGroup>
+
+        <InputGroup className="basis-full">
+          <CheckboxControlled
+            hookForm={form}
+            name="optimize"
+            label="Otimizar imagem automaticamente"
+            infoText="Quando ativado, a imagem será convertida para WebP e comprimida (padrão 80%). Desative apenas para imagens que requerem preservação exata, como logos de alta resolução ou sprites com fundo transparente que perdem qualidade na conversão."
+            disabled={isSubmitting || isLoading}
           />
         </InputGroup>
       </FieldsWrapper>
