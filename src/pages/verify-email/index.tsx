@@ -1,18 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
-import { PasswordInput } from "@/src/components/input/input.password";
-import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
 import {
-  PasswordRecoveryFormSchema,
   RECOVERY_CODE_LENGTH,
   RESEND_COOLDOWN_SECONDS,
-  type IPasswordRecoveryForm,
+  ValidationFormSchema,
+  type IValidationForm,
 } from "@/src/features/auth/schemas/auth.schema";
 import { normalizeCode, formatCooldown } from "@/src/utils/format";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
@@ -21,13 +19,15 @@ import { useBoundStore } from "@/src/store";
 
 
 
-export function RecoverPasswordPage() {
+export default function VerifyEmailPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialEmail = searchParams.get("email") || "";
+
   const addToast = useBoundStore((state) => state.addToast);
   const {
-    sendRecoveryCodeMutation,
-    validateRecoveryCodeMutation,
-    updateRecoveryPasswordMutation,
+    sendValidationCodeMutation,
+    validateEmailCodeMutation,
   } = useAuthMutation();
 
   const [isCodeInvalid, setIsCodeInvalid] = useState(false);
@@ -38,19 +38,17 @@ export function RecoverPasswordPage() {
 
   const codeInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-  const form = useForm<IPasswordRecoveryForm, unknown, IPasswordRecoveryForm>({
-    resolver: zodResolver(PasswordRecoveryFormSchema) as Resolver<
-      IPasswordRecoveryForm,
+  const form = useForm<IValidationForm, unknown, IValidationForm>({
+    resolver: zodResolver(ValidationFormSchema) as Resolver<
+      IValidationForm,
       unknown,
-      IPasswordRecoveryForm
+      IValidationForm
     >,
     mode: "onChange",
     defaultValues: {
-      step: 1,
-      email: "",
+      step: initialEmail ? 2 : 1,
+      email: initialEmail,
       code: "",
-      newPassword: "",
-      confirmPassword: "",
     },
   });
 
@@ -80,32 +78,22 @@ export function RecoverPasswordPage() {
   useEffect(() => {
     if (step !== 2) return;
     if (code.length !== RECOVERY_CODE_LENGTH) return;
-    if (validateRecoveryCodeMutation.isPending) return;
+    if (validateEmailCodeMutation.isPending) return;
     if (!email?.trim()) return;
     if (lastAttemptedCode === code) return;
 
     setLastAttemptedCode(code);
-    validateRecoveryCodeMutation.mutate(
+    validateEmailCodeMutation.mutate(
       {
         email: email.trim(),
         code,
       },
       {
-        onSuccess: (data: { isValid?: boolean }) => {
-          if (data && data.isValid === false) {
-            setIsCodeInvalid(true);
-            setShakeTick((prev) => prev + 1);
-            setError("code", {
-              type: "manual",
-              message: "Código inválido. Verifique e tente novamente.",
-            });
-            return;
-          }
-
+        onSuccess: () => {
           setIsCodeInvalid(false);
           clearErrors("code");
-          setValue("step", 3, { shouldDirty: false, shouldTouch: false });
-          addToast("success", "Código válido. Defina sua nova senha.");
+          addToast("success", "Conta validada com sucesso! Você já pode acessar a plataforma.");
+          navigate("/login", { replace: true });
         },
         onError: () => {
           setIsCodeInvalid(true);
@@ -122,12 +110,11 @@ export function RecoverPasswordPage() {
     code,
     email,
     lastAttemptedCode,
-    validateRecoveryCodeMutation,
-    validateRecoveryCodeMutation.isPending,
+    validateEmailCodeMutation,
     clearErrors,
-    setValue,
     setError,
     addToast,
+    navigate,
   ]);
 
   useEffect(() => {
@@ -137,17 +124,24 @@ export function RecoverPasswordPage() {
     clearErrors("code");
   }, [clearErrors, code, isCodeInvalid, lastAttemptedCode]);
 
+  useEffect(() => {
+    if (searchParams.get("email")) {
+      resendCooldown.start(RESEND_COOLDOWN_SECONDS);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSendCode = handleSubmit(async () => {
     const isValidEmail = await trigger("email");
     if (!isValidEmail) return;
 
-    sendRecoveryCodeMutation.mutate(email.trim(), {
+    sendValidationCodeMutation.mutate(email.trim(), {
       onSuccess: () => {
         setValue("step", 2, { shouldDirty: false, shouldTouch: false });
         setIsCodeInvalid(false);
         setLastAttemptedCode("");
         setValue("code", "", { shouldDirty: true, shouldTouch: true });
-        clearErrors(["code", "newPassword", "confirmPassword"]);
+        clearErrors(["code"]);
         addToast("success", "Código enviado para o e-mail informado.");
         resendCooldown.start(RESEND_COOLDOWN_SECONDS);
         window.setTimeout(() => codeInputRefs.current[0]?.focus(), 50);
@@ -159,7 +153,7 @@ export function RecoverPasswordPage() {
     if (resendCooldown.isActive) return;
 
     resendCooldown.start(RESEND_COOLDOWN_SECONDS);
-    sendRecoveryCodeMutation.mutate(email.trim(), {
+    sendValidationCodeMutation.mutate(email.trim(), {
       onSuccess: () => {
         addToast("success", "Código reenviado para o e-mail informado.");
       },
@@ -172,26 +166,6 @@ export function RecoverPasswordPage() {
       },
     });
   };
-
-  const onSavePassword = handleSubmit(async () => {
-    setValue("step", 3, { shouldDirty: false, shouldTouch: false });
-    const isValid = await trigger(["code", "newPassword", "confirmPassword"]);
-    if (!isValid) return;
-
-    updateRecoveryPasswordMutation.mutate(
-      {
-        email: email.trim(),
-        code,
-        newPassword: (watch("newPassword") ?? "").trim(),
-      },
-      {
-        onSuccess: () => {
-          addToast("success", "Senha atualizada com sucesso.");
-          navigate("/login", { replace: true });
-        },
-      },
-    );
-  });
 
   const updateCodeDigit = (index: number, rawValue: string) => {
     const digits = rawValue.replace(/\D/g, "");
@@ -254,9 +228,8 @@ export function RecoverPasswordPage() {
   };
 
   const isBusy =
-    sendRecoveryCodeMutation.isPending ||
-    validateRecoveryCodeMutation.isPending ||
-    updateRecoveryPasswordMutation.isPending;
+    sendValidationCodeMutation.isPending ||
+    validateEmailCodeMutation.isPending;
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8 text-white">
@@ -275,20 +248,19 @@ export function RecoverPasswordPage() {
           </div>
 
           <p className="mt-2 max-w-[280px] text-center text-sm text-grays-100">
-            Recuperação de senha em 3 etapas.
+            Verificação de e-mail em 2 etapas.
           </p>
         </header>
 
         <div className="mb-6 flex items-center justify-center gap-2">
-          {[1, 2, 3].map((item, index) => {
+          {[1, 2].map((item, index) => {
             const isActive = step === item;
-            const isDone =
-              (step === 2 && item === 1) || (step === 3 && item !== 3);
+            const isDone = step === 2 && item === 1;
             return (
               <span
                 key={item}
                 className={`h-2 w-16 rounded-full transition ${isActive || isDone ? "bg-secondary" : "bg-white/15"
-                  } ${index === 2 ? "mr-0" : ""}`}
+                  } ${index === 1 ? "mr-0" : ""}`}
               />
             );
           })}
@@ -301,12 +273,12 @@ export function RecoverPasswordPage() {
           {step === 1 ? (
             <>
               <p className="text-sm text-grays-100">
-                Informe seu e-mail para receber o código de recuperação.
+                Informe seu e-mail cadastrado para receber o código de verificação.
               </p>
 
               <InputGroup>
                 <Label htmlFor="email">E-mail</Label>
-                <ControlledInput<IPasswordRecoveryForm>
+                <ControlledInput<IValidationForm>
                   hookForm={form}
                   name="email"
                   placeholder="Digite seu e-mail"
@@ -322,7 +294,7 @@ export function RecoverPasswordPage() {
                 type="button"
                 buttonStyle="secondary"
                 maxWidth
-                isLoading={sendRecoveryCodeMutation.isPending}
+                isLoading={sendValidationCodeMutation.isPending}
                 onClick={(event) => {
                   event.preventDefault();
                   onSendCode();
@@ -397,57 +369,11 @@ export function RecoverPasswordPage() {
                 </Button>
               </div>
 
-              {validateRecoveryCodeMutation.isPending ? (
+              {validateEmailCodeMutation.isPending ? (
                 <p className="text-center text-xs text-grays-100">
                   Validando código...
                 </p>
               ) : null}
-            </>
-          ) : null}
-
-          {step === 3 ? (
-            <>
-              <p className="text-sm text-grays-100">
-                Agora defina sua nova senha.
-              </p>
-
-              <InputGroup>
-                <Label htmlFor="newPassword">Nova senha</Label>
-                <PasswordInput<IPasswordRecoveryForm>
-                  hookForm={form}
-                  name="newPassword"
-                  placeholder="Digite a nova senha"
-                  autoComplete="new-password"
-                  disabled={isBusy}
-                  error={errors.newPassword?.message}
-                />
-                <PasswordRequirements value={watch("newPassword")} />
-              </InputGroup>
-
-              <InputGroup>
-                <Label htmlFor="confirmPassword">Confirmar senha</Label>
-                <PasswordInput<IPasswordRecoveryForm>
-                  hookForm={form}
-                  name="confirmPassword"
-                  placeholder="Repita a nova senha"
-                  autoComplete="new-password"
-                  disabled={isBusy}
-                  error={errors.confirmPassword?.message}
-                />
-              </InputGroup>
-
-              <Button
-                type="button"
-                buttonStyle="secondary"
-                maxWidth
-                isLoading={updateRecoveryPasswordMutation.isPending}
-                onClick={(event) => {
-                  event.preventDefault();
-                  onSavePassword();
-                }}
-              >
-                Salvar nova senha
-              </Button>
             </>
           ) : null}
         </form>

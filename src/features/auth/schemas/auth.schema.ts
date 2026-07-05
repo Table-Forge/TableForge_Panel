@@ -12,6 +12,7 @@ export const LoginRequestSchema = z.object({
 });
 
 export const RECOVERY_CODE_LENGTH = 6;
+export const RESEND_COOLDOWN_SECONDS = 120;
 export const PasswordRecoveryStepSchema = z.union([
   z.literal(1),
   z.literal(2),
@@ -101,6 +102,42 @@ export const LoginResponseSchema = z.object({
 export type ILoginRequest = z.infer<typeof LoginRequestSchema>;
 export type ILoginResponse = z.infer<typeof LoginResponseSchema>;
 export type IPasswordRecoveryForm = z.infer<typeof PasswordRecoveryFormSchema>;
+
+export const ValidationStepSchema = z.union([z.literal(1), z.literal(2)]);
+
+export const ValidationFormSchema = z
+  .object({
+    step: ValidationStepSchema,
+    email: emailRequired,
+    code: z.string().trim().optional(),
+  })
+  .superRefine(({ step, code }, ctx) => {
+    const normalizedCode = (code ?? "").trim();
+
+    if (step === 2) {
+      if (!normalizedCode) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Campo obrigatório.",
+          path: ["code"],
+        });
+      } else if (!/^\d+$/.test(normalizedCode)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "O código deve conter apenas números.",
+          path: ["code"],
+        });
+      } else if (normalizedCode.length !== RECOVERY_CODE_LENGTH) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Digite os 6 dígitos do código.",
+          path: ["code"],
+        });
+      }
+    }
+  });
+
+export type IValidationForm = z.infer<typeof ValidationFormSchema>;
 
 export const isAdminAuthType = (type: string | null | undefined) =>
   String(type ?? "")

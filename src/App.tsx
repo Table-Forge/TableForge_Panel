@@ -18,6 +18,7 @@ import { LogDetailsPage } from "@/src/pages/logs/details";
 import { LogsPage } from "@/src/pages/logs";
 import { RacesPage } from "@/src/pages/races";
 import { RecoverPasswordPage } from "@/src/pages/recover-password";
+import VerifyEmailPage from "@/src/pages/verify-email";
 import { UserDetailsPage } from "@/src/pages/users/details";
 import UsersPage from "@/src/pages/users";
 import {
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/recover-password" element={<RecoverPasswordPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
