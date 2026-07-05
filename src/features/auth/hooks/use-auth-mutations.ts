@@ -1,4 +1,5 @@
-﻿import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/src/context/use-auth";
 import type {
   ILoginRequest,
@@ -43,6 +44,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 };
 
 export const useAuthMutation = () => {
+  const navigate = useNavigate();
   const { signIn } = useAuth();
   const addToast = useBoundStore((state) => state.addToast);
 
@@ -60,11 +62,16 @@ export const useAuthMutation = () => {
       await signIn(data);
       addToast("success", "Login realizado com sucesso.");
     },
-    onError: (error: unknown) => {
-      addToast(
-        "error",
-        getErrorMessage(error, "Não foi possível realizar o login."),
-      );
+    onError: (error: unknown, variables) => {
+      const message = getErrorMessage(error, "Não foi possível realizar o login.");
+
+      if (message.includes("validar o seu e-mail")) {
+        addToast("error", message);
+        navigate(`/verify-email?email=${encodeURIComponent(variables.login)}`);
+        return;
+      }
+
+      addToast("error", message);
     },
   });
 
@@ -101,12 +108,32 @@ export const useAuthMutation = () => {
     },
   });
 
+  const sendValidationCodeMutation = useMutation({
+    mutationFn: (email: string) => AuthService.sendValidationCode(email),
+    onError: (error: unknown) => {
+      addToast(
+        "error",
+        getErrorMessage(error, "Não foi possível enviar o código."),
+      );
+    },
+  });
+
+  const validateEmailCodeMutation = useMutation({
+    mutationFn: (params: TValidateRecoveryCodeParams) =>
+      AuthService.validateEmailCode(params.email, params.code),
+    onError: (error: unknown) => {
+      addToast("error", getErrorMessage(error, "Código inválido."));
+    },
+  });
+
   return {
     loginMutation,
     isLoadingLoginMutation: loginMutation.isPending,
     sendRecoveryCodeMutation,
     validateRecoveryCodeMutation,
     updateRecoveryPasswordMutation,
+    sendValidationCodeMutation,
+    validateEmailCodeMutation,
   };
 };
 

@@ -30,6 +30,20 @@ export const AuthService = {
     );
     return data;
   },
+  sendValidationCode: async (email: string) => {
+    const { data } = await api.put(`${ENDPOINT}/validation/${email}/send-code`);
+    return data;
+  },
+  validateEmailCode: async (email: string, code: string) => {
+    const { data } = await api.put(
+      `${ENDPOINT}/validation/${email}/validate-code`,
+      null,
+      {
+        params: { code, email },
+      },
+    );
+    return data;
+  },
   updateRecoveryPassword: async (
     email: string,
     code: string,

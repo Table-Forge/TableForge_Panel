@@ -198,6 +198,16 @@ const formatDocument = (value: string): string => {
     .replace(/(-\d{2})\d+?$/, "$1");
 };
 
+const normalizeCode = (value: string, maxLength: number) => {
+  return value.replace(/\D/g, "").slice(0, maxLength);
+};
+
+const formatCooldown = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  return `${minutes}:${String(remaining).padStart(2, "0")}`;
+};
+
 export {
   capitalizePhrase,
   cleanStringForKey,
@@ -217,4 +227,6 @@ export {
   transformStringToDate,
   formatPhone,
   formatDocument,
+  normalizeCode,
+  formatCooldown,
 };
