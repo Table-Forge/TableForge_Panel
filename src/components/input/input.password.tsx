@@ -35,7 +35,7 @@ export function PasswordInput<TFieldValues extends FieldValues = FieldValues>({
               {...registration}
               id={name}
               type={showPassword ? "text" : "password"}
-              onInput={(event) => {
+              onChange={(event) => {
                 const input = event.currentTarget;
                 const cursorStart = input.selectionStart ?? 0;
                 const filtered = sanitizePasswordValue(input.value);
