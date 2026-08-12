@@ -208,7 +208,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
       {isCreateMode ? (
         <FieldsWrapper>
-          <InputGroup className="relative">
+          <InputGroup className="relative group">
             <Label htmlFor="password" isRequired>
               Senha
             </Label>
