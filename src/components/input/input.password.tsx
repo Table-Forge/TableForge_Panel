@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type FieldValues } from "react-hook-form";
+import { useController, type FieldValues } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import { sanitizePasswordValue } from "@/src/utils/custom-schema-validations";
@@ -16,10 +16,21 @@ export function PasswordInput<TFieldValues extends FieldValues = FieldValues>({
 }: IControllerInput<TFieldValues>) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { onChange: registerOnChange, ...registration } =
-    hookForm.register(name);
-  const fieldError = hookForm.getFieldState(name, hookForm.formState).error;
+  const {
+    field: { value, onChange, onBlur, ref },
+    fieldState: { error: fieldError },
+  } = useController({
+    name,
+    control: hookForm.control,
+  });
+
   const message = error ?? fieldError?.message;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    const filtered = sanitizePasswordValue(inputValue);
+    onChange(filtered);
+  };
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -32,25 +43,12 @@ export function PasswordInput<TFieldValues extends FieldValues = FieldValues>({
               autoComplete="current-password"
               maxLength={100}
               {...props}
-              {...registration}
               id={name}
+              ref={ref}
+              value={(value ?? "") as string}
               type={showPassword ? "text" : "password"}
-              onChange={(event) => {
-                const input = event.currentTarget;
-                const cursorStart = input.selectionStart ?? 0;
-                const filtered = sanitizePasswordValue(input.value);
-
-                if (input.value !== filtered) {
-                  input.value = filtered;
-                }
-
-                registerOnChange(event);
-
-                window.setTimeout(
-                  () => input.setSelectionRange(cursorStart, cursorStart),
-                  0,
-                );
-              }}
+              onChange={handleChange}
+              onBlur={onBlur}
               className={`${inputInnerClasses} pr-11`}
             />
           )}
