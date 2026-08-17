@@ -6,6 +6,7 @@ import { InputGroup } from "@/src/components/input-group/input-group";
 import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledMaskedInput } from "@/src/components/input/input.masked.controlled";
 import { PasswordInput } from "@/src/components/input/input.password";
 import { PasswordRequirements } from "@/src/components/input/password-requirements";
 import { Label } from "@/src/components/label/label";
@@ -13,6 +14,7 @@ import { Select } from "@/src/components/select/select";
 import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutations";
 import { useUserGenderEnum } from "@/src/features/users/hooks/enums/use-user-gender-enum";
 import { useUserTypeEnum } from "@/src/features/users/hooks/enums/use-user-type-enum";
+import { useDocumentTypeEnum } from "@/src/features/users/hooks/enums/use-document-type-enum";
 import { useUserById } from "@/src/features/users/hooks/use-user-by-id";
 import { useUsersMutation } from "@/src/features/users/hooks/use-users-mutations";
 import { type IUser, UserSchema } from "@/src/features/users/schemas/user.schema";
@@ -43,6 +45,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
 
   const { genderEnum, isLoadingGenderEnum } = useUserGenderEnum();
   const { typeEnum, isLoadingTypeEnum } = useUserTypeEnum();
+  const { documentTypeEnum, isLoadingDocumentTypeEnum } = useDocumentTypeEnum();
   const isCreateMode = !data?.id;
   const editingUserId = dataEdit?.id ?? data?.id;
   const canEditAvatar =
@@ -71,9 +74,12 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
     reset,
     control,
     formState: { errors, isDirty },
+    watch,
   } = form;
 
   const passwordValue = useWatch({ control, name: "password" });
+  const selectedType = watch("type");
+  const selectedDocType = watch("documentType");
 
   useEffect(() => {
     reset(defaultValues);
@@ -143,6 +149,17 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
       delete payload.createdAt;
       delete payload.updatedAt;
       delete payload.lastAccess;
+    }
+
+    if (payload.type === "Organizer" || selectedType === "Organizer") {
+      if (payload.document) payload.document = payload.document.replace(/\D/g, "");
+      if (payload.phoneNumber) payload.phoneNumber = payload.phoneNumber.replace(/\D/g, "");
+      if (payload.documentType !== "CNPJ") delete payload.companyName;
+    } else {
+      delete payload.document;
+      delete payload.documentType;
+      delete payload.phoneNumber;
+      delete payload.companyName;
     }
 
     createOrUpdate(payload);
@@ -290,6 +307,70 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           />
         </InputGroup>
       </FieldsWrapper>
+
+      {selectedType === "Organizer" && (
+        <FieldsWrapper>
+          <InputGroup>
+            <Label htmlFor="documentType" isRequired>
+              Tipo de Documento
+            </Label>
+            <Select
+              hookForm={form}
+              name="documentType"
+              initialOptions={documentTypeEnum}
+              title="Selecione o tipo"
+              error={errors.documentType?.message}
+              searchInput={false}
+              disabled={isLoadingDocumentTypeEnum}
+              isLoading={isLoadingDocumentTypeEnum}
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label htmlFor="document" isRequired>
+              Documento
+            </Label>
+            <ControlledMaskedInput
+              hookForm={form}
+              name="document"
+              mask={selectedDocType === "CNPJ" ? "99.999.999/9999-99" : "999.999.999-99"}
+              placeholder={selectedDocType === "CNPJ" ? "00.000.000/0000-00" : "000.000.000-00"}
+              error={errors.document?.message}
+              isLoading={isLoading}
+              disabled={!selectedDocType}
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <Label htmlFor="phoneNumber" isRequired>
+              Telefone
+            </Label>
+            <ControlledMaskedInput
+              hookForm={form}
+              name="phoneNumber"
+              mask="(99) 99999-9999"
+              placeholder="(00) 00000-0000"
+              error={errors.phoneNumber?.message}
+              isLoading={isLoading}
+            />
+          </InputGroup>
+
+          {selectedDocType === "CNPJ" && (
+            <InputGroup>
+              <Label htmlFor="companyName" isRequired>
+                Razão Social / Empresa
+              </Label>
+              <ControlledInput
+                hookForm={form}
+                name="companyName"
+                placeholder="Nome da empresa"
+                error={errors.companyName?.message}
+                isLoading={isLoading}
+              />
+            </InputGroup>
+          )}
+        </FieldsWrapper>
+      )}
 
       <InputGroup className="basis-full">
         <Label htmlFor="avatarUrl">Avatar</Label>

@@ -11,4 +11,5 @@ export const USER_KEYS = {
   statusEnum: () => [...USER_KEYS.enums(), "status"] as const,
   deliveryMethodEnum: () => [...USER_KEYS.enums(), "deliveryMethod"] as const,
   typeEnum: () => [...USER_KEYS.enums(), "type"] as const,
+  documentTypeEnum: () => [...USER_KEYS.enums(), "documentType"] as const,
 };

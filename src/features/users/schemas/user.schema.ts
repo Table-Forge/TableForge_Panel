@@ -28,6 +28,10 @@ const BaseUserSchema = z.object({
   updatedAt: dateOptional,
   lastAccess: dateOptional,
   status: stringOptional,
+  document: stringOptional,
+  documentType: stringOptional,
+  phoneNumber: stringOptional,
+  companyName: stringOptional,
 });
 
 export const UserSchema = BaseUserSchema.superRefine((data, context) => {
@@ -73,6 +77,37 @@ export const UserSchema = BaseUserSchema.superRefine((data, context) => {
       message: "As senhas devem ser iguais.",
       path: ["confirmPassword"],
     });
+  }
+
+  if (data.type === "Organizer") {
+    if (!data.documentType) {
+      context.addIssue({
+        code: "custom",
+        message: "Campo obrigatório para lojistas.",
+        path: ["documentType"],
+      });
+    }
+    if (!data.document) {
+      context.addIssue({
+        code: "custom",
+        message: "Campo obrigatório para lojistas.",
+        path: ["document"],
+      });
+    }
+    if (!data.phoneNumber) {
+      context.addIssue({
+        code: "custom",
+        message: "Campo obrigatório para lojistas.",
+        path: ["phoneNumber"],
+      });
+    }
+    if (data.documentType === "CNPJ" && (!data.companyName || !data.companyName.trim())) {
+      context.addIssue({
+        code: "custom",
+        message: "O nome da empresa é obrigatório para CNPJ.",
+        path: ["companyName"],
+      });
+    }
   }
 });
 
