@@ -10,6 +10,7 @@ import {
   numberRequired,
   stringOptional,
   stringRequired,
+  cpfCnpjValidation,
 } from "@/src/utils/custom-schema-validations";
 import { z } from "zod";
 
@@ -28,7 +29,7 @@ const BaseUserSchema = z.object({
   updatedAt: dateOptional,
   lastAccess: dateOptional,
   status: stringOptional,
-  document: stringOptional,
+  document: cpfCnpjValidation.optional(),
   documentType: stringOptional,
   phoneNumber: stringOptional,
   companyName: stringOptional,
