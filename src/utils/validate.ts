@@ -78,13 +78,15 @@ const validateCPF = (cpf: string | null | undefined): boolean => {
 const validateCNPJ = (cnpj: string | null | undefined): boolean => {
   if (!cnpj) return false;
 
-  cnpj = cnpj.replace(/[^\d]+/g, "");
-  if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
+  cnpj = cnpj.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (cnpj.length !== 14 || /^(.)\1+$/.test(cnpj)) return false;
+
+  const charValue = (char: string): number => char.charCodeAt(0) - 48;
 
   const validateDigit = (base: string, weight: number[]): number => {
     let sum = 0;
     for (let i = 0; i < base.length; i++) {
-      sum += Number(base[i]) * weight[i];
+      sum += charValue(base[i]) * weight[i];
     }
     const rest = sum % 11;
     return rest < 2 ? 0 : 11 - rest;
