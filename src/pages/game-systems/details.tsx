@@ -7,7 +7,7 @@ import {
   InfoBox,
 } from "@/src/components/card-box/card-box";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useGameSystemById } from "@/src/features/game-systems/hooks/use-game-system-by-id";
 import { useBoundStore } from "@/src/store";
@@ -30,7 +30,7 @@ export function GameSystemDetailsPage() {
 
   const { data, isLoading, isError } = useGameSystemById(gameSystemId);
 
-  if (isLoading) return <SkeletonTable />;
+  if (isLoading) return <SkeletonDetails />;
   if (isError || !data) return <InfoNotFound />;
 
   return (

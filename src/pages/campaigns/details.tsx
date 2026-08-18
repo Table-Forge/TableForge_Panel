@@ -7,7 +7,7 @@ import {
   InfoBox,
 } from "@/src/components/card-box/card-box";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useCampaignStatusEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-status-enum";
 import { useCampaignDifficultyLevelEnum } from "@/src/features/campaigns/hooks/enums/use-campaign-difficulty-level-enum";
@@ -36,7 +36,7 @@ export function CampaignDetailsPage() {
 
   const { data, isLoading, isError } = useCampaignById(campaignId);
 
-  if (isLoading) return <SkeletonTable />;
+  if (isLoading) return <SkeletonDetails />;
   if (isError || !data) return <InfoNotFound />;
 
   const statusName = data.status
