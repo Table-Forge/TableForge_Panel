@@ -59,5 +59,7 @@ export interface ModalSlice {
   closeModal: () => void;
 }
 
-export type BoundStore = AuthSlice & ToastSlice & ModalSlice;
+import type { SidebarSlice } from "@/src/store/slices/sidebar-slice";
+
+export type BoundStore = AuthSlice & ToastSlice & ModalSlice & SidebarSlice;
 export type SliceCreator<TSlice> = StateCreator<BoundStore, [], [], TSlice>;
