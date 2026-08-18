@@ -5,24 +5,67 @@
     "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
 
-  --color-background: #000000;
-  --color-primary: #3a3a3a;
+  --color-background: var(--tf-bg);
+  --color-primary: var(--tf-primary);
   --color-secondary: #ff2400;
   --color-tertiary: #ff2400;
   --color-danger: #ff2400;
 
-  --color-white: #faf3e0;
-  --color-black: #000000;
-  --color-grays-50: #f1f1f1;
-  --color-grays-100: #d1d1d1;
-  --color-grays-200: #a1a1a1;
-  --color-grays-300: #717171;
-  --color-grays-400: #4a4a4a;
-  --color-grays-500: #2d2d2d;
-  --color-grays-600: #1e1e1e;
+  --color-white: var(--tf-white);
+  --color-black: var(--tf-black);
+  --color-grays-50: var(--tf-grays-50);
+  --color-grays-100: var(--tf-grays-100);
+  --color-grays-200: var(--tf-grays-200);
+  --color-grays-300: var(--tf-grays-300);
+  --color-grays-400: var(--tf-grays-400);
+  --color-grays-500: var(--tf-grays-500);
+  --color-grays-600: var(--tf-grays-600);
 }
 
 @layer base {
+  :root,
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --tf-bg: #000000;
+    --tf-primary: #3a3a3a;
+    --tf-white: #faf3e0;
+    --tf-black: #000000;
+    --tf-grays-50: #f1f1f1;
+    --tf-grays-100: #d1d1d1;
+    --tf-grays-200: #a1a1a1;
+    --tf-grays-300: #717171;
+    --tf-grays-400: #4a4a4a;
+    --tf-grays-500: #2d2d2d;
+    --tf-grays-600: #1e1e1e;
+    --tf-border-subtle: rgba(255, 255, 255, 0.1);
+    --tf-bg-gradient: radial-gradient(circle at 50% 0%, rgba(255, 36, 0, 0.06) 0%, rgba(0, 0, 0, 0) 65%);
+    --tf-picker-filter: invert(1);
+    --tf-chart-tooltip-bg: #18181b;
+    --tf-chart-tooltip-border: rgba(255, 255, 255, 0.15);
+    --tf-chart-tooltip-text: #ffffff;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+    --tf-bg: #f4f4f7;
+    --tf-primary: #ffffff;
+    --tf-white: #18181b;
+    --tf-black: #ffffff;
+    --tf-grays-50: #09090b;
+    --tf-grays-100: #18181b;
+    --tf-grays-200: #52525b;
+    --tf-grays-300: #71717a;
+    --tf-grays-400: #a1a1aa;
+    --tf-grays-500: #e4e4e7;
+    --tf-grays-600: #f4f4f5;
+    --tf-border-subtle: rgba(0, 0, 0, 0.08);
+    --tf-bg-gradient: radial-gradient(circle at 50% 0%, rgba(255, 36, 0, 0.05) 0%, rgba(244, 244, 247, 0) 65%);
+    --tf-picker-filter: invert(0);
+    --tf-chart-tooltip-bg: #ffffff;
+    --tf-chart-tooltip-border: rgba(0, 0, 0, 0.12);
+    --tf-chart-tooltip-text: #18181b;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -37,29 +80,26 @@
     margin: 0;
     font-family: var(--font-hud);
     background-color: var(--color-background);
-    background-image: radial-gradient(circle at 50% 0%, rgba(255, 36, 0, 0.06) 0%, rgba(0, 0, 0, 0) 65%);
+    background-image: var(--tf-bg-gradient);
     background-attachment: fixed;
     color: var(--color-white);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   @keyframes recovery-shake {
-
     0%,
     100% {
       transform: translateX(0);
     }
-
     25% {
       transform: translateX(-6px);
     }
-
     50% {
       transform: translateX(6px);
     }
-
     75% {
       transform: translateX(-4px);
     }
@@ -74,13 +114,9 @@
     display: none;
   }
 
-  input[type="date"] {
-    color-scheme: dark;
-  }
-
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    opacity: 1;
+    filter: var(--tf-picker-filter);
+    opacity: 0.8;
   }
 
   input:-webkit-autofill,
@@ -118,7 +154,7 @@
   .tf-datepicker-calendar-container {
     overflow: hidden;
     border-radius: 1rem;
-    border: 1px solid rgb(255 255 255 / 0.15);
+    border: 1px solid var(--tf-border-subtle);
     background: var(--color-primary);
     box-shadow:
       0 10px 15px -3px rgb(0 0 0 / 0.1),
@@ -126,19 +162,19 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker {
-    border: 1px solid rgb(255 255 255 / 0.15);
+    border: 1px solid var(--tf-border-subtle);
     border-radius: 14px;
-    background-color: #2d2d2d !important;
+    background-color: var(--color-grays-600) !important;
     background-image: none !important;
-    color: #faf3e0 !important;
-    box-shadow: 0 12px 30px rgb(0 0 0 / 0.35);
+    color: var(--color-white) !important;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 0.2);
     overflow: hidden;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__header {
-    background-color: #3a3a3a !important;
+    background-color: var(--color-primary) !important;
     background-image: none !important;
-    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    border-bottom: 1px solid var(--tf-border-subtle);
     padding: 14px 12px 10px;
     min-height: 50px;
     display: flex;
@@ -151,7 +187,7 @@
   .tf-datepicker-calendar-container .react-datepicker__month,
   .tf-datepicker-calendar-container .react-datepicker__week,
   .tf-datepicker-calendar-container .react-datepicker__day-names {
-    background-color: #2d2d2d;
+    background-color: var(--color-grays-600);
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day-names {
@@ -170,11 +206,10 @@
   .tf-datepicker-calendar-container .react-datepicker__day,
   .tf-datepicker-calendar-container .react-datepicker__time-name,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item {
-    color: #faf3e0 !important;
+    color: var(--color-white) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__current-month {
-    color: #ffffff !important;
     font-size: 18px;
     font-weight: 800;
     text-transform: lowercase;
@@ -183,7 +218,7 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day-name {
-    color: rgb(250 243 224 / 0.78) !important;
+    opacity: 0.78;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -208,7 +243,7 @@
   .tf-datepicker-calendar-container .react-datepicker__day--selected,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item--selected {
     background: var(--color-secondary) !important;
-    color: var(--color-white) !important;
+    color: #ffffff !important;
     font-weight: 700;
   }
 
@@ -216,7 +251,6 @@
     outline: 1px solid rgb(255 36 0 / 0.5);
     outline-offset: -1px;
     font-weight: 700;
-    color: #ffffff !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--in-range,
@@ -226,16 +260,16 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--outside-month {
-    color: rgb(250 243 224 / 0.34) !important;
+    opacity: 0.34;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--disabled,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item--disabled {
-    color: rgb(250 243 224 / 0.3) !important;
+    opacity: 0.3;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__navigation-icon::before {
-    border-color: #ffffff !important;
+    border-color: var(--color-white) !important;
     border-width: 2px 2px 0 0;
   }
 
@@ -247,9 +281,9 @@
     display: block;
     width: 100%;
     padding: 10px 12px;
-    background-color: #2d2d2d !important;
-    border-top: 1px solid rgb(255 255 255 / 0.1);
-    color: #faf3e0 !important;
+    background-color: var(--color-grays-600) !important;
+    border-top: 1px solid var(--tf-border-subtle);
+    color: var(--color-white) !important;
     text-align: center;
     line-height: 1.2;
     letter-spacing: 0.02em;
@@ -261,16 +295,16 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__today-button:hover {
-    background-color: #4a4a4a !important;
+    background-color: var(--color-grays-500) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__time-container {
-    border-left: 1px solid rgb(255 255 255 / 0.1);
+    border-left: 1px solid var(--tf-border-subtle);
   }
 
   .tf-datepicker-calendar-container .react-datepicker__time-box,
   .tf-datepicker-calendar-container .react-datepicker__time-list {
-    background-color: #2d2d2d;
+    background-color: var(--color-grays-600);
   }
 
   .tf-masonry-grid {

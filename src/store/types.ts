@@ -60,6 +60,9 @@ export interface ModalSlice {
 }
 
 import type { SidebarSlice } from "@/src/store/slices/sidebar-slice";
+import type { ThemeSlice } from "@/src/store/slices/theme-slice";
 
-export type BoundStore = AuthSlice & ToastSlice & ModalSlice & SidebarSlice;
+export type { SidebarSlice, ThemeSlice };
+
+export type BoundStore = AuthSlice & ToastSlice & ModalSlice & SidebarSlice & ThemeSlice;
 export type SliceCreator<TSlice> = StateCreator<BoundStore, [], [], TSlice>;

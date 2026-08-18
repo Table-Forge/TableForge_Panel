@@ -45,7 +45,7 @@ export default function SystemsBarChart({ systems = [] }: Props) {
               <YAxis
                 type="category"
                 dataKey="name"
-                stroke="#ffffff"
+                stroke="var(--color-white)"
                 fontSize={11}
                 tickLine={false}
                 axisLine={false}
@@ -53,16 +53,16 @@ export default function SystemsBarChart({ systems = [] }: Props) {
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#18181b",
-                  borderColor: "rgba(255,255,255,0.15)",
+                  backgroundColor: "var(--tf-chart-tooltip-bg)",
+                  borderColor: "var(--tf-chart-tooltip-border)",
                   borderRadius: "12px",
-                  color: "#fff",
+                  color: "var(--tf-chart-tooltip-text)",
                   fontSize: "12px",
                   fontWeight: "bold",
                 }}
-                itemStyle={{ color: "rgba(255,255,255,0.9)" }}
-                labelStyle={{ color: "#ffffff" }}
-                cursor={{ fill: "rgba(255, 255, 255, 0.05)" }}
+                itemStyle={{ color: "var(--tf-chart-tooltip-text)" }}
+                labelStyle={{ color: "var(--tf-chart-tooltip-text)" }}
+                cursor={{ fill: "var(--tf-border-subtle)" }}
                 formatter={(val: unknown) => [String(val), "Mesas"]}
               />
               <Bar dataKey="count" radius={[0, 8, 8, 0]}>

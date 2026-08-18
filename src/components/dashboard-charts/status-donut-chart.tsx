@@ -33,13 +33,15 @@ export default function StatusDonutChart({ userTypes = [], totalUsers = 0 }: Pro
               <PieChart>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#18181b",
-                    borderColor: "rgba(255,255,255,0.15)",
+                    backgroundColor: "var(--tf-chart-tooltip-bg)",
+                    borderColor: "var(--tf-chart-tooltip-border)",
                     borderRadius: "12px",
-                    color: "#fff",
+                    color: "var(--tf-chart-tooltip-text)",
                     fontSize: "12px",
                     fontWeight: "bold",
                   }}
+                  itemStyle={{ color: "var(--tf-chart-tooltip-text)" }}
+                  labelStyle={{ color: "var(--tf-chart-tooltip-text)" }}
                   formatter={(val: unknown) => [`${val}%`, "Proporção"]}
                 />
                 <Pie
