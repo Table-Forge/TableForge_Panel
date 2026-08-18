@@ -25,7 +25,14 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
     users: { stroke: "#10b981", fill: "#10b981" },
   };
 
+  const labelsMap = {
+    campaigns: "Campanhas",
+    events: "Eventos",
+    users: "Usuários",
+  };
+
   const currentColor = colorsMap[activeSeries];
+  const currentLabel = labelsMap[activeSeries];
 
   return (
     <div className="flex flex-col gap-4 select-none">
@@ -122,6 +129,7 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
                 allowDecimals={false}
               />
               <Tooltip
+                formatter={(value) => [value ?? 0, currentLabel]}
                 contentStyle={{
                   backgroundColor: "#18181b",
                   borderColor: "rgba(255,255,255,0.15)",
@@ -134,6 +142,7 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
               <Area
                 type="monotone"
                 dataKey={activeSeries}
+                name={currentLabel}
                 stroke={currentColor.stroke}
                 fill="url(#activeGradient)"
                 strokeWidth={3}
