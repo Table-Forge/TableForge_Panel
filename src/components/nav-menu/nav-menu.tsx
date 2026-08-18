@@ -10,13 +10,17 @@ import {
   ShieldUser,
   Sparkles,
   Swords,
+  CalendarDays,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+import { useAuth } from "@/src/context/use-auth";
+
 const navItems = [
   { to: "/", label: "Painel", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
+  { to: "/events", label: "Eventos", icon: CalendarDays },
   { to: "/gamesystems", label: "Sistemas", icon: Gamepad2 },
   { to: "/banners", label: "Banners", icon: Image },
   { to: "/classes", label: "Classes", icon: Swords },
@@ -28,6 +32,20 @@ const navItems = [
 
 export function NavMenu() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { user } = useAuth();
+
+  const isOrganizer = user?.type === "Organizer";
+  
+  const filteredNavItems = navItems.filter(() => {
+    // If we want to hide some admin routes from Organizer, we could do it here
+    // But for now, we just add the space routes
+    return true;
+  });
+
+  const organizerItems = [
+    { to: "/my-space", label: "Meu Espaço", icon: Sparkles },
+    { to: "/my-bookings", label: "Agendamentos", icon: ScrollText },
+  ];
 
   return (
     <aside className="border-b border-white/10 bg-primary/85 p-3 lg:border-b-0 lg:border-r lg:p-5">
@@ -71,7 +89,7 @@ export function NavMenu() {
       <nav
         className={`${isMobileOpen ? "mt-3 flex" : "hidden"} flex-col gap-2 lg:mt-6 lg:flex`}
       >
-        {navItems.map(({ to, label, icon: Icon, end }) => (
+        {([...filteredNavItems, ...(isOrganizer ? organizerItems : [])] as { to: string; label: string; icon: React.ComponentType<{ size?: number }>; end?: boolean }[]).map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}

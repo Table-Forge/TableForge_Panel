@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { CircleHelp } from "lucide-react";
 import { Button } from "@/src/components/button/button";
 
-export function InfoNotFound() {
+interface InfoNotFoundProps {
+  message?: string;
+}
+
+export function InfoNotFound({ message }: InfoNotFoundProps = {}) {
   const navigate = useNavigate();
 
   return (
@@ -14,7 +18,7 @@ export function InfoNotFound() {
       <h1 className="text-2xl font-bold uppercase text-white md:text-4xl">Conteúdo Não Encontrado</h1>
 
       <p className="max-w-[520px] text-sm text-grays-100 md:text-base">
-        O conteúdo que você tentou acessar nessa página não foi encontrado.
+        {message || "O conteúdo que você tentou acessar nessa página não foi encontrado."}
       </p>
 
       <Button type="button" onClick={() => navigate(-1)} className="min-w-[140px]">

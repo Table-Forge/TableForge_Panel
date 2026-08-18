@@ -14,7 +14,7 @@ interface ControlledLocationAutocompleteProps<
 > {
   disabled?: boolean;
   hasSelectionError?: boolean;
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   isSelectionValid?: boolean;
   name: Path<TFieldValues>;
   onClearSelection: () => void;

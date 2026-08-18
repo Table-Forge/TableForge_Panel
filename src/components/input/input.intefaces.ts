@@ -11,7 +11,7 @@ export interface IInputStyles {
 export interface IControllerInput<TFieldValues extends FieldValues = FieldValues>
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name">,
     IInputStyles {
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   name: Path<TFieldValues>;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
@@ -65,7 +65,7 @@ export interface IControllerTextarea<
   TFieldValues extends FieldValues = FieldValues,
 > extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name">,
     IInputStyles {
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   name: Path<TFieldValues>;
   sanitize?: boolean;
   sanitizeEmail?: boolean;

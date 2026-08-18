@@ -15,3 +15,9 @@ export interface IPaginationResponse {
   size?: number;
   filteredItems?: number;
 }
+
+export interface IPaginatedResponse<T> {
+  items: T[];
+  pagination: IPaginationResponse;
+}
+
