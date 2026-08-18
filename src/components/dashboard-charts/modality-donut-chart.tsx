@@ -1,30 +1,30 @@
-import type { IDashboardUserTypeStat } from "@/src/features/dashboard/hooks/use-dashboard-stats";
+import type { IDashboardModalityStat } from "@/src/features/dashboard/hooks/use-dashboard-stats";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 interface Props {
-  userTypes?: IDashboardUserTypeStat[];
-  totalUsers?: number;
+  modalityBreakdown?: IDashboardModalityStat[];
 }
 
-const DONUT_COLORS = ["#10b981", "#ff2400", "#f59e0b"];
+const MODALITY_COLORS = ["#a855f7", "#60a5fa"];
 
-export default function StatusDonutChart({ userTypes = [], totalUsers = 0 }: Props) {
-  const items = userTypes;
+export default function ModalityDonutChart({ modalityBreakdown = [] }: Props) {
+  const items = modalityBreakdown;
+  const totalCount = items.reduce((acc, curr) => acc + (curr.count ?? 0), 0);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
-          Comunidade & Perfis
+          Modalidades de Mesas & Eventos
         </span>
         <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/50">
-          Total: {totalUsers.toLocaleString()}
+          Total: {totalCount.toLocaleString()}
         </span>
       </div>
 
       {items.length === 0 ? (
         <div className="flex h-32 items-center justify-center text-xs font-bold text-grays-200">
-          Nenhum perfil cadastrado.
+          Nenhuma modalidade registrada.
         </div>
       ) : (
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -45,7 +45,7 @@ export default function StatusDonutChart({ userTypes = [], totalUsers = 0 }: Pro
                 <Pie
                   data={items}
                   dataKey="percentage"
-                  nameKey="type"
+                  nameKey="modality"
                   cx="50%"
                   cy="50%"
                   innerRadius={38}
@@ -54,7 +54,7 @@ export default function StatusDonutChart({ userTypes = [], totalUsers = 0 }: Pro
                   stroke="none"
                 >
                   {items.map((_, index) => (
-                    <Cell key={index} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                    <Cell key={index} fill={MODALITY_COLORS[index % MODALITY_COLORS.length]} />
                   ))}
                 </Pie>
               </PieChart>
@@ -63,12 +63,12 @@ export default function StatusDonutChart({ userTypes = [], totalUsers = 0 }: Pro
 
           <div className="flex w-full flex-col gap-2.5 sm:w-auto">
             {items.map((item, idx) => {
-              const color = DONUT_COLORS[idx % DONUT_COLORS.length];
+              const color = MODALITY_COLORS[idx % MODALITY_COLORS.length];
               return (
-                <div key={item.type || idx} className="flex items-center justify-between gap-4 text-xs font-bold">
+                <div key={item.modality || idx} className="flex items-center justify-between gap-4 text-xs font-bold">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-                    <span className="text-white/80">{item.type || "Outro"}</span>
+                    <span className="text-white/80">{item.modality || "Outro"}</span>
                   </div>
                   <span className="font-mono text-white">{item.percentage}%</span>
                 </div>

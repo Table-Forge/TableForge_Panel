@@ -131,7 +131,7 @@ export default function UsersPage() {
   if (isError) return <InfoNotFound />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
-  const activeCount = data?.items?.filter((u) => u.status === 1 || u.status === "Active")?.length ?? 0;
+  const activeCount = data?.items?.filter((u) => u.status === "1" || u.status === "Active")?.length ?? 0;
 
   return (
     <>

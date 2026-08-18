@@ -185,10 +185,10 @@ export function EventsPage() {
           const isSelected = statusFilter[0] === opt.value;
           return (
             <button
-              key={opt.value}
+              key={String(opt.value ?? opt.label)}
               type="button"
               onClick={() => {
-                setStatusFilter([opt.value]);
+                setStatusFilter([String(opt.value ?? "")]);
                 setPage(1);
               }}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${

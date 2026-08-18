@@ -1,20 +1,22 @@
-import { IDashboardSystemStat } from "@/src/features/dashboard/hooks/use-dashboard-stats";
+import type { IDashboardSystemStat } from "@/src/features/dashboard/hooks/use-dashboard-stats";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Cell,
+} from "recharts";
 
 interface Props {
   systems?: IDashboardSystemStat[];
 }
 
-const DEFAULT_SYSTEMS: IDashboardSystemStat[] = [
-  { name: "D&D 5E", count: 142, percentage: 45 },
-  { name: "Tormenta20", count: 86, percentage: 28 },
-  { name: "Call of Cthulhu", count: 48, percentage: 15 },
-  { name: "Pathfinder 2e", count: 38, percentage: 12 },
-];
+const BAR_COLORS = ["#ff2400", "#f59e0b", "#a855f7", "#10b981", "#06b6d4"];
 
-const COLORS = ["bg-secondary", "bg-amber-500", "bg-purple-500", "bg-emerald-500", "bg-cyan-500"];
-
-export default function SystemsBarChart({ systems }: Props) {
-  const items = systems && systems.length > 0 ? systems : DEFAULT_SYSTEMS;
+export default function SystemsBarChart({ systems = [] }: Props) {
+  const items = systems;
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -27,31 +29,48 @@ export default function SystemsBarChart({ systems }: Props) {
         </span>
       </div>
 
-      <div className="space-y-3">
-        {items.map((sys, idx) => {
-          const color = COLORS[idx % COLORS.length];
-          return (
-            <div key={sys.name} className="flex flex-col gap-1">
-              <div className="flex items-center justify-between text-xs font-bold text-white">
-                <span className="flex items-center gap-2">
-                  <span className={`h-2 w-2 rounded-full ${color}`} />
-                  {sys.name}
-                </span>
-                <span className="text-grays-100 font-mono">
-                  {sys.count} ({sys.percentage}%)
-                </span>
-              </div>
-              {/* Progress bar background */}
-              <div className="h-2 w-full overflow-hidden rounded-full bg-white/5">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${color}`}
-                  style={{ width: `${Math.max(sys.percentage, 5)}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {items.length === 0 ? (
+        <div className="flex h-36 items-center justify-center text-xs font-bold text-grays-200">
+          Nenhum sistema com estatísticas registradas.
+        </div>
+      ) : (
+        <div className="h-48 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={items}
+              layout="vertical"
+              margin={{ top: 0, right: 10, left: 10, bottom: 0 }}
+            >
+              <XAxis type="number" hide />
+              <YAxis
+                type="category"
+                dataKey="name"
+                stroke="#ffffff"
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                width={100}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#18181b",
+                  borderColor: "rgba(255,255,255,0.15)",
+                  borderRadius: "12px",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+                formatter={(val: unknown) => [String(val), "Mesas"]}
+              />
+              <Bar dataKey="count" radius={[0, 8, 8, 0]}>
+                {items.map((_, index) => (
+                  <Cell key={index} fill={BAR_COLORS[index % BAR_COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }
