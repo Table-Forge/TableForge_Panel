@@ -133,10 +133,22 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
     }
   });
 
+  const isCanceled = data?.status === "Canceled";
+
+  const statusOptions = useMemo(() => {
+    return (eventStatusEnum ?? []).filter((opt) => opt.value !== "Canceled");
+  }, [eventStatusEnum]);
+
   const isSubmitting = createMutation.isPending || updateMutation.isPending || isLoadingImage;
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
+      {isCanceled && (
+        <div className="p-3 rounded bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium">
+          Este evento foi cancelado e não pode ser editado.
+        </div>
+      )}
+
       <FieldsWrapper>
         <InputGroup>
           <Label htmlFor="title" isRequired>Título</Label>
@@ -145,6 +157,7 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
             name="title"
             placeholder="Digite o título do evento"
             error={errors.title?.message as string | undefined}
+            disabled={isCanceled || isSubmitting}
           />
         </InputGroup>
 
@@ -153,11 +166,11 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
           <Select
             hookForm={form}
             name="status"
-            initialOptions={eventStatusEnum ?? []}
+            initialOptions={statusOptions}
             title="Selecione o status"
             error={errors.status?.message as string | undefined}
             searchInput={false}
-            disabled={isLoadingStatus}
+            disabled={isCanceled || isLoadingStatus || isSubmitting}
             isLoading={isLoadingStatus}
           />
         </InputGroup>
@@ -294,7 +307,7 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
         <Button
           type="submit"
           isLoading={isSubmitting}
-          disabled={!isDirty || isSubmitting}
+          disabled={isCanceled || !isDirty || isSubmitting}
         >
           {data?.id ? "Salvar alterações" : "Criar evento"}
         </Button>
