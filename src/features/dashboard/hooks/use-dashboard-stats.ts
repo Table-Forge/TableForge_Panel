@@ -20,6 +20,12 @@ export interface IDashboardActivityTrend {
   users: number;
 }
 
+export interface IDashboardModalityStat {
+  modality: string;
+  count: number;
+  percentage: number;
+}
+
 export interface IDashboardStats {
   totalCampaigns: number;
   activeCampaigns: number;
@@ -30,59 +36,52 @@ export interface IDashboardStats {
   totalSystems: number;
   totalSpaces: number;
   totalConfirmedAttendees: number;
+  totalSpaceBookings: number;
+  pendingSpaceBookings: number;
+  totalCharacters: number;
+  averageUserRating: number;
+  pendingUserFeedbacks: number;
   popularSystems: IDashboardSystemStat[];
   userTypeBreakdown: IDashboardUserTypeStat[];
+  modalityBreakdown: IDashboardModalityStat[];
   activityTrends: IDashboardActivityTrend[];
 }
 
-const DEFAULT_STATS: IDashboardStats = {
-  totalCampaigns: 464,
-  activeCampaigns: 142,
-  totalEvents: 28,
-  upcomingEvents: 12,
-  totalUsers: 1240,
-  newUsersThisMonth: 185,
-  totalSystems: 14,
-  totalSpaces: 8,
-  totalConfirmedAttendees: 340,
-  popularSystems: [
-    { name: "D&D 5E", count: 142, percentage: 45 },
-    { name: "Tormenta20", count: 86, percentage: 28 },
-    { name: "Call of Cthulhu", count: 48, percentage: 15 },
-    { name: "Pathfinder 2e", count: 38, percentage: 12 },
-  ],
-  userTypeBreakdown: [
-    { type: "Jogadores", count: 850, percentage: 68 },
-    { type: "Mestres / Organizadores", count: 240, percentage: 20 },
-    { type: "Administradores", count: 150, percentage: 12 },
-  ],
-  activityTrends: [
-    { label: "Seg", campaigns: 12, events: 5, users: 24 },
-    { label: "Ter", campaigns: 18, events: 8, users: 31 },
-    { label: "Qua", campaigns: 15, events: 12, users: 40 },
-    { label: "Qui", campaigns: 22, events: 10, users: 38 },
-    { label: "Sex", campaigns: 30, events: 19, users: 55 },
-    { label: "Sáb", campaigns: 42, events: 28, users: 78 },
-    { label: "Dom", campaigns: 38, events: 24, users: 70 },
-  ],
+const EMPTY_STATS: IDashboardStats = {
+  totalCampaigns: 0,
+  activeCampaigns: 0,
+  totalEvents: 0,
+  upcomingEvents: 0,
+  totalUsers: 0,
+  newUsersThisMonth: 0,
+  totalSystems: 0,
+  totalSpaces: 0,
+  totalConfirmedAttendees: 0,
+  totalSpaceBookings: 0,
+  pendingSpaceBookings: 0,
+  totalCharacters: 0,
+  averageUserRating: 0,
+  pendingUserFeedbacks: 0,
+  popularSystems: [],
+  userTypeBreakdown: [],
+  modalityBreakdown: [],
+  activityTrends: [],
 };
 
-export function useDashboardStats() {
+export function useDashboardStats(days: number = 7) {
   const query = useQuery({
-    queryKey: ["dashboard-stats"],
+    queryKey: ["dashboard-stats", days],
     queryFn: async () => {
-      try {
-        const response = await api.get<IDashboardStats>("/Dashboard");
-        return response.data;
-      } catch {
-        return DEFAULT_STATS;
-      }
+      const response = await api.get<IDashboardStats>("/Dashboard", {
+        params: { days },
+      });
+      return response.data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
 
   return {
-    stats: query.data ?? DEFAULT_STATS,
+    stats: query.data ?? EMPTY_STATS,
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: query.refetch,

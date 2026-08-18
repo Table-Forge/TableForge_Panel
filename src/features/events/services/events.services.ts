@@ -40,7 +40,7 @@ export const EventService = {
     await api.delete(`${ENDPOINT}/${id}`);
   },
 
-  getEnum: async (enumName: string) => {
+  getEnum: async (enumName: string): Promise<{ id: number; value: string; name: string; allowSelect?: boolean }[]> => {
     const { data } = await api.get(`${ENDPOINT}/enums/${enumName}`);
     return data;
   },

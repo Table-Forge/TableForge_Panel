@@ -15,10 +15,11 @@ function parsePersistedAuth(value: string | null): ILoginResponse | null {
     const parsedAuth = LoginResponseSchema.safeParse(parsedJson);
     if (!parsedAuth.success) return null;
 
-    const isTokenExpired =
-      parsedAuth.data.token.expiration.getTime() <= Date.now();
+    const expTime = new Date(parsedAuth.data.token.expiration).getTime();
+    if (!Number.isNaN(expTime) && expTime <= Date.now()) {
+      return null;
+    }
 
-    if (isTokenExpired) return null;
     if (!isAdminAuthType(parsedAuth.data.user?.type)) return null;
 
     return parsedAuth.data;
@@ -27,9 +28,13 @@ function parsePersistedAuth(value: string | null): ILoginResponse | null {
   }
 }
 
+const initialAuth = parsePersistedAuth(
+  typeof window !== "undefined" ? localStorage.getItem(AUTH_STORAGE_KEY) : null
+);
+
 export const createAuthSlice: SliceCreator<AuthSlice> = (set) => ({
-  authData: null,
-  isLoading: true,
+  authData: initialAuth,
+  isLoading: false,
 
   hydrateAuth: () => {
     const persistedAuth = parsePersistedAuth(

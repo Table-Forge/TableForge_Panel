@@ -32,46 +32,50 @@ import {
   Routes,
 } from "react-router-dom";
 
+import { ErrorBoundary } from "@/src/components/error-boundary/error-boundary";
+
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/recover-password" element={<RecoverPasswordPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/recover-password" element={<RecoverPasswordPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AdminLayout />}>
-              <Route index element={<DashboardPage />} />
-              <Route path="campaigns" element={<CampaignsPage />} />
-              <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
-              <Route path="gamesystems" element={<GameSystemsPage />} />
-              <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
-              <Route path="banners" element={<BannersPage />} />
-              <Route path="classes" element={<ClassesPage />} />
-              <Route path="races" element={<RacesPage />} />
-              <Route path="users" element={<UsersPage />} />
-              <Route path="users/:id" element={<UserDetailsPage />} />
-              <Route path="images" element={<ImagesPage />} />
-              <Route path="images/:id" element={<ImageDetailsPage />} />
-              <Route path="logs" element={<LogsPage />} />
-              <Route path="logs/:id" element={<LogDetailsPage />} />
-              <Route path="events" element={<EventsPage />} />
-              <Route path="my-space" element={<MySpacePage />} />
-              <Route path="my-bookings" element={<MyBookingsPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="campaigns" element={<CampaignsPage />} />
+                <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
+                <Route path="gamesystems" element={<GameSystemsPage />} />
+                <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
+                <Route path="banners" element={<BannersPage />} />
+                <Route path="classes" element={<ClassesPage />} />
+                <Route path="races" element={<RacesPage />} />
+                <Route path="users" element={<UsersPage />} />
+                <Route path="users/:id" element={<UserDetailsPage />} />
+                <Route path="images" element={<ImagesPage />} />
+                <Route path="images/:id" element={<ImageDetailsPage />} />
+                <Route path="logs" element={<LogsPage />} />
+                <Route path="logs/:id" element={<LogDetailsPage />} />
+                <Route path="events" element={<EventsPage />} />
+                <Route path="my-space" element={<MySpacePage />} />
+                <Route path="my-bookings" element={<MyBookingsPage />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
 
-        <GlobalModal />
-        <EnvFlag />
-        <ToastContainer />
-        <div id="root-portal" />
-      </BrowserRouter>
-    </AuthProvider>
+          <GlobalModal />
+          <EnvFlag />
+          <ToastContainer />
+          <div id="root-portal" />
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
