@@ -334,9 +334,9 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   ) : null;
 
   const optionsElement = (
-    <ul className="max-h-56 overflow-auto p-1">
+    <ul className="max-h-56 overflow-auto p-1.5 space-y-0.5">
       {isComponentLoading ? (
-        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-grays-200">
           Carregando...
         </li>
       ) : displayedOptions.length > 0 ? (
@@ -351,10 +351,10 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
                 type="button"
                 data-option-index={index}
                 disabled={!isSelectable}
-                className={`w-full rounded-xl px-3 py-2 text-left text-sm transition ${
+                className={`w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-medium transition-all duration-150 ${
                   isSelected
-                    ? "bg-secondary/20 text-white"
-                    : "text-white/85 hover:bg-white/10"
+                    ? "bg-secondary/25 text-white font-bold"
+                    : "text-white/85 hover:bg-white/10 hover:text-white"
                 } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
                   isSelectable ? "opacity-100" : "opacity-50"
                 }`}
@@ -370,7 +370,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           );
         })
       ) : (
-        <li className="px-3 py-4 text-center text-xs tracking-wide text-white/55">
+        <li className="px-3 py-4 text-center text-xs tracking-wide text-grays-200">
           Nenhum resultado encontrado
         </li>
       )}
@@ -383,7 +383,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           <div
             ref={listRef}
             data-portal="true"
-            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-xl"
+            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary/95 backdrop-blur-xl shadow-2xl"
             style={{
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,
@@ -437,7 +437,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           handleOpenList(!listOpen);
           headerRef.current?.focus();
         }}
-        className={`flex h-12 w-full items-center justify-between rounded-2xl px-3 text-left ${getInputClasses(
+        className={`flex h-12 w-full items-center justify-between rounded-2xl px-4 text-left ${getInputClasses(
           message,
           isComponentLoading,
           disabled,

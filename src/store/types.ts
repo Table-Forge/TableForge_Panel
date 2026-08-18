@@ -27,6 +27,7 @@ export type ModalSize = TModalSize;
 export interface IOpenModalPayload {
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size?: ModalSize;
 }
 
@@ -35,6 +36,7 @@ export interface IModalState {
   isOpen: boolean;
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size: ModalSize;
 }
 
@@ -43,6 +45,7 @@ export interface IModalInstance {
   isOpen: boolean;
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size: ModalSize;
 }
 
@@ -51,7 +54,7 @@ export interface ModalSlice {
   modals: IModalInstance[];
   openModal: {
     (payload: IOpenModalPayload): void;
-    (title: ReactNode, content: ReactNode, size?: ModalSize): void;
+    (title: ReactNode, content: ReactNode, size?: ModalSize, footer?: ReactNode): void;
   };
   closeModal: () => void;
 }

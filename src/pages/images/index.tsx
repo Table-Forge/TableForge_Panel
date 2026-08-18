@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/button/button";
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -128,27 +128,32 @@ export default function ImagesPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+
   return (
     <>
-      <header className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Imagens
-          </h1>
-          <p className="text-sm text-grays-100">
-            Gerencie os recursos de imagem disponíveis no sistema.
-          </p>
-        </div>
-
-        <Button
-          buttonStyle="primary"
-          size="sm"
-          onClick={() => openModal("Nova Imagem", <ModalEdit />, "md")}
-        >
-          <MdAdd />
-          Nova Imagem
-        </Button>
-      </header>
+      <CrmPageHeader
+        title="Imagens"
+        subtitle="Gerencie os recursos de mídia e imagens do sistema."
+        count={totalItems}
+        actionLabel="Nova Imagem"
+        actionIcon={<MdAdd />}
+        onActionClick={() => openModal("Nova Imagem", <ModalEdit />, "md")}
+        stats={[
+          {
+            title: "Total Imagens",
+            value: totalItems,
+            badge: "Armazenadas",
+            badgeType: "neutral",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
+      />
 
       <ImagesSearchFilters />
 

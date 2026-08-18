@@ -73,8 +73,8 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
         <Button
           type="button"
           size="sm"
-          buttonStyle="primary"
-          className="rounded-xl"
+          buttonStyle="soft"
+          className="!rounded-2xl border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
           onClick={handleToggle}
         >
           <Filter size={14} />
@@ -88,7 +88,7 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
               <div
                 ref={filterRef}
                 data-portal="true"
-                className="absolute z-[1200] w-[min(92vw,640px)] overflow-visible rounded-2xl border border-white/15 bg-primary shadow-2xl"
+                className="absolute z-[1200] w-[min(92vw,640px)] overflow-visible rounded-3xl border border-white/15 bg-primary/95 backdrop-blur-xl shadow-2xl"
                 style={{
                   top: `${listStyle.top}px`,
                   left: `${listStyle.left}px`,
@@ -97,7 +97,7 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
                 }}
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="max-h-[70vh] overflow-auto p-4">{filters}</div>
+                <div className="max-h-[70vh] overflow-auto p-5">{filters}</div>
               </div>
             </FilterContext.Provider>,
             document.body,

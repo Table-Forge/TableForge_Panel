@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/button/button";
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -151,27 +151,45 @@ export function CampaignsPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+  const activeCount = data?.items?.filter((c) => c.status === "Active" || c.status === "Open")?.length ?? 0;
+
   return (
     <>
-      <header className="shrink-0 flex flex-col items-start justify-between gap-4 sm:flex-row">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Campanhas
-          </h1>
-          <p className="text-sm text-grays-100">
-            Suas campanhas disponíveis para administração.
-          </p>
-        </div>
-
-        <Button
-          buttonStyle="primary"
-          size="sm"
-          onClick={() => openModal("Criar Campanha", <ModalEdit />, "md")}
-        >
-          <MdAdd />
-          Criar Campanha
-        </Button>
-      </header>
+      <CrmPageHeader
+        title="Campanhas"
+        subtitle="Gerencie suas mesas e aventuras com estatísticas rápidas."
+        count={totalItems}
+        actionLabel="Criar Campanha"
+        actionIcon={<MdAdd />}
+        onActionClick={() => openModal("Criar Campanha", <ModalEdit />, "md")}
+        stats={[
+          {
+            title: "Total Campanhas",
+            value: totalItems,
+            badge: "Geral",
+            badgeType: "neutral",
+          },
+          {
+            title: "Mesas Ativas",
+            value: activeCount,
+            badge: "Disponíveis",
+            badgeType: "success",
+          },
+          {
+            title: "Privadas",
+            value: data?.items?.filter((c) => c.isPrivate)?.length ?? 0,
+            badge: "Restrito",
+            badgeType: "warning",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
+      />
 
       <CampaignsSearchFilters />
 

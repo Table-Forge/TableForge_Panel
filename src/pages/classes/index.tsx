@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/button/button";
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -90,27 +90,32 @@ export function ClassesPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+
   return (
     <>
-      <header className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Classes
-          </h1>
-          <p className="text-sm text-grays-100">
-            Gerencie as classes disponíveis para personagens.
-          </p>
-        </div>
-
-        <Button
-          buttonStyle="primary"
-          size="sm"
-          onClick={() => openModal("Criar Classe", <ModalEdit />, "md")}
-        >
-          <MdAdd />
-          Criar Classe
-        </Button>
-      </header>
+      <CrmPageHeader
+        title="Classes"
+        subtitle="Gerencie as classes de personagem disponíveis para aventuras."
+        count={totalItems}
+        actionLabel="Criar Classe"
+        actionIcon={<MdAdd />}
+        onActionClick={() => openModal("Criar Classe", <ModalEdit />, "md")}
+        stats={[
+          {
+            title: "Total de Classes",
+            value: totalItems,
+            badge: "Cadastradas",
+            badgeType: "neutral",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
+      />
 
       <ClassesSearchFilters />
 

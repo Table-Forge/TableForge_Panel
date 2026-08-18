@@ -76,13 +76,12 @@ export const Paginate: React.FC<IPaginateProps> = ({
 
   return (
     <footer
-      className={`flex flex-col gap-4 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between ${className}`}
+      className={`flex flex-col gap-4 rounded-3xl border border-white/10 bg-primary/40 p-4 backdrop-blur-md shadow-lg md:flex-row md:items-center md:justify-between ${className}`}
     >
-      <p className="text-sm text-grays-100">
-        Mostrando <span className="font-bold text-secondary">{itemStart}</span>{" "}
-        a <span className="font-bold text-secondary">{itemEnd}</span> de{" "}
-        <span className="font-bold text-secondary">{filteredItems}</span>{" "}
-        registros
+      <p className="text-sm font-medium text-grays-100">
+        Mostrando <span className="font-bold text-white">{itemStart}</span> a{" "}
+        <span className="font-bold text-white">{itemEnd}</span> de{" "}
+        <span className="font-bold text-secondary">{filteredItems}</span> registros
       </p>
 
       {pages.length > 0 ? (
@@ -92,15 +91,15 @@ export const Paginate: React.FC<IPaginateProps> = ({
             disabled={safePage <= 1}
             title="Anterior"
             aria-label="Página anterior"
-            color="var(--color-tertiary)"
+            color="var(--color-secondary)"
             hasHoverEffect
-            size="32px"
-            className="rounded-lg border border-white/15 bg-primary hover:border-tertiary/50"
+            size="34px"
+            className="rounded-xl border border-white/15 bg-white/5 hover:border-secondary/50"
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={16} />
           </ButtonIcon>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {pages.map((item) => {
               const isSelected = item.value === safePage;
 
@@ -112,7 +111,11 @@ export const Paginate: React.FC<IPaginateProps> = ({
                   onClick={() =>
                     !item.disabled ? handleChangePage(Number(item.value)) : null
                   }
-                  className={`inline-flex h-8 min-w-8 items-center justify-center rounded-lg px-2 text-sm font-semibold transition ${isSelected ? "bg-tertiary text-white" : "bg-transparent text-white/90 hover:bg-white/10"} disabled:cursor-default disabled:text-grays-200 disabled:hover:bg-transparent`}
+                  className={`inline-flex h-8 min-w-8 items-center justify-center rounded-xl px-2.5 text-xs font-bold transition-all duration-150 ${
+                    isSelected
+                      ? "bg-secondary text-white shadow-md shadow-secondary/20"
+                      : "bg-white/5 text-white/90 hover:bg-white/15"
+                  } disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white/5`}
                 >
                   {item.value}
                 </button>
@@ -125,12 +128,12 @@ export const Paginate: React.FC<IPaginateProps> = ({
             disabled={safePage >= totalPages || totalPages === 0}
             title="Próximo"
             aria-label="Próxima página"
-            color="var(--color-tertiary)"
+            color="var(--color-secondary)"
             hasHoverEffect
-            size="32px"
-            className="rounded-lg border border-white/15 bg-primary hover:border-tertiary/50"
+            size="34px"
+            className="rounded-xl border border-white/15 bg-white/5 hover:border-secondary/50"
           >
-            <ChevronRight size={14} />
+            <ChevronRight size={16} />
           </ButtonIcon>
         </div>
       ) : null}

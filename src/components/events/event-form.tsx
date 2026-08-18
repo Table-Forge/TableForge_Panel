@@ -1,8 +1,10 @@
 import { Button } from "@/src/components/button/button";
+import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlled";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
 import { Label } from "@/src/components/label/label";
@@ -21,6 +23,7 @@ import { useBoundStore } from "@/src/store";
 type IEventForm = IEventCreate & { bannerContent?: string };
 
 export const EventForm = ({ data }: { data?: IEvent }) => {
+  const closeModal = useBoundStore((state) => state.closeModal);
   const { createMutation, updateMutation } = useEventMutations();
   const { createOrUpdate: createOrUpdateImage, isPending: isLoadingImage } = useImagesMutation();
   const { data: eventStatusEnum, isLoading: isLoadingStatus } = useEventStatusEnum();
@@ -64,6 +67,8 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
 
   const isOnlineWatch = useWatch({ control, name: "isOnline" });
   const currentBannerContent = useWatch({ control, name: "bannerContent" });
+  const startDateWatch = useWatch({ control, name: "startDate" });
+  const endDateWatch = useWatch({ control, name: "endDate" });
 
   const selectedBannerSource = toImageSource(
     currentBannerContent || (data?.bannerUrl)
@@ -179,21 +184,33 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
       <FieldsWrapper>
         <InputGroup>
           <Label htmlFor="startDate" isRequired>Data e Hora de Início</Label>
-          <ControlledInput
+          <DateInput
             hookForm={form}
             name="startDate"
-            type="datetime-local"
+            showTime
+            selectsStart
+            startDate={startDateWatch || undefined}
+            endDate={endDateWatch || undefined}
+            maxDate={endDateWatch || undefined}
+            placeholder="DD/MM/AAAA HH:mm"
             error={errors.startDate?.message as string | undefined}
+            disabled={isCanceled || isSubmitting}
           />
         </InputGroup>
 
         <InputGroup>
           <Label htmlFor="endDate">Data e Hora de Término</Label>
-          <ControlledInput
+          <DateInput
             hookForm={form}
             name="endDate"
-            type="datetime-local"
+            showTime
+            selectsEnd
+            startDate={startDateWatch || undefined}
+            endDate={endDateWatch || undefined}
+            minDate={startDateWatch || undefined}
+            placeholder="DD/MM/AAAA HH:mm"
             error={errors.endDate?.message as string | undefined}
+            disabled={isCanceled || isSubmitting}
           />
         </InputGroup>
       </FieldsWrapper>
@@ -303,7 +320,10 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
         />
       </InputGroup>
 
-      <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-cream/10">
+      <ModalFooter>
+        <Button buttonStyle="hollow" onClick={closeModal} type="button">
+          Cancelar
+        </Button>
         <Button
           type="submit"
           isLoading={isSubmitting}
@@ -311,7 +331,7 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
         >
           {data?.id ? "Salvar alterações" : "Criar evento"}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

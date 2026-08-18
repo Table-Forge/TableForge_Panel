@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Resolver } from "react-hook-form";
 import { Button } from "@/src/components/button/button";
+import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
@@ -164,7 +165,7 @@ export const ModalEditTable = ({ spaceId, data }: IProps) => {
         />
       </InputGroup>
 
-      <div className="mt-6 flex justify-end gap-3">
+      <ModalFooter>
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
           Cancelar
         </Button>
@@ -175,7 +176,7 @@ export const ModalEditTable = ({ spaceId, data }: IProps) => {
         >
           {data?.id ? "Salvar alterações" : "Adicionar Mesa"}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };
