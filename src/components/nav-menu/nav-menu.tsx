@@ -28,7 +28,7 @@ interface INavItem {
 }
 
 const navItems: INavItem[] = [
-  { to: "/", label: "Painel", icon: LayoutGrid, end: true },
+  { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/events", label: "Eventos", icon: CalendarDays },
   { to: "/gamesystems", label: "Sistemas", icon: Gamepad2 },
