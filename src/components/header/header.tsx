@@ -14,7 +14,7 @@ export const Header = () => {
   const navigate = useNavigate();
 
 
-  const avatarSource = toImageSource(user?.avatarUrl);
+  const avatarSource = toImageSource(user?.avatarUrl ?? undefined);
   const displayName = user?.nickname ?? user?.username ?? "Aventureiro";
   const initial = (user?.nickname ?? user?.username ?? "A")[0]?.toUpperCase();
 
