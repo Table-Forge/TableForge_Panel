@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/button/button";
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -107,7 +107,7 @@ export function BannersPage() {
       align: "center",
       render: (banner) => (
         banner.tag ? (
-          <span className="rounded bg-white/10 px-2 py-1 text-xs font-semibold text-white">
+          <span className="rounded-md bg-white/10 px-2 py-1 text-xs font-semibold text-white">
             {banner.tag}
           </span>
         ) : (
@@ -140,27 +140,32 @@ export function BannersPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError) return <InfoNotFound />;
 
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+
   return (
     <>
-      <header className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Banners
-          </h1>
-          <p className="text-sm text-grays-100">
-            Gerencie os banners para destaque no aplicativo.
-          </p>
-        </div>
-
-        <Button
-          buttonStyle="primary"
-          size="sm"
-          onClick={() => openModal("Criar Banner", <ModalEdit />, "md")}
-        >
-          <MdAdd />
-          Criar Banner
-        </Button>
-      </header>
+      <CrmPageHeader
+        title="Banners"
+        subtitle="Gerencie os banners para destaque no aplicativo."
+        count={totalItems}
+        actionLabel="Criar Banner"
+        actionIcon={<MdAdd />}
+        onActionClick={() => openModal("Criar Banner", <ModalEdit />, "md")}
+        stats={[
+          {
+            title: "Total Banners",
+            value: totalItems,
+            badge: "Ativos",
+            badgeType: "success",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
+      />
 
       <BannersSearchFilters />
 

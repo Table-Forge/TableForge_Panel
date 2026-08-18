@@ -15,11 +15,11 @@ export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
   },
   modals: [],
 
-  openModal: ((arg1, arg2, arg3) => {
+  openModal: ((arg1, arg2, arg3, arg4) => {
     const isPayloadShape =
       typeof arg1 === "object" &&
       arg1 !== null &&
-      ("title" in arg1 || "content" in arg1 || "size" in arg1) &&
+      ("title" in arg1 || "content" in arg1 || "size" in arg1 || "footer" in arg1) &&
       arg2 === undefined &&
       arg3 === undefined;
 
@@ -27,12 +27,14 @@ export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
       ? (arg1 as {
           title?: ReactNode;
           content?: ReactNode;
+          footer?: ReactNode;
           size?: ModalSize;
         })
       : {
           title: arg1 as ReactNode,
           content: arg2 as ReactNode,
           size: arg3,
+          footer: arg4 as ReactNode,
         };
 
     const size = payload.size ?? "md";
@@ -43,6 +45,7 @@ export const createModalSlice: SliceCreator<ModalSlice> = (set) => ({
         isOpen: true,
         title: payload.title,
         content: payload.content,
+        footer: payload.footer,
         size,
       };
 

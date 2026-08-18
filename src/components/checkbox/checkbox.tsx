@@ -25,8 +25,9 @@ export const Checkbox = forwardRef<HTMLInputElement, ICheckbox>(
 
           <span
             className="
-              absolute inset-0 rounded-md border border-white/35 bg-background transition
-              peer-checked:border-secondary peer-checked:bg-secondary
+              absolute inset-0 rounded-lg border border-white/20 bg-primary/40 transition-all duration-200
+              peer-checked:border-secondary peer-checked:bg-secondary shadow-xs
+              group-hover:border-white/35
               after:absolute after:left-[6px] after:top-[2px] after:hidden after:h-[11px] after:w-[6px]
               after:rotate-45 after:border-b-[2.5px] after:border-r-[2.5px] after:border-white
               peer-checked:after:block

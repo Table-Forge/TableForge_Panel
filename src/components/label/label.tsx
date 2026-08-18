@@ -20,7 +20,7 @@ export const Label: React.FC<LabelProps> = ({
     <label
       {...props}
       htmlFor={htmlFor}
-      className={`flex w-full items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-grays-100 ${
+      className={`flex w-full items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-grays-200 ${
         spaced ? "justify-between" : "justify-start"
       } ${className ?? ""}`}
     >

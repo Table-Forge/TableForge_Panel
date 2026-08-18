@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Resolver } from "react-hook-form";
 import { Button } from "@/src/components/button/button";
+import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { DateInput } from "@/src/components/input/input.date.controlled";
@@ -384,7 +385,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         />
       </InputGroup>
 
-      <div className="mt-6 flex justify-end gap-3">
+      <ModalFooter>
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
           Cancelar
         </Button>
@@ -395,7 +396,7 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
         >
           Salvar alterações
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

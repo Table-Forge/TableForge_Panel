@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/button/button";
+import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
@@ -132,7 +133,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
         </InputGroup>
       </FieldsWrapper>
 
-      <div className="mt-6 flex justify-end gap-3">
+      <ModalFooter>
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
           Cancelar
         </Button>
@@ -143,7 +144,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
         >
           {data?.id ? "Salvar alterações" : "Criar imagem"}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };

@@ -1,4 +1,4 @@
-﻿import { createPortal } from "react-dom";
+import { createPortal } from "react-dom";
 import {
   memo,
   useCallback,
@@ -136,7 +136,7 @@ export function Table<T extends { id?: number | string }>({
   if (!bodyData?.length) {
     return (
       <div className="h-full">
-        <p className="rounded-2xl border border-white/10 bg-primary/40 px-3 py-6 text-center text-xs font-semibold uppercase tracking-wider text-grays-100">
+        <p className="rounded-3xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200 backdrop-blur-md">
           Nenhum dado listado.
         </p>
       </div>
@@ -146,7 +146,7 @@ export function Table<T extends { id?: number | string }>({
   return (
     <div
       aria-label="tabela"
-      className={`relative h-full min-h-0 w-full overflow-x-auto ${scrollable ? "max-w-full" : ""}`}
+      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-3xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl ${scrollable ? "max-w-full" : ""}`}
       style={{
         height: bodyHeight,
         maxHeight: bodyHeight,
@@ -157,7 +157,7 @@ export function Table<T extends { id?: number | string }>({
       <div className="flex min-w-max w-full flex-col">
         <div
           role="rowgroup"
-          className="sticky top-0 z-30 flex rounded-t-2xl border border-white/10 bg-primary px-4 py-3"
+          className="sticky top-0 z-30 flex border-b border-white/10 bg-primary/90 px-4 py-3.5 backdrop-blur-md shadow-sm"
         >
           {tableContents.map((column, index) => {
             const isVisible = column.show ?? true;
@@ -177,7 +177,7 @@ export function Table<T extends { id?: number | string }>({
                     ? "var(--color-primary)"
                     : undefined,
                 }}
-                className={`min-w-0 items-center px-2 text-[11px] font-bold uppercase tracking-widest text-grays-100 ${getColumnAlignmentClasses(
+                className={`min-w-0 items-center px-2 text-[10px] font-extrabold uppercase tracking-widest text-grays-200 ${getColumnAlignmentClasses(
                   column.align,
                 )}`}
               >
@@ -189,7 +189,7 @@ export function Table<T extends { id?: number | string }>({
 
         <div
           role="rowgroup"
-          className="flex flex-col gap-2 rounded-b-2xl border border-white/10 bg-primary/15 py-2"
+          className="flex flex-col divide-y divide-white/5"
         >
           {bodyData.map((row, index) => (
             <TableRow
@@ -209,7 +209,7 @@ export function Table<T extends { id?: number | string }>({
       {contextMenu
         ? createPortal(
             <div
-              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-xl border border-white/15 bg-primary shadow-2xl"
+              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-2xl border border-white/15 bg-primary/95 backdrop-blur-md shadow-2xl"
               style={{ top: contextMenu.y, left: contextMenu.x }}
               onClick={(event) => event.stopPropagation()}
             >
@@ -217,7 +217,7 @@ export function Table<T extends { id?: number | string }>({
                 <button
                   key={`${option.label}-${index}`}
                   type="button"
-                  className="flex w-full items-center gap-2 border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white transition last:border-b-0 hover:bg-secondary/15"
+                  className="flex w-full items-center gap-2 border-b border-white/10 px-3.5 py-2.5 text-left text-xs font-semibold text-white transition last:border-b-0 hover:bg-secondary/20"
                   onClick={() => {
                     option.onClick();
                     setContextMenu(null);
@@ -249,9 +249,9 @@ function TableRowComponent<T extends { id?: number | string }>({
       role="row"
       onClick={() => handleRowClick(row)}
       onContextMenu={(event) => handleContextMenu(event, row)}
-      className={`group flex items-center rounded-xl border border-white/10 bg-primary/80 px-4 py-3 transition ${
+      className={`group flex items-center px-4 py-3.5 backdrop-blur-xs transition-colors duration-150 ${
         isClickable
-          ? "cursor-pointer hover:border-secondary/40 hover:shadow-md"
+          ? "cursor-pointer hover:bg-white/5"
           : "cursor-default"
       }`}
       style={{ color: customRowColor }}

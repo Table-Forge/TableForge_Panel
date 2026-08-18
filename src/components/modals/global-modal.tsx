@@ -107,7 +107,7 @@ const ModalItem = memo(
 
     return (
       <div
-        className="fixed inset-0 flex items-center justify-center bg-background/70 p-2 sm:p-4"
+        className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-5 transition-all duration-200"
         style={{ zIndex: 1000 + index }}
       >
         <button
@@ -123,7 +123,7 @@ const ModalItem = memo(
           role="dialog"
           aria-modal="true"
           tabIndex={-1}
-          className="relative flex max-h-[98vh] min-w-[300px] flex-col overflow-hidden rounded-xl border border-white/15 bg-primary shadow-2xl"
+          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-3xl border border-white/15 bg-primary/95 backdrop-blur-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
           style={{
             width: SIZES[size],
             maxWidth: size === "full" ? "100vw" : "95vw",
@@ -131,8 +131,8 @@ const ModalItem = memo(
             transition: "opacity 0.2s ease, transform 0.2s ease",
           }}
         >
-          <header className="flex items-center justify-between border-b border-white/10 px-8 py-4 max-[992px]:px-2.5 max-[992px]:py-2.5">
-            <h3 className="truncate text-xl font-bold uppercase tracking-tight text-white">
+          <header className="flex items-center justify-between border-b border-white/10 bg-primary/40 px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
+            <h3 className="truncate text-lg font-extrabold uppercase tracking-tight text-white">
               {modal.title}
             </h3>
 
@@ -141,16 +141,22 @@ const ModalItem = memo(
               disabled={!isTopMost}
               aria-label="Fechar modal"
               hasHoverEffect
-              size="32px"
-              className="text-white/80 hover:text-tertiary disabled:pointer-events-none disabled:opacity-40"
+              size="34px"
+              className="!rounded-2xl border border-white/10 text-white/80 hover:text-white hover:border-secondary/40 hover:bg-secondary/20 transition-all disabled:pointer-events-none disabled:opacity-40"
             >
-              <X size={22} />
+              <X size={18} />
             </ButtonIcon>
           </header>
 
-          <div className="flex flex-1 flex-col gap-2 overflow-y-auto px-8 py-4 text-sm text-white/90 max-[992px]:px-2.5 max-[992px]:py-2.5">
+          <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-5 text-sm text-white/90 max-[992px]:px-4 max-[992px]:py-3">
             {modal.content}
           </div>
+
+          {modal.footer ? (
+            <footer className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-white/10 bg-primary/95 px-6 py-4 backdrop-blur-md max-[992px]:px-4 max-[992px]:py-3">
+              {modal.footer}
+            </footer>
+          ) : null}
         </section>
       </div>
     );
