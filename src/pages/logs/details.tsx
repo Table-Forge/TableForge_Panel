@@ -1,4 +1,3 @@
-import { Button } from "@/src/components/button/button";
 import {
   CardBox,
   CardLabel,
@@ -14,6 +13,7 @@ import type { ILog } from "@/src/features/logs/schemas/log.schema";
 import { formatDate } from "@/src/utils/format";
 import { pickText } from "@/src/utils/pick-text";
 import { useMemo } from "react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export function LogDetailsPage() {
@@ -35,103 +35,150 @@ export function LogDetailsPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError || !data) return <InfoNotFound />;
 
-  return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Log {data.id ?? "-"}
-          </h1>
-          <p className="text-sm text-grays-100">
-            Detalhes completos do registro.
-          </p>
-        </div>
+  const isSuccessStatus = Boolean(
+    data.statusCode && data.statusCode >= 200 && data.statusCode < 300
+  );
 
-        <Button
-          buttonStyle="hollow"
-          size="sm"
-          onClick={() => navigate("/logs")}
-        >
-          Voltar
-        </Button>
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Header Toolbar */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/logs")}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            title="Voltar para a lista"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+                Log #{data.id}
+              </h1>
+              <span
+                className={`rounded-full border px-3 py-0.5 text-xs font-extrabold tracking-wide ${
+                  isSuccessStatus
+                    ? "border-emerald-500/30 bg-emerald-500/20 text-emerald-300"
+                    : "border-red-500/30 bg-red-500/20 text-red-300"
+                }`}
+              >
+                HTTP {data.statusCode ?? "ERR"}
+              </span>
+            </div>
+            <p className="truncate text-xs font-semibold text-grays-100">
+              {data.endpoint || "Endpoint não especificado"}
+            </p>
+          </div>
+        </div>
       </header>
 
-      <CardBox title="Informações Gerais">
-        <GridBox>
+      {/* KPI Stat Cards Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+            Status HTTP
+          </span>
+          <div
+            className={`mt-2 text-2xl font-extrabold ${
+              isSuccessStatus ? "text-emerald-400" : "text-red-400"
+            }`}
+          >
+            {data.statusCode ?? "-"}
+          </div>
+          <span className="mt-1 text-[10px] font-bold text-white/60">
+            Resposta do Servidor
+          </span>
+        </div>
+
+        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+            Tipo de Log
+          </span>
+          <div className="mt-2 text-xl font-extrabold text-white truncate">
+            {data.type || "Geral"}
+          </div>
+          <span className="mt-1 text-[10px] font-bold text-white/60">
+            Categoria do Registro
+          </span>
+        </div>
+
+        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+            Endereço IP
+          </span>
+          <div className="mt-2 text-lg font-extrabold text-white truncate">
+            {data.ipAddress || "-"}
+          </div>
+          <span className="mt-1 text-[10px] font-bold text-white/60">
+            Origem da Requisição
+          </span>
+        </div>
+
+        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+            Data e Hora
+          </span>
+          <div className="mt-2 text-sm font-extrabold text-white">
+            {createdOn ? formatDate(createdOn, true) : "-"}
+          </div>
+          <span className="mt-1 text-[10px] font-bold text-white/60">
+            Data de Registro
+          </span>
+        </div>
+      </div>
+
+      {/* Main Metadata Section */}
+      <CardBox title="Parâmetros Técnicos">
+        <GridBox className="lg:grid-cols-3">
           <InfoBox>
-            <CardLabel>ID</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.id ?? "-")}
-            </CardValue>
+            <CardLabel>ID do Registro</CardLabel>
+            <CardValue>{String(data.id ?? "-")}</CardValue>
           </InfoBox>
           <InfoBox>
-            <CardLabel>Tipo</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.type ?? "-"}
-            </CardValue>
+            <CardLabel>Código Interno</CardLabel>
+            <CardValue>{data.code ?? "-"}</CardValue>
           </InfoBox>
           <InfoBox>
-            <CardLabel>Código</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.code ?? "-"}
-            </CardValue>
+            <CardLabel>ID do Usuário Solicitante</CardLabel>
+            <CardValue>{String(data.userId ?? "-")}</CardValue>
           </InfoBox>
-          <InfoBox>
-            <CardLabel>Status</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.statusCode ?? "-")}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Data</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {createdOn ? formatDate(createdOn, true) : "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>IP</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.ipAddress ?? "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Usuário ID</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.userId ?? "-")}
+          <InfoBox className="lg:col-span-3">
+            <CardLabel>Endpoint</CardLabel>
+            <CardValue className="break-all font-mono text-secondary-light">
+              {data.endpoint ?? "-"}
             </CardValue>
           </InfoBox>
         </GridBox>
       </CardBox>
 
-      <CardBox title="Endpoint">
-        <CardValue className="block break-all">
-          {data.endpoint ?? "-"}
-        </CardValue>
-      </CardBox>
-
-      <CardBox title="Mensagem">
-        <CardValue className="block whitespace-pre-wrap break-words font-medium">
+      {/* Log Content Sections */}
+      <CardBox title="Mensagem Principal">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-white/90">
           {structuredContent.message}
-        </CardValue>
+        </div>
       </CardBox>
 
-      <CardBox title="Rastreamento">
-        <Code>
-          {structuredContent.stackTrace}
-        </Code>
-      </CardBox>
+      {structuredContent.stackTrace !== "-" && (
+        <CardBox title="Rastreamento (Stack Trace)">
+          <Code>{structuredContent.stackTrace}</Code>
+        </CardBox>
+      )}
 
-      <CardBox title="Mensagem da Exceção Interna">
-        <CardValue className="block whitespace-pre-wrap break-words font-medium">
-          {structuredContent.innerExceptionMessage}
-        </CardValue>
-      </CardBox>
+      {structuredContent.innerExceptionMessage !== "-" && (
+        <CardBox title="Exceção Interna">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-red-300">
+            {structuredContent.innerExceptionMessage}
+          </div>
+        </CardBox>
+      )}
 
-      <CardBox title="Rastreamento da Exceção Interna">
-        <Code>
-          {structuredContent.innerExceptionStackTrace}
-        </Code>
-      </CardBox>
+      {structuredContent.innerExceptionStackTrace !== "-" && (
+        <CardBox title="Rastreamento da Exceção Interna">
+          <Code>{structuredContent.innerExceptionStackTrace}</Code>
+        </CardBox>
+      )}
     </div>
   );
 }
