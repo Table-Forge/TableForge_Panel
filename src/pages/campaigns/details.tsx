@@ -15,6 +15,7 @@ import { useCampaignFrequencyEnum } from "@/src/features/campaigns/hooks/enums/u
 import { useCampaignById } from "@/src/features/campaigns/hooks/use-campaign-by-id";
 import { useBoundStore } from "@/src/store";
 import { useMemo } from "react";
+import { ArrowLeft } from "lucide-react";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
@@ -38,16 +39,44 @@ export function CampaignDetailsPage() {
   if (isLoading) return <SkeletonTable />;
   if (isError || !data) return <InfoNotFound />;
 
+  const statusName = data.status
+    ? campaignStatusEnum.find((o) => o.value === data.status)?.name || data.status
+    : "-";
+
+  const difficultyName = data.difficulty
+    ? difficultyLevelEnum.find((o) => o.value === data.difficulty)?.name || data.difficulty
+    : "-";
+
+  const frequencyName = data.frequency
+    ? frequencyEnum.find((o) => o.value === data.frequency)?.name || data.frequency
+    : "-";
+
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            {data.title || "Campanha"}
-          </h1>
-          <p className="text-sm text-grays-100">
-            Detalhes completos da campanha.
-          </p>
+    <div className="flex flex-col gap-6">
+      {/* Navigation & Header */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/campaigns")}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            title="Voltar para a lista"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+                {data.title || "Campanha"}
+              </h1>
+              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+                #{data.id}
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-grays-100">
+              Sistema: {data.gameSystemName || "RPG"} • Criado por {data.creatorUsername || "Mestre"}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -57,127 +86,146 @@ export function CampaignDetailsPage() {
             onClick={() =>
               openModal("Editar Campanha", <ModalEdit data={data} />, "md")
             }
+            className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
-            Editar
-          </Button>
-          <Button
-            buttonStyle="hollow"
-            size="sm"
-            onClick={() => navigate("/campaigns")}
-          >
-            Voltar
+            Editar Campanha
           </Button>
         </div>
       </header>
 
-      <CardBox title="Informações Gerais">
-        <GridBox>
-          <InfoBox>
-            <CardLabel>ID</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.id ?? "-")}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Título</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.title ?? "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Status</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.status ? campaignStatusEnum.find(o => o.value === data.status)?.name || data.status : "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Dificuldade</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.difficulty ? difficultyLevelEnum.find(o => o.value === data.difficulty)?.name || data.difficulty : "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Frequência</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.frequency ? frequencyEnum.find(o => o.value === data.frequency)?.name || data.frequency : "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Criador</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.creatorUsername ?? "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Limite de jogadores</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.playersLimit ?? 0)}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Campanha privada</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.isPrivate ? "Sim" : "Não"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Chat habilitado</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.isChatEnabled ? "Sim" : "Não"}
-            </CardValue>
-          </InfoBox>
-        </GridBox>
-      </CardBox>
+      {/* Hero Bento Box & KPI Cards Row */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        {/* Left: Media Banner / Identity */}
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
+          {data.bannerUrl ? (
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-lg">
+              <Thumbnail
+                image={data.bannerUrl}
+                width="100%"
+                height={160}
+                alt={data.title || "Banner"}
+                className="w-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="flex h-36 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+              Sem Imagem
+            </div>
+          )}
 
-      <CardBox title="Vínculos">
-        <GridBox>
-          <InfoBox>
-            <CardLabel>ID do criador</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.creatorId ?? "-")}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Localização</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.locationName ?? "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Endereço</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.address ?? "-"}
-            </CardValue>
-          </InfoBox>
-          <InfoBox>
-            <CardLabel>Sistema de jogo</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.gameSystemName ?? String(data.gameSystemId ?? "-")}
-            </CardValue>
-          </InfoBox>
-        </GridBox>
-      </CardBox>
+          <div className="mt-4 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+              Status Atual
+            </span>
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/20 px-3 py-1 text-xs font-extrabold text-emerald-300 shadow-xs">
+              {statusName}
+            </span>
+          </div>
+        </div>
 
-      <CardBox title="Descrição">
-        <CardValue className="block whitespace-pre-wrap break-words font-medium">
-          {data.description ?? "-"}
-        </CardValue>
-      </CardBox>
+        {/* Right: 4 Quick Stat KPIs */}
+        <div className="grid grid-cols-2 gap-3 lg:col-span-2 sm:grid-cols-4">
+          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+            <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+              Jogadores
+            </span>
+            <div className="mt-2 text-2xl font-extrabold text-white">
+              {data.membersCount ?? 0} / {data.playersLimit ?? 0}
+            </div>
+            <span className="mt-1 text-[10px] font-bold text-white/60">
+              Limite Configurado
+            </span>
+          </div>
 
-      <CardBox title="Banner">
-        {data.bannerUrl ? (
-          <Thumbnail
-            image={data.bannerUrl}
-            width={240}
-            height={150}
-            alt={data.title || "Banner"}
-          />
-        ) : (
-          <CardValue className="mt-1 block break-all">
-            {String(data.bannerId ?? "-")}
-          </CardValue>
-        )}
+          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+            <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+              Dificuldade
+            </span>
+            <div className="mt-2 text-xl font-extrabold text-white truncate">
+              {difficultyName}
+            </div>
+            <span className="mt-1 text-[10px] font-bold text-white/60">
+              Nível do Desafio
+            </span>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+            <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+              Frequência
+            </span>
+            <div className="mt-2 text-xl font-extrabold text-white truncate">
+              {frequencyName}
+            </div>
+            <span className="mt-1 text-[10px] font-bold text-white/60">
+              Periodicidade
+            </span>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+            <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+              Privacidade
+            </span>
+            <div className="mt-2 text-xl font-extrabold text-white">
+              {data.isPrivate ? "Privada" : "Pública"}
+            </div>
+            <span className="mt-1 text-[10px] font-bold text-white/60">
+              Visibilidade
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Details Grid */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <CardBox title="Informações Gerais">
+          <GridBox className="lg:grid-cols-2">
+            <InfoBox>
+              <CardLabel>ID da Campanha</CardLabel>
+              <CardValue>{String(data.id ?? "-")}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>Mestre / Criador</CardLabel>
+              <CardValue>{data.creatorUsername ?? "-"}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>Sistema de Jogo</CardLabel>
+              <CardValue>{data.gameSystemName ?? String(data.gameSystemId ?? "-")}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>Chat Habilitado</CardLabel>
+              <CardValue>{data.isChatEnabled ? "Sim" : "Não"}</CardValue>
+            </InfoBox>
+          </GridBox>
+        </CardBox>
+
+        <CardBox title="Localização e Vínculos">
+          <GridBox className="lg:grid-cols-2">
+            <InfoBox>
+              <CardLabel>Localização</CardLabel>
+              <CardValue>{data.locationName ?? "-"}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>Endereço</CardLabel>
+              <CardValue>{data.address ?? "-"}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>ID do Criador</CardLabel>
+              <CardValue>{String(data.creatorId ?? "-")}</CardValue>
+            </InfoBox>
+            <InfoBox>
+              <CardLabel>ID do Banner</CardLabel>
+              <CardValue>{String(data.bannerId ?? "-")}</CardValue>
+            </InfoBox>
+          </GridBox>
+        </CardBox>
+      </div>
+
+      {/* Description Section */}
+      <CardBox title="Descrição da Campanha">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
+          {data.description || "Nenhuma descrição fornecida para esta campanha."}
+        </div>
       </CardBox>
     </div>
   );

@@ -13,6 +13,7 @@ import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { useBoundStore } from "@/src/store";
 import { formatDate } from "@/src/utils/format";
 import { useMemo } from "react";
+import { ArrowLeft } from "lucide-react";
 import { MdModeEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { CopyButton } from "@/src/components/copy-button/copy-button";
@@ -34,15 +35,31 @@ export function ImageDetailsPage() {
   if (isError || !data) return <InfoNotFound />;
 
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            {data.name || "Imagem"}
-          </h1>
-          <p className="text-sm text-grays-100">
-            Detalhes completos da imagem.
-          </p>
+    <div className="flex flex-col gap-6">
+      {/* Header Toolbar */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/images")}
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            title="Voltar para a lista"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+                {data.name || "Imagem"}
+              </h1>
+              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+                #{data.id}
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-grays-100">
+              Tipo: {data.type || "Geral"} • UUID: {data.uuid || "-"}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -52,81 +69,60 @@ export function ImageDetailsPage() {
             onClick={() =>
               openModal("Editar Imagem", <ModalEdit data={data} />, "md")
             }
+            className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
-            Editar
-          </Button>
-          <Button
-            buttonStyle="hollow"
-            size="sm"
-            onClick={() => navigate("/images")}
-          >
-            Voltar
+            Editar Imagem
           </Button>
         </div>
       </header>
 
-      <CardBox title="Informações Gerais">
-        <GridBox>
+      {/* Hero Media Preview Bento Card */}
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center">
+        <div className="relative overflow-hidden rounded-2xl border border-white/15 shadow-2xl p-2 bg-black/40 max-w-full flex items-center justify-center">
+          <Thumbnail
+            image={data}
+            width="auto"
+            height="auto"
+            className="max-h-[460px] w-auto max-w-full rounded-xl object-contain"
+            alt={data.name || "Imagem"}
+          />
+        </div>
+
+        {data.url && (
+          <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xs">
+            <span className="truncate text-xs font-semibold text-white/80">
+              {data.url}
+            </span>
+            <CopyButton text={data.url} />
+          </div>
+        )}
+      </div>
+
+      {/* Image Metadata Grid */}
+      <CardBox title="Informações do Arquivo">
+        <GridBox className="lg:grid-cols-3">
           <InfoBox>
-            <CardLabel>ID</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {String(data.id ?? "-")}
-            </CardValue>
+            <CardLabel>ID do Recurso</CardLabel>
+            <CardValue>{String(data.id ?? "-")}</CardValue>
           </InfoBox>
           <InfoBox>
-            <CardLabel>Nome</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.name ?? "-"}
-            </CardValue>
+            <CardLabel>Nome da Imagem</CardLabel>
+            <CardValue>{data.name ?? "-"}</CardValue>
           </InfoBox>
           <InfoBox>
-            <CardLabel>UUID</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.uuid ?? "-"}
-            </CardValue>
+            <CardLabel>Tipo de Imagem</CardLabel>
+            <CardValue>{data.type ?? "-"}</CardValue>
           </InfoBox>
           <InfoBox>
-            <CardLabel>Tipo</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.type ?? "-"}
-            </CardValue>
+            <CardLabel>UUID do Arquivo</CardLabel>
+            <CardValue className="break-all">{data.uuid ?? "-"}</CardValue>
           </InfoBox>
           <InfoBox>
             <CardLabel>Criado em</CardLabel>
-            <CardValue className="mt-1 block break-all">
-              {data.createdAt ? formatDate(data.createdAt, true) : "-"}
-            </CardValue>
+            <CardValue>{data.createdAt ? formatDate(data.createdAt, true) : "-"}</CardValue>
           </InfoBox>
         </GridBox>
-      </CardBox>
-
-      <CardBox title="Visualização e Link">
-        <div className="flex flex-col gap-6">
-          <div>
-            <div className="flex items-center gap-2">
-              <CardLabel>URL do recurso</CardLabel>
-              {data.url && <CopyButton text={data.url} />}
-            </div>
-            <CardValue className="mt-1 block break-all font-semibold text-primary">
-              <a href={data.url} target="_blank" rel="noreferrer">
-                {data.url ?? "-"}
-              </a>
-            </CardValue>
-          </div>
-          <div>
-            <CardLabel>Prévia</CardLabel>
-            <div className="mt-1">
-              <Thumbnail
-                image={data}
-                width="auto"
-                height="auto"
-                className="max-h-[500px] w-fit rounded-lg"
-                alt={data.name || "Imagem"}
-              />
-            </div>
-          </div>
-        </div>
       </CardBox>
     </div>
   );
