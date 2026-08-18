@@ -4,12 +4,15 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  type DragEvent,
   type MouseEvent,
   type CSSProperties,
   type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { MdDragIndicator } from "react-icons/md";
 import { Tooltip } from "@/src/components/tooltip/tooltip";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import type { ITable, TableRowProps } from "./table.interfaces";
@@ -22,13 +25,81 @@ export function Table<T extends { id?: number | string }>({
   scrollable = true,
   getRowColor,
   getContextOptions,
+  isDraggable,
+  onReorder,
 }: ITable<T>) {
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
     options: IMoreOptions[];
   } | null>(null);
+
+  const canDrag = isDraggable ?? Boolean(onReorder);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  const handleContainerDragOver = useCallback(
+    (event: DragEvent<HTMLDivElement>) => {
+      if (draggedIndex === null || !canDrag || !containerRef.current) return;
+
+      const container = containerRef.current;
+      const rect = container.getBoundingClientRect();
+      const threshold = 60;
+      const topDistance = event.clientY - rect.top;
+      const bottomDistance = rect.bottom - event.clientY;
+
+      if (topDistance > 0 && topDistance < threshold) {
+        const intensity = (threshold - topDistance) / threshold;
+        container.scrollTop -= Math.max(4, Math.round(intensity * 18));
+      } else if (bottomDistance > 0 && bottomDistance < threshold) {
+        const intensity = (threshold - bottomDistance) / threshold;
+        container.scrollTop += Math.max(4, Math.round(intensity * 18));
+      }
+    },
+    [canDrag, draggedIndex],
+  );
+
+  const handleDragStart = useCallback(
+    (event: DragEvent<HTMLDivElement>, index: number) => {
+      event.dataTransfer.effectAllowed = "move";
+      setDraggedIndex(index);
+    },
+    [],
+  );
+
+  const handleDragOver = useCallback(
+    (event: DragEvent<HTMLDivElement>, index: number) => {
+      event.preventDefault();
+      setDragOverIndex(index);
+    },
+    [],
+  );
+
+  const handleDragLeave = useCallback(() => {
+    setDragOverIndex(null);
+  }, []);
+
+  const handleDrop = useCallback(
+    (event: DragEvent<HTMLDivElement>, targetIndex: number) => {
+      event.preventDefault();
+      if (draggedIndex !== null && draggedIndex !== targetIndex) {
+        const newData = [...bodyData];
+        const [movedItem] = newData.splice(draggedIndex, 1);
+        newData.splice(targetIndex, 0, movedItem);
+        onReorder?.(newData, movedItem, targetIndex);
+      }
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+    },
+    [bodyData, draggedIndex, onReorder],
+  );
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  }, []);
 
   const handleLinkNavigation = useCallback(
     (link: string) => {
@@ -145,8 +216,11 @@ export function Table<T extends { id?: number | string }>({
 
   return (
     <div
+      ref={containerRef}
       aria-label="tabela"
+      onDragOver={handleContainerDragOver}
       className={`relative h-full min-h-0 w-full overflow-x-auto rounded-3xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl ${scrollable ? "max-w-full" : ""}`}
+
       style={{
         height: bodyHeight,
         maxHeight: bodyHeight,
@@ -159,6 +233,13 @@ export function Table<T extends { id?: number | string }>({
           role="rowgroup"
           className="sticky top-0 z-30 flex border-b border-white/10 bg-primary/90 px-4 py-3.5 backdrop-blur-md shadow-sm"
         >
+          {canDrag ? (
+            <div
+              role="columnheader"
+              style={{ width: "40px", flexBasis: "40px", flexShrink: 0, flexGrow: 0 }}
+              className="min-w-0 items-center justify-center px-1 text-[10px] font-extrabold uppercase tracking-widest text-grays-200"
+            />
+          ) : null}
           {tableContents.map((column, index) => {
             const isVisible = column.show ?? true;
             const cellStyle = getFlexColumnStyle(column.width, isVisible);
@@ -195,12 +276,21 @@ export function Table<T extends { id?: number | string }>({
             <TableRow
               key={`${String(row.id ?? "row")}-${index}`}
               row={row}
+              index={index}
               tableContents={tableContents}
               columnOffsets={columnOffsets}
               isClickable={Boolean(detailsLink)}
               handleRowClick={handleRowClick}
               handleContextMenu={handleContextMenu}
               customRowColor={getRowColor?.(row)}
+              isDraggable={canDrag}
+              draggedIndex={draggedIndex}
+              dragOverIndex={dragOverIndex}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onDragEnd={handleDragEnd}
             />
           ))}
         </div>
@@ -237,26 +327,56 @@ export function Table<T extends { id?: number | string }>({
 
 function TableRowComponent<T extends { id?: number | string }>({
   row,
+  index,
   tableContents,
   columnOffsets,
   isClickable,
   handleRowClick,
   handleContextMenu,
   customRowColor,
+  isDraggable,
+  draggedIndex,
+  dragOverIndex,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  onDragEnd,
 }: TableRowProps<T>) {
+  const isBeingDragged = draggedIndex === index;
+  const isDragTarget = dragOverIndex === index;
+
   return (
     <div
       role="row"
+      draggable={isDraggable}
+      onDragStart={(event) => onDragStart?.(event, index)}
+      onDragOver={(event) => onDragOver?.(event, index)}
+      onDragLeave={(event) => onDragLeave?.(event)}
+      onDrop={(event) => onDrop?.(event, index)}
+      onDragEnd={(event) => onDragEnd?.(event)}
       onClick={() => handleRowClick(row)}
       onContextMenu={(event) => handleContextMenu(event, row)}
-      className={`group flex items-center px-4 py-3.5 backdrop-blur-xs transition-colors duration-150 ${
-        isClickable
-          ? "cursor-pointer hover:bg-white/5"
-          : "cursor-default"
+      className={`group flex items-center px-4 py-3.5 backdrop-blur-xs transition-all duration-150 ${
+        isBeingDragged ? "opacity-30 bg-white/5" : ""
+      } ${
+        isDragTarget ? "border-t-2 border-secondary bg-secondary/10 shadow-lg" : ""
+      } ${
+        isClickable ? "cursor-pointer hover:bg-white/5" : "cursor-default"
       }`}
       style={{ color: customRowColor }}
     >
-      {tableContents.map((column, index) => {
+      {isDraggable ? (
+        <div
+          role="cell"
+          style={{ width: "40px", flexBasis: "40px", flexShrink: 0, flexGrow: 0 }}
+          className="flex min-w-0 items-center justify-center px-1 text-grays-200"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <MdDragIndicator className="h-4 w-4 cursor-grab text-grays-300 transition hover:text-white active:cursor-grabbing" />
+        </div>
+      ) : null}
+      {tableContents.map((column, colIndex) => {
         const isVisible = column.show ?? true;
         const rawValue = row[column.key as keyof T];
         const content = column.render
@@ -269,13 +389,13 @@ function TableRowComponent<T extends { id?: number | string }>({
 
         return (
           <div
-            key={index}
+            key={colIndex}
             role="cell"
             style={{
               ...getFlexColumnStyle(column.width, isVisible),
               display: isVisible ? "flex" : "none",
               position: column.fixed ? "sticky" : "static",
-              left: column.fixed ? columnOffsets[index] : undefined,
+              left: column.fixed ? columnOffsets[colIndex] : undefined,
               zIndex: column.fixed ? 25 : undefined,
               backgroundColor: column.fixed
                 ? "var(--color-primary)"
@@ -328,3 +448,4 @@ function getColumnAlignmentClasses(align?: "left" | "center" | "right") {
 }
 
 export const TableRow = memo(TableRowComponent) as typeof TableRowComponent;
+
