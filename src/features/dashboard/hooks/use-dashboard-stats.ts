@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/src/lib/axios";
+import { api } from "@/src/features/api";
 
 export interface IDashboardSystemStat {
   name: string;
