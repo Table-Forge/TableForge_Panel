@@ -20,6 +20,8 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "@/src/context/use-auth";
 import { useBoundStore } from "@/src/store";
 
+import { useLogo } from "@/src/constants/logos";
+
 interface INavItem {
   to: string;
   label: string;
@@ -45,6 +47,7 @@ export function NavMenu() {
   const isSidebarCollapsed = useBoundStore((state) => state.isSidebarCollapsed);
   const toggleSidebar = useBoundStore((state) => state.toggleSidebar);
   const { user } = useAuth();
+  const logo = useLogo();
 
   const isOrganizer = user?.type === "Organizer";
 
@@ -64,7 +67,7 @@ export function NavMenu() {
       {/* Mobile Topbar */}
       <div className="flex items-center justify-between gap-3 lg:hidden">
         <img
-          src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/0b85dfdf-3c07-4aad-b8fe-0c88e2bbfa3f.webp?v=1"
+          src={logo.horizontal}
           alt="TableForge Logo"
           width={130}
           height={130}
@@ -115,7 +118,7 @@ export function NavMenu() {
       >
         {isSidebarCollapsed ? (
           <img
-            src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/d4037d09-0893-4098-bc52-f94291c91c00.png"
+            src={logo.minimal}
             alt="TableForge Logo Simplificada"
             width={38}
             height={38}
@@ -125,7 +128,7 @@ export function NavMenu() {
         ) : (
           <>
             <img
-              src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
+              src={logo.vertical}
               alt="TableForge Logo"
               width={160}
               height={160}

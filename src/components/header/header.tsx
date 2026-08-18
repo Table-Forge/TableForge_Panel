@@ -3,6 +3,7 @@ import { useBoundStore } from "@/src/store/use-bound-store";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../button/button";
+import { ThemeToggle } from "../theme-toggle/theme-toggle";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -67,15 +68,19 @@ export const Header = () => {
         </div>
       </div>
 
-      <Button
-        type="button"
-        buttonStyle="soft"
-        className="!h-9 !px-4 !py-2 !rounded-2xl border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
-        onClick={handleSignOut}
-      >
-        <LogOut size={15} />
-        Sair
-      </Button>
+      <div className="flex items-center gap-3">
+        <ThemeToggle />
+
+        <Button
+          type="button"
+          buttonStyle="soft"
+          className="!h-9 !px-4 !py-2 !rounded-2xl border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
+          onClick={handleSignOut}
+        >
+          <LogOut size={15} />
+          Sair
+        </Button>
+      </div>
     </header>
   );
 };

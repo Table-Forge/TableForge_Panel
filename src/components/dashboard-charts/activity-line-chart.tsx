@@ -113,16 +113,16 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
                   <stop offset="95%" stopColor={currentColor.fill} stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--tf-border-subtle)" vertical={false} />
               <XAxis
                 dataKey="label"
-                stroke="rgba(255,255,255,0.5)"
+                stroke="var(--color-grays-300)"
                 fontSize={11}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                stroke="rgba(255,255,255,0.5)"
+                stroke="var(--color-grays-300)"
                 fontSize={11}
                 tickLine={false}
                 axisLine={false}
@@ -131,15 +131,15 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
               <Tooltip
                 formatter={(value) => [value ?? 0, currentLabel]}
                 contentStyle={{
-                  backgroundColor: "#18181b",
-                  borderColor: "rgba(255,255,255,0.15)",
+                  backgroundColor: "var(--tf-chart-tooltip-bg)",
+                  borderColor: "var(--tf-chart-tooltip-border)",
                   borderRadius: "12px",
-                  color: "#fff",
+                  color: "var(--tf-chart-tooltip-text)",
                   fontSize: "12px",
                   fontWeight: "bold",
                 }}
-                itemStyle={{ color: "rgba(255,255,255,0.9)" }}
-                labelStyle={{ color: "#ffffff" }}
+                itemStyle={{ color: "var(--tf-chart-tooltip-text)" }}
+                labelStyle={{ color: "var(--tf-chart-tooltip-text)" }}
               />
               <Area
                 type="monotone"

@@ -18,12 +18,14 @@ import { normalizeCode, formatCooldown } from "@/src/utils/format";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
 import { useCountdown } from "@/src/hooks/utils/use-countdown";
 import { useBoundStore } from "@/src/store";
+import { useLogo } from "@/src/constants/logos";
 
 
 
 export function RecoverPasswordPage() {
   const navigate = useNavigate();
   const addToast = useBoundStore((state) => state.addToast);
+  const logo = useLogo();
   const {
     sendRecoveryCodeMutation,
     validateRecoveryCodeMutation,
@@ -266,7 +268,7 @@ export function RecoverPasswordPage() {
         <header className="mb-6 flex flex-col items-center">
           <div className="mb-4 flex items-center justify-center ">
             <img
-              src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
+              src={logo.vertical}
               alt="TableForge Logo"
               width={180}
               height={180}
