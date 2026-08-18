@@ -138,6 +138,8 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
                   fontSize: "12px",
                   fontWeight: "bold",
                 }}
+                itemStyle={{ color: "rgba(255,255,255,0.9)" }}
+                labelStyle={{ color: "#ffffff" }}
               />
               <Area
                 type="monotone"
