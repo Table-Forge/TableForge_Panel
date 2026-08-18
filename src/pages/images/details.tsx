@@ -7,7 +7,7 @@ import {
   InfoBox,
 } from "@/src/components/card-box/card-box";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { useImageById } from "@/src/features/images/hooks/use-image-by-id";
 import { useBoundStore } from "@/src/store";
@@ -31,7 +31,7 @@ export function ImageDetailsPage() {
 
   const { data, isLoading, isError } = useImageById(imageId);
 
-  if (isLoading) return <SkeletonTable />;
+  if (isLoading) return <SkeletonDetails />;
   if (isError || !data) return <InfoNotFound />;
 
   return (

@@ -7,7 +7,7 @@ import {
 } from "@/src/components/card-box/card-box";
 import { Code } from "@/src/components/code/code";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { useLogById } from "@/src/features/logs/hooks/use-log-by-id";
 import type { ILog } from "@/src/features/logs/schemas/log.schema";
 import { formatDate } from "@/src/utils/format";
@@ -32,7 +32,7 @@ export function LogDetailsPage() {
     [data],
   );
 
-  if (isLoading) return <SkeletonTable />;
+  if (isLoading) return <SkeletonDetails />;
   if (isError || !data) return <InfoNotFound />;
 
   const isSuccessStatus = Boolean(
