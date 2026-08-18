@@ -60,6 +60,9 @@ export default function SystemsBarChart({ systems = [] }: Props) {
                   fontSize: "12px",
                   fontWeight: "bold",
                 }}
+                itemStyle={{ color: "rgba(255,255,255,0.9)" }}
+                labelStyle={{ color: "#ffffff" }}
+                cursor={{ fill: "rgba(255, 255, 255, 0.05)" }}
                 formatter={(val: unknown) => [String(val), "Mesas"]}
               />
               <Bar dataKey="count" radius={[0, 8, 8, 0]}>
