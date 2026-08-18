@@ -2,7 +2,7 @@ import { api } from "@/src/features/api";
 import type { IEvent, IEventCreate } from "../schemas/events.schema";
 import { type IGetPaginatedParams, type IPaginatedResponse } from "@/src/interfaces";
 
-const ENDPOINT = "/Events";
+const ENDPOINT = "/api/Events";
 
 export interface IGetEventsParams extends IGetPaginatedParams {
   search?: string;
