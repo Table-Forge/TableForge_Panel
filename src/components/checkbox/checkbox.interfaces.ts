@@ -10,7 +10,7 @@ interface ICheckboxControlled<TFieldValues extends FieldValues = FieldValues> {
   disabled?: boolean;
   infoText?: string;
   name: Path<TFieldValues>;
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   defaultValue?: boolean;
 }
 

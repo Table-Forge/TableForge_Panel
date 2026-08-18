@@ -21,6 +21,9 @@ import { RecoverPasswordPage } from "@/src/pages/recover-password";
 import VerifyEmailPage from "@/src/pages/verify-email";
 import { UserDetailsPage } from "@/src/pages/users/details";
 import UsersPage from "@/src/pages/users";
+import { EventsPage } from "@/src/pages/events";
+import { MySpacePage } from "@/src/pages/my-space";
+import { MyBookingsPage } from "@/src/pages/my-bookings";
 import {
   BrowserRouter,
   Navigate,
@@ -54,6 +57,9 @@ function App() {
               <Route path="images/:id" element={<ImageDetailsPage />} />
               <Route path="logs" element={<LogsPage />} />
               <Route path="logs/:id" element={<LogDetailsPage />} />
+              <Route path="events" element={<EventsPage />} />
+              <Route path="my-space" element={<MySpacePage />} />
+              <Route path="my-bookings" element={<MyBookingsPage />} />
             </Route>
           </Route>
 

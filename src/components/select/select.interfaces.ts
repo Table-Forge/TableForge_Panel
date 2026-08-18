@@ -23,7 +23,7 @@ interface ISelect<TFieldValues extends FieldValues = FieldValues> {
   searchInput?: boolean;
   name: Path<TFieldValues>;
   required?: boolean;
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   className?: string;
   firstReset?: boolean;
   resetCallback?: () => void;

@@ -3,11 +3,12 @@ import { useBoundStore } from "@/src/store/use-bound-store";
 import { useState } from "react";
 import type { IModalDelete } from "./modal-delete.interface";
 
-export function ModalDelete<TID extends number | string>({
+export function ModalDelete<TID extends number | string, TData = unknown, TError = unknown>({
   name,
   id,
   deleteMutation,
-}: IModalDelete<TID>) {
+  customMessage,
+}: IModalDelete<TID, TData, TError>) {
   const closeModal = useBoundStore((state) => state.closeModal);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -22,7 +23,13 @@ export function ModalDelete<TID extends number | string>({
     <>
       <div className="flex w-full flex-col gap-2 p-4">
         <p className="text-sm text-white/90">
-          Você tem certeza que deseja excluir <b>{name}</b>?
+          {customMessage ? (
+            customMessage
+          ) : (
+            <>
+              Você tem certeza que deseja excluir <b>{name}</b>?
+            </>
+          )}
         </p>
       </div>
 
