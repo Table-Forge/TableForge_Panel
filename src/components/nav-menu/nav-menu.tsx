@@ -20,7 +20,14 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "@/src/context/use-auth";
 import { useBoundStore } from "@/src/store";
 
-const navItems = [
+interface INavItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number }>;
+  end?: boolean;
+}
+
+const navItems: INavItem[] = [
   { to: "/", label: "Painel", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/events", label: "Eventos", icon: CalendarDays },
@@ -41,7 +48,7 @@ export function NavMenu() {
 
   const isOrganizer = user?.type === "Organizer";
 
-  const organizerItems = [
+  const organizerItems: INavItem[] = [
     { to: "/my-space", label: "Meu Espaço", icon: Sparkles },
     { to: "/my-bookings", label: "Agendamentos", icon: ScrollText },
   ];
