@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
 import { MoreInfo } from "@/src/components/more-info/more-info";
@@ -18,9 +19,27 @@ import { SearchFilters as BannersSearchFilters } from "./components/search-filte
 
 export function BannersPage() {
   const openModal = useBoundStore((state) => state.openModal);
-  const { deleteMutation } = useBannersMutation();
+  const { deleteMutation, reorderMutation } = useBannersMutation();
 
   const { data, isLoading, isError, filters, setFilters } = useAllBanners();
+  const [localBanners, setLocalBanners] = useState<IBanner[] | null>(null);
+
+  const bannersList = useMemo(() => {
+    return localBanners ?? data?.items ?? [];
+  }, [localBanners, data?.items]);
+
+  useEffect(() => {
+    setLocalBanners(null);
+  }, [data?.items]);
+
+  const handleReorder = (reordered: IBanner[]) => {
+    const updated = reordered.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
+    setLocalBanners(updated);
+    reorderMutation.mutate(updated);
+  };
 
   const getMoreInfoOptions = (item: IBanner): IMoreOptions[] => {
     const options = [
@@ -171,7 +190,8 @@ export function BannersPage() {
 
       <Table
         tableContents={tableContents}
-        bodyData={data?.items ?? []}
+        bodyData={bannersList}
+        onReorder={handleReorder}
       />
 
       <Paginate
@@ -186,3 +206,4 @@ export function BannersPage() {
     </>
   );
 }
+
