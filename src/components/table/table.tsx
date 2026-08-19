@@ -23,6 +23,7 @@ export function Table<T extends { id?: number | string }>({
   detailsLink,
   bodyHeight,
   scrollable = true,
+  emptyMessage,
   getRowColor,
   getContextOptions,
   isDraggable,
@@ -208,7 +209,7 @@ export function Table<T extends { id?: number | string }>({
     return (
       <div className="h-full">
         <p className="rounded-3xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200 backdrop-blur-md">
-          Nenhum dado listado.
+          {emptyMessage || "Nenhum registro encontrado."}
         </p>
       </div>
     );

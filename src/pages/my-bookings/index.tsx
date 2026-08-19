@@ -91,15 +91,17 @@ export function MyBookingsPage() {
         }
       />
 
-      {isError || !data?.items?.length ? (
-        <InfoNotFound message="Nenhum agendamento encontrado." />
+      {isError ? (
+        <InfoNotFound message="Ocorreu um erro ao carregar os agendamentos." />
       ) : (
         <>
-          <BookingsTable data={data.items} />
-          <Paginate
-            paginationData={data.pagination}
-            onPageChange={(page) => setQueryParams((prev) => ({ ...prev, page }))}
-          />
+          <BookingsTable data={data?.items ?? []} />
+          {data && data.items.length > 0 && (
+            <Paginate
+              paginationData={data.pagination}
+              onPageChange={(page) => setQueryParams((prev) => ({ ...prev, page }))}
+            />
+          )}
         </>
       )}
     </>

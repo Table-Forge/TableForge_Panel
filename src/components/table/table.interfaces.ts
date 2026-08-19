@@ -18,6 +18,7 @@ interface ITable<T extends { id?: number | string }> {
   detailsLink?: ((item: T) => string) | string;
   bodyHeight?: string;
   scrollable?: boolean;
+  emptyMessage?: string;
   getRowColor?: (row: T) => string | undefined;
   getContextOptions?: (row: T) => IMoreOptions[];
   isDraggable?: boolean;

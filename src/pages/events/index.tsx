@@ -203,21 +203,24 @@ export function EventsPage() {
         })}
       </div>
 
-      {isError || !data?.items.length ? (
-        <InfoNotFound message="Nenhum evento encontrado." />
+      {isError ? (
+        <InfoNotFound message="Ocorreu um erro ao carregar os eventos." />
       ) : (
         <>
           <Table
             tableContents={tableContents}
-            bodyData={data.items}
+            bodyData={data?.items ?? []}
             bodyHeight="100%"
             detailsLink=""
+            emptyMessage="Nenhum evento encontrado."
           />
 
-          <Paginate
-            paginationData={data.pagination}
-            onPageChange={setPage}
-          />
+          {data && data.items.length > 0 && (
+            <Paginate
+              paginationData={data.pagination}
+              onPageChange={setPage}
+            />
+          )}
         </>
       )}
     </>

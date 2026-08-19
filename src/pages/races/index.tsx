@@ -88,7 +88,7 @@ export function RacesPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar as raças." />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
 
@@ -119,17 +119,23 @@ export function RacesPage() {
 
       <RacesSearchFilters />
 
-      <Table tableContents={tableContents} bodyData={data?.items ?? []} />
-
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
+      <Table
+        tableContents={tableContents}
+        bodyData={data?.items ?? []}
+        emptyMessage="Nenhuma raça encontrada."
       />
+
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }

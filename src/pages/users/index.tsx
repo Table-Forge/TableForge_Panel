@@ -128,7 +128,7 @@ export default function UsersPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar os usuários." />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
   const activeCount = data?.items?.filter((u) => u.status === "1" || u.status === "Active")?.length ?? 0;
@@ -146,19 +146,19 @@ export default function UsersPage() {
           {
             title: "Total Usuários",
             value: totalItems,
-            badge: "Cadastrados",
+            badge: "Geral",
             badgeType: "neutral",
           },
           {
             title: "Ativos",
             value: activeCount,
-            badge: "Online",
+            badge: "Verificados",
             badgeType: "success",
           },
           {
-            title: "Página Atual",
+            title: "Exibindo",
             value: data?.items?.length ?? 0,
-            badge: "Registros",
+            badge: "Página Atual",
             badgeType: "neutral",
           },
         ]}
@@ -170,17 +170,20 @@ export default function UsersPage() {
         tableContents={tableContents}
         bodyData={data?.items ?? []}
         detailsLink="/users"
+        emptyMessage="Nenhum usuário encontrado."
       />
 
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
-      />
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }
