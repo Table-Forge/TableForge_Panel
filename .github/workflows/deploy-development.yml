@@ -30,3 +30,4 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_DEVELOPMENT_URL }}
           VITE_API_DEVELOPMENT_URL: ${{ vars.VITE_API_DEVELOPMENT_URL }}
           VITE_ENV: development
+          VITE_GEOAPIFY_API_KEY: ${{ secrets.GEOAPIFY_API_KEY }}
