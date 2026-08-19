@@ -14,9 +14,9 @@ import type {
   IBookingChatMessage,
 } from "../schemas/spaces.schema";
 
-const ENDPOINT_SPACES = "/Spaces";
-const ENDPOINT_TABLES = "/SpaceTables";
-const ENDPOINT_BOOKINGS = "/SpaceBookings";
+const ENDPOINT_SPACES = "/api/Spaces";
+const ENDPOINT_TABLES = "/api/SpaceTables";
+const ENDPOINT_BOOKINGS = "/api/SpaceBookings";
 
 export const SpaceService = {
   // SPACES
