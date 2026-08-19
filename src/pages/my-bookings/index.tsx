@@ -1,59 +1,107 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/src/context/use-auth";
 import { useAllBookings } from "@/src/features/spaces/hooks/use-spaces-queries";
 import { BookingsTable } from "./components/bookings-table/bookings-table";
-import { SearchFilters } from "./components/search-filters/search-filters";
+import { BookingsSearchFilters, type IBookingParams } from "./components/search-filters/search-filters";
 import { Paginate } from "@/src/components/paginate/paginate";
-import type { IGetPaginatedParams } from "@/src/interfaces";
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
+import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 
 export function MyBookingsPage() {
   const { user } = useAuth();
-  
-  const [queryParams, setQueryParams] = useState<IGetPaginatedParams>({
+
+  const [queryParams, setQueryParams] = useState<IBookingParams>({
     page: 1,
     size: 10,
     search: "",
+    status: undefined,
   });
 
-  const { data, isLoading } = useAllBookings({
-    ...queryParams,
-    spaceOwnerId: user?.id, // Assumindo que a API aceita filtrar pelo spaceOwnerId
-  }, !!user?.id);
+  const isOrganizer = user?.type === "Organizer";
 
-  const handleSearchChange = (search: string) => {
-    setQueryParams((prev) => ({ ...prev, search, page: 1 }));
-  };
+  const { data, isLoading, bookingsQuery } = useAllBookings(
+    {
+      ...queryParams,
+      spaceOwnerId: isOrganizer ? user?.id : undefined,
+    },
+    !!user?.id
+  );
 
-  const handleStatusChange = (status: string) => {
-    setQueryParams((prev) => ({ ...prev, status, page: 1 }));
-  };
+  const isError = bookingsQuery.isError;
+
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+
+  const pendingCount = useMemo(
+    () => data?.items?.filter((b) => b.status === "Pending")?.length ?? 0,
+    [data?.items]
+  );
+
+  const approvedCount = useMemo(
+    () => data?.items?.filter((b) => b.status === "Approved")?.length ?? 0,
+    [data?.items]
+  );
+
+  if (isLoading) return <SkeletonTable />;
 
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Meus Agendamentos
-          </h1>
-          <p className="text-sm text-grays-100">
-            Acompanhe os pedidos de reserva para as mesas do seu espaço.
-          </p>
-        </div>
-      </header>
-
-      <SearchFilters 
-        onSearchChange={handleSearchChange} 
-        onStatusChange={handleStatusChange} 
+    <>
+      <CrmPageHeader
+        title="Agendamentos"
+        subtitle="Acompanhe e gerencie as solicitações de reserva para as mesas do seu espaço."
+        count={totalItems}
+        stats={[
+          {
+            title: "Total Reservas",
+            value: totalItems,
+            badge: "Geral",
+            badgeType: "neutral",
+          },
+          {
+            title: "Pendentes",
+            value: pendingCount,
+            badge: "Aguardando",
+            badgeType: "warning",
+          },
+          {
+            title: "Aprovados",
+            value: approvedCount,
+            badge: "Confirmados",
+            badgeType: "success",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
       />
 
-      <BookingsTable data={data?.items ?? []} isLoading={isLoading} />
+      <BookingsSearchFilters
+        filters={queryParams}
+        onSearchChange={(search) =>
+          setQueryParams((prev) => ({ ...prev, search, page: 1 }))
+        }
+        onFilterChange={(newFilters) =>
+          setQueryParams((prev) => ({ ...prev, ...newFilters, page: 1 }))
+        }
+        onReset={() =>
+          setQueryParams({ page: 1, size: 10, search: "", status: undefined })
+        }
+      />
 
-      {data && data.items.length > 0 && (
-        <Paginate
-          paginationData={data.pagination}
-          onPageChange={(page) => setQueryParams((prev) => ({ ...prev, page }))}
-        />
+      {isError || !data?.items?.length ? (
+        <InfoNotFound message="Nenhum agendamento encontrado." />
+      ) : (
+        <>
+          <BookingsTable data={data.items} />
+          <Paginate
+            paginationData={data.pagination}
+            onPageChange={(page) => setQueryParams((prev) => ({ ...prev, page }))}
+          />
+        </>
       )}
-    </div>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { useAuth } from "@/src/context/use-auth";
 import { useAllSpaces } from "@/src/features/spaces/hooks/use-spaces-queries";
 import { useMemo } from "react";
@@ -16,13 +16,17 @@ export function MySpacePage() {
   const { user } = useAuth();
   const openModal = useBoundStore((state) => state.openModal);
 
-  const { spaces, isLoadingSpaces: isLoading, allSpacesQuery } = useAllSpaces({ ownerId: user?.id }, !!user?.id);
+  const isOrganizer = user?.type === "Organizer";
+  const { spaces, isLoadingSpaces: isLoading, allSpacesQuery } = useAllSpaces(
+    isOrganizer ? { ownerId: user?.id } : {},
+    !!user?.id
+  );
 
   const space = useMemo(() => {
     return spaces?.[0] ?? null;
   }, [spaces]);
 
-  if (isLoading) return <SkeletonTable />;
+  if (isLoading) return <SkeletonDetails />;
 
   if (allSpacesQuery.isError || !space) {
     return (
@@ -40,13 +44,18 @@ export function MySpacePage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between">
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            {space.name}
-          </h1>
-          <p className="text-sm text-grays-100">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              {space.name}
+            </h1>
+            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              #{space.id}
+            </span>
+          </div>
+          <p className="text-xs font-semibold text-grays-100 mt-1">
             Gerencie as informações do seu espaço e mesas.
           </p>
         </div>
@@ -58,6 +67,7 @@ export function MySpacePage() {
             onClick={() =>
               openModal("Editar Espaço", <ModalEditSpace data={space} />, "md")
             }
+            className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Espaço

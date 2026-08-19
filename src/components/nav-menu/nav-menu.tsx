@@ -13,12 +13,14 @@ import {
   CalendarDays,
   PanelLeftClose,
   PanelLeftOpen,
+  Store,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { useAuth } from "@/src/context/use-auth";
 import { useBoundStore } from "@/src/store";
+import { isAdminAuthType } from "@/src/features/auth/schemas/auth.schema";
 
 import { useLogo } from "@/src/constants/logos";
 
@@ -29,7 +31,7 @@ interface INavItem {
   end?: boolean;
 }
 
-const navItems: INavItem[] = [
+const mainNavItems: INavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/events", label: "Eventos", icon: CalendarDays },
@@ -39,8 +41,9 @@ const navItems: INavItem[] = [
   { to: "/races", label: "Raças", icon: Sparkles },
   { to: "/users", label: "Usuários", icon: ShieldUser },
   { to: "/images", label: "Imagens", icon: Image },
-  { to: "/logs", label: "Logs", icon: FileText },
 ];
+
+const logItem: INavItem = { to: "/logs", label: "Logs", icon: FileText };
 
 export function NavMenu() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -49,14 +52,18 @@ export function NavMenu() {
   const { user } = useAuth();
   const logo = useLogo();
 
-  const isOrganizer = user?.type === "Organizer";
+  const canAccessSpaceItems = user?.type === "Organizer" || isAdminAuthType(user?.type);
 
-  const organizerItems: INavItem[] = [
-    { to: "/my-space", label: "Meu Espaço", icon: Sparkles },
+  const spaceItems: INavItem[] = [
+    { to: "/my-space", label: "Meu Espaço", icon: Store },
     { to: "/my-bookings", label: "Agendamentos", icon: ScrollText },
   ];
 
-  const allItems = [...navItems, ...(isOrganizer ? organizerItems : [])];
+  const allItems = [
+    ...mainNavItems,
+    ...(canAccessSpaceItems ? spaceItems : []),
+    logItem,
+  ];
 
   return (
     <aside

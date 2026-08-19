@@ -27,7 +27,7 @@ export function EventsPage() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useEvents({
-    organizerId: user?.id,
+    organizerId: user?.type === "Organizer" ? user?.id : undefined,
     status: statusFilter[0] !== "All" ? statusFilter[0] : undefined,
     onlyUpcoming: false,
     page,

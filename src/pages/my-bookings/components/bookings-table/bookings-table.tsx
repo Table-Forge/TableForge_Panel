@@ -1,5 +1,4 @@
 import { Button } from "@/src/components/button/button";
-import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { Table } from "@/src/components/table/table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
@@ -12,13 +11,21 @@ import { ModalBookingDetails } from "../modal-booking-details/modal-booking-deta
 
 interface IProps {
   data: ISpaceBooking[];
-  isLoading: boolean;
 }
 
-export function BookingsTable({ data, isLoading }: IProps) {
+export function BookingsTable({ data }: IProps) {
   const openModal = useBoundStore((state) => state.openModal);
 
   const tableContents: ITableColumn<ISpaceBooking>[] = [
+    {
+      title: "ID",
+      key: "id",
+      width: "90px",
+      align: "center",
+      render: (booking) => (
+        <span className="font-bold">{booking.id ?? "-"}</span>
+      ),
+    },
     {
       title: "Cliente",
       key: "userName",
@@ -86,18 +93,6 @@ export function BookingsTable({ data, isLoading }: IProps) {
       ),
     },
   ];
-
-  if (isLoading) {
-    return <SkeletonTable />;
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-secondary/20 bg-secondary/10 p-10 text-center">
-        <p className="text-grays-100">Nenhum agendamento encontrado.</p>
-      </div>
-    );
-  }
 
   return (
     <Table

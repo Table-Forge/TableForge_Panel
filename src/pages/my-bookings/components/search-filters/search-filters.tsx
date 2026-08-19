@@ -1,27 +1,39 @@
 import { Button } from "@/src/components/button/button";
-import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { Filters } from "@/src/components/filters/filters";
+import { useFilterContext } from "@/src/components/filters/filters.context";
+import { Input } from "@/src/components/input/input.default";
+import { InputGroup } from "@/src/components/input-group/input-group";
+import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
-import { type TSelectOptions } from "@/src/components/select/select.interfaces";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import { PAGE_SIZE } from "@/src/constants/select-options";
 import { useBookingStatusEnum } from "@/src/features/spaces/hooks/enums/use-spaces-enums";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { MdFilterList } from "react-icons/md";
-import { z } from "zod";
+import type { IGetPaginatedParams } from "@/src/interfaces";
+import { useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
-interface IProps {
-  onSearchChange: (search: string) => void;
-  onStatusChange: (status: string) => void;
+export interface IBookingParams extends IGetPaginatedParams {
+  status?: string;
+  spaceOwnerId?: number;
 }
 
-const filterSchema = z.object({
-  search: z.string().optional(),
-  status: z.string().optional(),
-});
+interface IProps {
+  filters: IBookingParams;
+  onSearchChange: (search: string) => void;
+  onFilterChange: (filters: Partial<IBookingParams>) => void;
+  onReset: () => void;
+}
 
-type IFilterForm = z.infer<typeof filterSchema>;
-
-export function SearchFilters({ onSearchChange, onStatusChange }: IProps) {
+function AdvancedFiltersContent({
+  filters,
+  onFilterChange,
+  onReset,
+}: {
+  filters: IBookingParams;
+  onFilterChange: (filters: Partial<IBookingParams>) => void;
+  onReset: () => void;
+}) {
+  const { close } = useFilterContext();
   const { statusEnum, isLoadingStatusEnum } = useBookingStatusEnum();
 
   const statusOptions = useMemo<TSelectOptions[]>(
@@ -32,51 +44,28 @@ export function SearchFilters({ onSearchChange, onStatusChange }: IProps) {
     [statusEnum]
   );
 
-  const form = useForm<IFilterForm>({
+  const form = useForm<IBookingParams>({
     defaultValues: {
-      search: "",
-      status: "",
+      status: filters.status ?? "",
+      size: filters.size ?? 10,
     },
-    resolver: zodResolver(filterSchema),
   });
 
-  const { reset } = form;
-
-  // React Compiler compatibility fix: Do not use form.watch outside components or inline.
-  // We'll use handleSubmit for search, or an isolated useEffect if we have to.
-  // Actually, standard is to have a button or just use onBlur/onChange. Let's make it a form submission to trigger the filters.
-
-  const onSubmit = form.handleSubmit((data) => {
-    onSearchChange(data.search ?? "");
-    onStatusChange(data.status ?? "");
-  });
+  const handleApply = (data: IBookingParams) => {
+    onFilterChange(data);
+    close();
+  };
 
   const handleClear = () => {
-    reset();
-    onSearchChange("");
-    onStatusChange("");
+    form.reset({ status: "", size: 10 });
+    onReset();
+    close();
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-col gap-4 rounded-lg bg-secondary p-4 md:flex-row md:items-end"
-    >
-      <div className="flex-1">
-        <label className="mb-2 block text-sm font-medium text-white">
-          Buscar
-        </label>
-        <ControlledInput
-          hookForm={form}
-          name="search"
-          placeholder="Buscar por cliente ou ID"
-          className="bg-primary/50"
-        />
-      </div>
-      <div className="w-full md:w-64">
-        <label className="mb-2 block text-sm font-medium text-white">
-          Status
-        </label>
+    <form onSubmit={form.handleSubmit(handleApply)} className="space-y-4">
+      <InputGroup>
+        <Label htmlFor="status">Status do Agendamento</Label>
         <Select
           hookForm={form}
           name="status"
@@ -84,18 +73,66 @@ export function SearchFilters({ onSearchChange, onStatusChange }: IProps) {
           title="Selecione o status"
           disabled={isLoadingStatusEnum}
           isLoading={isLoadingStatusEnum}
-          className="bg-primary/50"
         />
-      </div>
-      <div className="flex gap-2">
-        <Button type="button" buttonStyle="hollow" onClick={handleClear}>
+      </InputGroup>
+
+      <InputGroup>
+        <Label htmlFor="size">Itens por página</Label>
+        <Select
+          hookForm={form}
+          name="size"
+          initialOptions={PAGE_SIZE}
+          title="Itens por página"
+        />
+      </InputGroup>
+
+      <div className="flex justify-end gap-2 border-t border-white/10 pt-3">
+        <Button type="button" buttonStyle="primary" onClick={handleClear}>
           Limpar
         </Button>
-        <Button type="submit" buttonStyle="primary">
-          <MdFilterList />
+        <Button type="submit" buttonStyle="secondary">
           Filtrar
         </Button>
       </div>
     </form>
+  );
+}
+
+export function BookingsSearchFilters({
+  filters,
+  onSearchChange,
+  onFilterChange,
+  onReset,
+}: IProps) {
+  const form = useForm<{ search: string }>({
+    defaultValues: { search: String(filters.search ?? "") },
+  });
+
+  const watchedSearch = useWatch({ control: form.control, name: "search" });
+
+  useEffect(() => {
+    onSearchChange(watchedSearch ?? "");
+  }, [watchedSearch, onSearchChange]);
+
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
+        <Input
+          {...form.register("search")}
+          placeholder="Buscar agendamento por cliente ou ID"
+          wrapperClassName="w-full"
+        />
+        <Filters
+          filters={
+            <AdvancedFiltersContent
+              filters={filters}
+              onFilterChange={onFilterChange}
+              onReset={onReset}
+            />
+          }
+          align="left"
+        />
+      </div>
+    </div>
   );
 }
