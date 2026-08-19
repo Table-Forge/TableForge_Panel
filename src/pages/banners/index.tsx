@@ -157,7 +157,7 @@ export function BannersPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar os banners." />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
 
@@ -179,7 +179,7 @@ export function BannersPage() {
           },
           {
             title: "Exibindo",
-            value: data?.items?.length ?? 0,
+            value: bannersList.length,
             badge: "Página Atual",
             badgeType: "neutral",
           },
@@ -192,18 +192,20 @@ export function BannersPage() {
         tableContents={tableContents}
         bodyData={bannersList}
         onReorder={handleReorder}
+        emptyMessage="Nenhum banner encontrado."
       />
 
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
-      />
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }
-

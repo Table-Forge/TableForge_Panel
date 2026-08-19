@@ -1,4 +1,4 @@
-﻿import { Paginate } from "@/src/components/paginate/paginate";
+import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
@@ -68,7 +68,7 @@ export function LogsPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar os logs." />;
 
   return (
     <>
@@ -89,6 +89,7 @@ export function LogsPage() {
         tableContents={tableContents}
         bodyData={data?.items ?? []}
         detailsLink="/logs"
+        emptyMessage="Nenhum log de auditoria encontrado."
         getRowColor={(row) => {
           const normalizedType = cleanStringForKey(row.type);
           if (normalizedType === "critical") {
@@ -99,15 +100,17 @@ export function LogsPage() {
         }}
       />
 
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
-      />
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }

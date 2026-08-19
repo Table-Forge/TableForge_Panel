@@ -100,6 +100,7 @@ export function BookingsTable({ data }: IProps) {
       bodyData={data}
       bodyHeight="100%"
       detailsLink=""
+      emptyMessage="Nenhum agendamento encontrado."
     />
   );
 }

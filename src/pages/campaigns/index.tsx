@@ -149,7 +149,7 @@ export function CampaignsPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar as campanhas." />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
   const activeCount = data?.items?.filter((c) => c.status === "Active" || c.status === "Open")?.length ?? 0;
@@ -198,17 +198,20 @@ export function CampaignsPage() {
         bodyData={data?.items ?? []}
         bodyHeight="100%"
         detailsLink="/campaigns"
+        emptyMessage="Nenhuma campanha encontrada."
       />
 
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
-      />
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }

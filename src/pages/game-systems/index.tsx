@@ -108,7 +108,7 @@ export function GameSystemsPage() {
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound />;
+  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar os sistemas de jogo." />;
 
   const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
 
@@ -145,17 +145,20 @@ export function GameSystemsPage() {
         tableContents={tableContents}
         bodyData={data?.items ?? []}
         detailsLink="/gamesystems"
+        emptyMessage="Nenhum sistema de jogo encontrado."
       />
 
-      <Paginate
-        paginationData={data?.pagination}
-        onPageChange={(nextPage) =>
-          setFilters({
-            ...filters,
-            page: nextPage,
-          })
-        }
-      />
+      {data && data.items.length > 0 && (
+        <Paginate
+          paginationData={data?.pagination}
+          onPageChange={(nextPage) =>
+            setFilters({
+              ...filters,
+              page: nextPage,
+            })
+          }
+        />
+      )}
     </>
   );
 }
