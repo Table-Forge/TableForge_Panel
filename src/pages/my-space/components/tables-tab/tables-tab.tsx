@@ -37,12 +37,8 @@ export function TablesTab({ spaceId }: IProps) {
       <div className="flex flex-col gap-4">
         {isLoading ? (
           <SkeletonTable />
-        ) : tables && tables.length > 0 ? (
-          <TableList tables={tables} />
         ) : (
-          <p className="text-center text-sm text-grays-100 py-6">
-            Nenhuma mesa cadastrada neste espaço.
-          </p>
+          <TableList tables={tables ?? []} />
         )}
       </div>
     </CardBox>
