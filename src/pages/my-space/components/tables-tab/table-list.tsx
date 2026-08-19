@@ -73,6 +73,7 @@ export function TableList({ tables }: IProps) {
       bodyData={tables}
       bodyHeight="100%"
       detailsLink=""
+      emptyMessage="Nenhuma mesa cadastrada neste espaço."
     />
   );
 }
