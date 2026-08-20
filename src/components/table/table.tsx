@@ -208,7 +208,7 @@ export function Table<T extends { id?: number | string }>({
   if (!bodyData?.length) {
     return (
       <div className="h-full">
-        <p className="rounded-3xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200 backdrop-blur-md">
+        <p className="rounded-3xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200">
           {emptyMessage || "Nenhum registro encontrado."}
         </p>
       </div>
@@ -220,7 +220,7 @@ export function Table<T extends { id?: number | string }>({
       ref={containerRef}
       aria-label="tabela"
       onDragOver={handleContainerDragOver}
-      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-3xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl ${scrollable ? "max-w-full" : ""}`}
+      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-3xl border border-white/10 bg-primary/40 shadow-2xl ${scrollable ? "max-w-full" : ""}`}
 
       style={{
         height: bodyHeight,
@@ -232,7 +232,7 @@ export function Table<T extends { id?: number | string }>({
       <div className="flex min-w-max w-full flex-col">
         <div
           role="rowgroup"
-          className="sticky top-0 z-30 flex border-b border-white/10 bg-primary/90 px-4 py-3.5 backdrop-blur-md shadow-sm"
+          className="sticky top-0 z-30 flex border-b border-white/10 bg-primary px-4 py-3.5 shadow-sm"
         >
           {canDrag ? (
             <div
@@ -300,7 +300,7 @@ export function Table<T extends { id?: number | string }>({
       {contextMenu
         ? createPortal(
             <div
-              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-2xl border border-white/15 bg-primary/95 backdrop-blur-md shadow-2xl"
+              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
               style={{ top: contextMenu.y, left: contextMenu.x }}
               onClick={(event) => event.stopPropagation()}
             >
@@ -358,7 +358,7 @@ function TableRowComponent<T extends { id?: number | string }>({
       onDragEnd={(event) => onDragEnd?.(event)}
       onClick={() => handleRowClick(row)}
       onContextMenu={(event) => handleContextMenu(event, row)}
-      className={`group flex items-center px-4 py-3.5 backdrop-blur-xs transition-all duration-150 ${
+      className={`group flex items-center px-4 py-3.5 transition-all duration-150 ${
         isBeingDragged ? "opacity-30 bg-white/5" : ""
       } ${
         isDragTarget ? "border-t-2 border-secondary bg-secondary/10 shadow-lg" : ""

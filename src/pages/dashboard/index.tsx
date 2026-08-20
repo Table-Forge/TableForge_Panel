@@ -49,7 +49,7 @@ function ChartSkeleton() {
 
 function KpiSkeleton() {
   return (
-    <div className="flex h-32 w-full animate-pulse flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md">
+    <div className="flex h-32 w-full animate-pulse flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5">
       <div className="flex items-center justify-between">
         <div className="h-10 w-10 rounded-2xl bg-white/10" />
         <div className="h-7 w-7 rounded-full bg-white/10" />
@@ -166,7 +166,7 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Top Welcome Banner Bento */}
-      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-primary/80 via-primary/60 to-secondary/15 p-6 lg:p-8 backdrop-blur-md shadow-2xl">
+      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-primary/80 via-primary/60 to-secondary/15 p-6 lg:p-8 shadow-2xl">
         <div className="absolute right-0 top-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-secondary/15 blur-3xl" />
         <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -183,7 +183,7 @@ export function DashboardPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="rounded-2xl border border-white/10 bg-background/50 px-4 py-2.5 text-right backdrop-blur-xs shadow-md">
+            <div className="rounded-2xl border border-white/10 bg-background/50 px-4 py-2.5 text-right shadow-md">
               <p className="text-[10px] font-bold uppercase tracking-widest text-grays-200">
                 Função de Acesso
               </p>
@@ -203,7 +203,7 @@ export function DashboardPage() {
               <Link
                 key={kpi.title}
                 to={kpi.to}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-primary/60 p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-1 hover:border-secondary/50 hover:bg-primary/80 hover:shadow-[0_12px_30px_rgba(255,36,0,0.15)] flex flex-col justify-between"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-primary/60 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-secondary/50 hover:bg-primary/80 hover:shadow-[0_12px_30px_rgba(255,36,0,0.15)] flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between">
                   <div
@@ -237,7 +237,7 @@ export function DashboardPage() {
       {/* Dynamic Lazy-Loaded Charts Section */}
       <section className="grid gap-4 lg:grid-cols-3">
         {/* Left 2 Cols: Activity Line Chart */}
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-2">
+        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between lg:col-span-2">
           <div className="mb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-secondary/20 text-secondary">
@@ -263,7 +263,7 @@ export function DashboardPage() {
         </div>
 
         {/* Right Col: Systems Distribution Bar Chart */}
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
           {isLoading ? (
             <ChartSkeleton />
           ) : (
@@ -277,7 +277,7 @@ export function DashboardPage() {
       {/* Community & Modality Donut Charts + Feedback Summary Row */}
       <section className="grid gap-4 lg:grid-cols-3">
         {/* Donut Chart: Community Profiles */}
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
               <Users size={18} />
@@ -300,7 +300,7 @@ export function DashboardPage() {
         </div>
 
         {/* Donut Chart: Modality (Presencial vs Online) */}
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
           <div className="flex items-center gap-2 mb-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400">
               <MapPin size={18} />
@@ -320,7 +320,7 @@ export function DashboardPage() {
         </div>
 
         {/* Satisfaction & Support Feedbacks Card */}
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
           {isLoading ? (
             <ChartSkeleton />
           ) : (
@@ -340,7 +340,7 @@ export function DashboardPage() {
               </div>
 
               <div className="space-y-3 my-auto">
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xs">
+                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400">
                       <Star size={18} />
@@ -359,7 +359,7 @@ export function DashboardPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xs">
+                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary/15 text-secondary">
                       <MessageSquare size={18} />
@@ -384,7 +384,7 @@ export function DashboardPage() {
       </section>
 
       {/* Quick Action Shortcuts Grid */}
-      <section className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+      <section className="rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
         <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
           <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-grays-200">
             Atalhos Rápidos de Gestão
@@ -399,7 +399,7 @@ export function DashboardPage() {
             <Link
               key={card.title}
               to={card.to}
-              className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xs transition-all duration-200 hover:border-secondary/50 hover:bg-white/10 hover:shadow-lg"
+              className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-4 transition-all duration-200 hover:border-secondary/50 hover:bg-white/10 hover:shadow-lg"
             >
               <div>
                 <div className="flex items-center justify-between">

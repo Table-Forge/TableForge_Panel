@@ -107,7 +107,7 @@ const ModalItem = memo(
 
     return (
       <div
-        className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-5 transition-all duration-200"
+        className="fixed inset-0 flex items-center justify-center bg-black/80 p-3 sm:p-5 transition-all duration-200"
         style={{ zIndex: 1000 + index }}
       >
         <button
@@ -123,7 +123,7 @@ const ModalItem = memo(
           role="dialog"
           aria-modal="true"
           tabIndex={-1}
-          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-3xl border border-white/15 bg-primary/95 backdrop-blur-2xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
+          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-3xl border border-white/15 bg-primary shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
           style={{
             width: SIZES[size],
             maxWidth: size === "full" ? "100vw" : "95vw",
@@ -153,7 +153,7 @@ const ModalItem = memo(
           </div>
 
           {modal.footer ? (
-            <footer className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-white/10 bg-primary/95 px-6 py-4 backdrop-blur-md max-[992px]:px-4 max-[992px]:py-3">
+            <footer className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-white/10 bg-primary px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
               {modal.footer}
             </footer>
           ) : null}

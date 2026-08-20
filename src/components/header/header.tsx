@@ -65,7 +65,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-primary/60 px-6 py-3.5 backdrop-blur-md shadow-lg">
+    <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-primary/60 px-6 py-3.5 shadow-lg">
       <div className="flex items-center gap-3">
         <button
           type="button"

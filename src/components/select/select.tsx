@@ -383,7 +383,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           <div
             ref={listRef}
             data-portal="true"
-            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary/95 backdrop-blur-xl shadow-2xl"
+            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
             style={{
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,
