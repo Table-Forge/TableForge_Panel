@@ -40,7 +40,7 @@ export function CrmPageHeader({
               {title}
             </h1>
             {count !== undefined ? (
-              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90 shadow-xs backdrop-blur-md">
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90 shadow-xs">
                 {count}
               </span>
             ) : null}
@@ -72,7 +72,7 @@ export function CrmPageHeader({
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-primary/40 p-4 backdrop-blur-md transition-all duration-200 hover:border-white/20 hover:bg-primary/60 hover:shadow-lg"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-primary/40 p-4 transition-all duration-200 hover:border-white/20 hover:bg-primary/60 hover:shadow-lg"
             >
               <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-grays-200">
                 <span>{stat.title}</span>

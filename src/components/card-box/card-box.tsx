@@ -13,7 +13,7 @@ export const CardBox: React.FC<ICardBox> = ({
 }) => {
   return (
     <section
-      className={`relative w-full rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl transition-all duration-200 hover:border-white/20 ${className}`}
+      className={`relative w-full rounded-3xl border border-white/10 bg-primary/40 p-6 shadow-2xl transition-all duration-200 hover:border-white/20 ${className}`}
     >
       {title ? (
         <header className="mb-4 border-b border-white/10 pb-3.5 flex items-center justify-between">
@@ -48,7 +48,7 @@ export const InfoBox: React.FC<TCardBoxComponentProps> = ({
   className = "",
 }) => (
   <div
-    className={`rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xs flex gap-1.5 flex-col transition-all duration-200 hover:border-white/20 hover:bg-white/10 shadow-xs ${className}`}
+    className={`rounded-2xl border border-white/10 bg-white/5 p-4 flex gap-1.5 flex-col transition-all duration-200 hover:border-white/20 hover:bg-white/10 shadow-xs ${className}`}
   >
     {children}
   </div>

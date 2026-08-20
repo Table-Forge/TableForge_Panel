@@ -67,7 +67,7 @@ export function NavMenu() {
 
   return (
     <aside
-      className={`flex flex-col rounded-3xl border border-white/10 bg-primary/60 p-3.5 backdrop-blur-md shadow-xl transition-all duration-300 ease-in-out lg:h-full lg:overflow-y-auto ${
+      className={`flex flex-col rounded-3xl border border-white/10 bg-primary/60 p-3.5 shadow-xl transition-all duration-300 ease-in-out lg:h-full lg:overflow-y-auto ${
         isSidebarCollapsed ? "lg:items-center lg:px-2" : "lg:px-4"
       }`}
     >
