@@ -2,7 +2,7 @@
 
 This document defines how we manage forms and validation using React Hook Form and Zod.
 
----
+> Date and timestamp rules in forms are defined in [dates-and-timestamps.md](./dates-and-timestamps.md).
 
 ## Reference implementations
 - [features/users/schemas/user.schema.ts](../../src/features/users/schemas/user.schema.ts) — Zod schemas with inferred types.

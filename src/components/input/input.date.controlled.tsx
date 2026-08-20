@@ -21,14 +21,7 @@ const serializeDateOnly = (date: Date) => {
 };
 
 const serializeDateTime = (date: Date) => {
-  const year = date.getFullYear();
-  const month = toTwoDigits(date.getMonth() + 1);
-  const day = toTwoDigits(date.getDate());
-  const hour = toTwoDigits(date.getHours());
-  const minute = toTwoDigits(date.getMinutes());
-  const seconds = toTwoDigits(date.getSeconds());
-
-  return `${year}-${month}-${day}T${hour}:${minute}:${seconds}`;
+  return date.toISOString();
 };
 
 const parseDateValue = (value: unknown): Date | null => {
@@ -44,7 +37,7 @@ const parseDateValue = (value: unknown): Date | null => {
     "toDate" in value &&
     typeof value.toDate === "function"
   ) {
-    const parsed = value.toDate();
+    const parsed = (value as { toDate: () => unknown }).toDate();
     return parsed instanceof Date && !Number.isNaN(parsed.getTime())
       ? parsed
       : null;
@@ -55,26 +48,18 @@ const parseDateValue = (value: unknown): Date | null => {
   const trimmed = value.trim();
   if (!trimmed) return null;
 
-  const regex =
-    /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?/;
-  const match = trimmed.match(regex);
-
-  if (match) {
-    const [, year, month, day, hour = "12", minute = "00", second = "00"] =
-      match;
-
-    return new Date(
-      Number(year),
-      Number(month) - 1,
-      Number(day),
-      Number(hour),
-      Number(minute),
-      Number(second),
-    );
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    const [year, month, day] = trimmed.split("-").map(Number);
+    return new Date(year, month - 1, day, 12, 0, 0);
   }
 
-  const parsed = parseISO(trimmed);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
+  const parsed = new Date(trimmed);
+  if (!Number.isNaN(parsed.getTime())) {
+    return parsed;
+  }
+
+  const dateFnsParsed = parseISO(trimmed);
+  return Number.isNaN(dateFnsParsed.getTime()) ? null : dateFnsParsed;
 };
 
 const parseDateValueOrUndefined = (value: unknown): Date | undefined =>

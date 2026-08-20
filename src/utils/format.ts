@@ -21,11 +21,8 @@ const transformStringToDate = (date: string): Date => {
 };
 
 const formatDateISO = (date: Date | Dayjs | string) => {
-  const dateISO = dayjs(date)
-    .utc(true)
-    .startOf("hour")
-    .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-  return dateISO;
+  const parsed = dayjs(date);
+  return parsed.isValid() ? parsed.toISOString() : "";
 };
 
 const formatDateToDownload = (date: Date | Dayjs | string) => {
