@@ -323,6 +323,14 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
             onChangeInputSearch={onSearchUsers}
             isLoading={isLoadingUsersSelect}
             disabled={isLoading || isSubmitting}
+            selectedOption={
+              dataEdit?.creatorId && (dataEdit as unknown as { creatorName?: string }).creatorName
+                ? {
+                    value: dataEdit.creatorId,
+                    name: (dataEdit as unknown as { creatorName?: string }).creatorName!,
+                  }
+                : undefined
+            }
           />
         </InputGroup>
 
@@ -376,6 +384,14 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
             searchInput
             isLoading={isLoadingGameSystemsSelect}
             disabled={isLoading || isSubmitting}
+            selectedOption={
+              dataEdit?.gameSystemId && dataEdit?.gameSystemName
+                ? {
+                    value: dataEdit.gameSystemId,
+                    name: dataEdit.gameSystemName,
+                  }
+                : undefined
+            }
           />
         </InputGroup>
       </FieldsWrapper>
