@@ -33,6 +33,7 @@ interface ISelect<TFieldValues extends FieldValues = FieldValues> {
   onChangeInputSearch?: (value: string) => void;
   isLoading?: boolean;
   searchPlaceholder?: string;
+  selectedOption?: TSelectOptions;
 }
 
 export type { ISelect, TPrimitives, TSelectOptions };

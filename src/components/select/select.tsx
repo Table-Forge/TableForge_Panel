@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { type FieldValues, useController } from "react-hook-form";
 import { ChevronDown, Search } from "lucide-react";
 import type { FocusEvent, KeyboardEvent } from "react";
-import type { ISelect } from "./select.interfaces";
+import type { ISelect, TSelectOptions } from "./select.interfaces";
 import { ErrorMessage } from "@/src/components/error-message/error-message";
 import { getInputClasses } from "@/src/components/input/input.styles";
 import { Input } from "@/src/components/input/input.default";
@@ -36,6 +36,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   firstReset,
   resetCallback,
   error,
+  selectedOption,
 }: ISelect<TFieldValues>) {
   const {
     field: { value, onChange },
@@ -58,36 +59,76 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   const shouldSkipOpenOnFocusRef = useRef(false);
   const searchRequestIdRef = useRef(0);
 
+  const [savedOptionsMap, setSavedOptionsMap] = useState<
+    Map<unknown, TSelectOptions>
+  >(() => new Map());
+
   const message = error ?? fieldState.error?.message;
   const currentValue = value;
   const isComponentLoading = isLoading || isTyping;
 
+  useEffect(() => {
+    if (selectedOption && selectedOption.value !== undefined && selectedOption.value !== null) {
+      const optVal = selectedOption.value;
+      setSavedOptionsMap((prev) => {
+        if (prev.has(optVal)) return prev;
+        const nextMap = new Map(prev);
+        nextMap.set(optVal, selectedOption);
+        return nextMap;
+      });
+    }
+  }, [selectedOption]);
+
+  useEffect(() => {
+    if (currentValue === undefined || currentValue === null) return;
+
+    const foundInProps = initialOptions.find((opt) =>
+      areValuesEqual(opt.value, currentValue),
+    );
+
+    if (foundInProps) {
+      setSavedOptionsMap((prev) => {
+        if (prev.has(currentValue)) return prev;
+        const nextMap = new Map(prev);
+        nextMap.set(currentValue, foundInProps);
+        return nextMap;
+      });
+    }
+  }, [initialOptions, currentValue]);
+
   const selectedItem = useMemo(
     () =>
-      initialOptions.find((item) => areValuesEqual(item.value, currentValue)),
-    [initialOptions, currentValue],
+      initialOptions.find((item) =>
+        areValuesEqual(item.value, currentValue),
+      ) ??
+      savedOptionsMap.get(currentValue) ??
+      Array.from(savedOptionsMap.values()).find((opt) =>
+        areValuesEqual(opt.value, currentValue),
+      ),
+    [initialOptions, currentValue, savedOptionsMap],
   );
 
+  const effectiveOptions = useMemo(() => {
+    if (
+      !selectedItem ||
+      initialOptions.some((opt) => areValuesEqual(opt.value, selectedItem.value))
+    ) {
+      return initialOptions;
+    }
+    return [selectedItem, ...initialOptions];
+  }, [initialOptions, selectedItem]);
+
   const displayedOptions = useMemo(() => {
-    if (!inputSearch.trim()) return initialOptions;
+    if (!inputSearch.trim()) return effectiveOptions;
 
     const normalizedSearch = normalizeString(inputSearch);
 
-    const filtered = initialOptions.filter((item) =>
+    return effectiveOptions.filter((item) =>
       normalizeString(`${item.name ?? item.label ?? ""}`).includes(
         normalizedSearch,
       ),
     );
-
-    if (
-      selectedItem &&
-      !filtered.some((item) => areValuesEqual(item.value, selectedItem.value))
-    ) {
-      filtered.unshift(selectedItem);
-    }
-
-    return filtered;
-  }, [initialOptions, inputSearch, selectedItem]);
+  }, [effectiveOptions, inputSearch]);
 
   const {
     listStyle,
@@ -208,6 +249,14 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   const handleSelect = (index: number) => {
     const item = displayedOptions[index];
     if (!item || item.allowSelect === false) return;
+
+    if (item.value !== undefined && item.value !== null) {
+      setSavedOptionsMap((prev) => {
+        const nextMap = new Map(prev);
+        nextMap.set(item.value, item);
+        return nextMap;
+      });
+    }
 
     onChange(item.value);
     onChangeOption?.(item);
@@ -351,13 +400,11 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
                 type="button"
                 data-option-index={index}
                 disabled={!isSelectable}
-                className={`w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-medium transition-all duration-150 ${
-                  isSelected
+                className={`w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-medium transition-all duration-150 ${isSelected
                     ? "bg-secondary/25 text-white font-bold"
                     : "text-white/85 hover:bg-white/10 hover:text-white"
-                } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${
-                  isSelectable ? "opacity-100" : "opacity-50"
-                }`}
+                  } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${isSelectable ? "opacity-100" : "opacity-50"
+                  }`}
                 onMouseDown={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -380,32 +427,32 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
   const listElement =
     listOpen && listStyle.top > 0
       ? createPortal(
-          <div
-            ref={listRef}
-            data-portal="true"
-            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
-            style={{
-              top: `${listStyle.top}px`,
-              left: `${listStyle.left}px`,
-              width: `${listStyle.width}px`,
-              opacity: isSettling ? 0 : 1,
-              pointerEvents: isSettling ? "none" : "auto",
-            }}
-          >
-            {listDirection === "up" ? (
-              <>
-                {optionsElement}
-                {searchElement}
-              </>
-            ) : (
-              <>
-                {searchElement}
-                {optionsElement}
-              </>
-            )}
-          </div>,
-          document.body,
-        )
+        <div
+          ref={listRef}
+          data-portal="true"
+          className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
+          style={{
+            top: `${listStyle.top}px`,
+            left: `${listStyle.left}px`,
+            width: `${listStyle.width}px`,
+            opacity: isSettling ? 0 : 1,
+            pointerEvents: isSettling ? "none" : "auto",
+          }}
+        >
+          {listDirection === "up" ? (
+            <>
+              {optionsElement}
+              {searchElement}
+            </>
+          ) : (
+            <>
+              {searchElement}
+              {optionsElement}
+            </>
+          )}
+        </div>,
+        document.body,
+      )
       : null;
 
   return (
