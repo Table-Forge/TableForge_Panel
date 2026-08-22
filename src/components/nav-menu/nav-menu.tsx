@@ -14,6 +14,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Store,
+  MessageSquareWarning,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -33,6 +34,7 @@ interface INavItem {
 
 const mainNavItems: INavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
+  { to: "/user-feedbacks", label: "Feedbacks", icon: MessageSquareWarning },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
   { to: "/events", label: "Eventos", icon: CalendarDays },
   { to: "/gamesystems", label: "Sistemas", icon: Gamepad2 },
