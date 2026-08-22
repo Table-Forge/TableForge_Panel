@@ -24,6 +24,7 @@ import UsersPage from "@/src/pages/users";
 import { EventsPage } from "@/src/pages/events";
 import { MySpacePage } from "@/src/pages/my-space";
 import { MyBookingsPage } from "@/src/pages/my-bookings";
+import { UserFeedbacksPage, UserFeedbacksDashboardPage } from "@/src/pages/user-feedbacks/exports";
 import {
   BrowserRouter,
   Navigate,
@@ -63,6 +64,8 @@ function App() {
                 <Route path="events" element={<EventsPage />} />
                 <Route path="my-space" element={<MySpacePage />} />
                 <Route path="my-bookings" element={<MyBookingsPage />} />
+                <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
+                <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />
               </Route>
             </Route>
 
