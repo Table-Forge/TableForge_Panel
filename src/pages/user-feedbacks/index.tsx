@@ -16,9 +16,15 @@ import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import dayjs from "dayjs";
 import { UserFeedbacksFilters, type IUserFeedbackFilterState } from "./components/filters/user-feedbacks-filters";
 import { MatrixTag } from "@/src/components/matrix-tag/matrix-tag";
+import {
+  useUserFeedbackCategoryEnum,
+  useUserFeedbackStatusEnum,
+} from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 
 export function UserFeedbacksPage() {
   const openModal = useBoundStore((state) => state.openModal);
+  const { statusEnum } = useUserFeedbackStatusEnum(true, false);
+  const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
   const [filters, setFilters] = useState<IUserFeedbackFilterState>({
     status: UserFeedbackStatus.New,
@@ -83,9 +89,10 @@ export function UserFeedbacksPage() {
       key: "category",
       width: "120px",
       align: "center",
-      render: (row) => (
-        <MatrixTag matrixName={row.category} />
-      ),
+      render: (row) => {
+        const option = categoryEnum.find((item) => item.value === row.category);
+        return <MatrixTag matrixName={option?.name || row.category} />;
+      },
     },
     {
       title: "Nota",
@@ -99,9 +106,13 @@ export function UserFeedbacksPage() {
       key: "status",
       width: "140px",
       align: "center",
-      render: (row) => (
-        <MatrixTag matrixName={row.status} lineColor={getStatusColor(row.status)} />
-      ),
+      render: (row) => {
+        const option = statusEnum.find((item) => item.value === row.status);
+        const displayName = option?.name || row.status;
+        return (
+          <MatrixTag matrixName={displayName} lineColor={getStatusColor(row.status)} />
+        );
+      },
     },
     {
       title: "Anexos",
