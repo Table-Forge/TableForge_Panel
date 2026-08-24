@@ -22,7 +22,9 @@ import VerifyEmailPage from "@/src/pages/verify-email";
 import { UserDetailsPage } from "@/src/pages/users/details";
 import UsersPage from "@/src/pages/users";
 import { EventsPage } from "@/src/pages/events";
-import { MySpacePage } from "@/src/pages/my-space";
+import { MySpacesPage } from "@/src/pages/my-spaces";
+import { MySpaceDetailsPage } from "@/src/pages/my-spaces/details";
+import { AllSpacesPage } from "@/src/pages/all-spaces";
 import { MyBookingsPage } from "@/src/pages/my-bookings";
 import { UserFeedbacksPage, UserFeedbacksDashboardPage } from "@/src/pages/user-feedbacks/exports";
 import {
@@ -62,7 +64,11 @@ function App() {
                 <Route path="logs" element={<LogsPage />} />
                 <Route path="logs/:id" element={<LogDetailsPage />} />
                 <Route path="events" element={<EventsPage />} />
-                <Route path="my-space" element={<MySpacePage />} />
+                <Route path="my-spaces" element={<MySpacesPage />} />
+                <Route path="my-spaces/:id" element={<MySpaceDetailsPage />} />
+                <Route path="spaces" element={<AllSpacesPage />} />
+                <Route path="spaces/:id" element={<MySpaceDetailsPage />} />
+                <Route path="my-space" element={<Navigate to="/my-spaces" replace />} />
                 <Route path="my-bookings" element={<MyBookingsPage />} />
                 <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
                 <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />

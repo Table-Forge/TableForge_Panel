@@ -25,7 +25,6 @@ import {
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-// Define an interface for the form that extends ISpaceCreate with the current bannerUrl to display the image
 interface ISpaceForm extends ISpaceCreate {
   id?: number;
   bannerUrl?: string;
@@ -95,7 +94,7 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
     if (isImageDataUrl(bannerContent)) {
       try {
         const imagePayload = {
-          type: 4, // 4 = Space Banner? Let's check ENUM later, but we can pass type 1 or generic
+          type: 4,
           name: `${payload.name}-banner`,
           content: bannerContent,
         };
@@ -115,9 +114,12 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
     }
 
     if (data?.id) {
-      updateSpaceMutation.mutate({ id: data.id, data: payload });
+      updateSpaceMutation.mutate(
+        { id: data.id, data: payload },
+        { onSuccess: () => closeModal() }
+      );
     } else {
-      createSpaceMutation.mutate(payload);
+      createSpaceMutation.mutate(payload, { onSuccess: () => closeModal() });
     }
   });
 
@@ -239,7 +241,7 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
           name="bannerUrl"
           previewValue={toImageSource(data?.bannerUrl)}
           canChangeImage={true}
-          maxSizeBytes={MAX_AVATAR_SIZE_BYTES} // Adjust if banner allows larger sizes
+          maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
           disabled={isPending || isLoadingImage}
         />
       </InputGroup>
