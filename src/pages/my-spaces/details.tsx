@@ -1,10 +1,8 @@
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
-import { useAuth } from "@/src/context/use-auth";
-import { useAllSpaces } from "@/src/features/spaces/hooks/use-spaces-queries";
-import { useMemo } from "react";
+import { useSpaceById } from "@/src/features/spaces/hooks/use-spaces-queries";
 import { Button } from "@/src/components/button/button";
-import { MdAdd, MdModeEdit } from "react-icons/md";
+import { MdArrowBack, MdModeEdit } from "react-icons/md";
 import { Store, Phone, Clock, CalendarDays } from "lucide-react";
 import { useBoundStore } from "@/src/store";
 import { ModalEditSpace } from "./components/modal-edit-space/modal-edit-space";
@@ -18,51 +16,30 @@ import {
 import { SpaceStatus } from "@/src/features/spaces/components/space-status";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
 import { TablesTab } from "./components/tables-tab/tables-tab";
+import { useNavigate, useParams } from "react-router-dom";
 
-export function MySpacePage() {
-  const { user } = useAuth();
+export function MySpaceDetailsPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const openModal = useBoundStore((state) => state.openModal);
 
-  const isOrganizer = user?.type === "Organizer";
-  const { spaces, isLoadingSpaces: isLoading, allSpacesQuery } = useAllSpaces(
-    isOrganizer ? { ownerId: user?.id } : {},
-    !!user?.id
+  const spaceId = Number(id);
+  const isValidId = Number.isFinite(spaceId) && spaceId > 0;
+
+  const { space, isLoadingSpace: isLoading, spaceQuery } = useSpaceById(
+    spaceId,
+    isValidId
   );
 
-  const space = useMemo(() => {
-    return spaces?.[0] ?? null;
-  }, [spaces]);
+  if (!isValidId) {
+    return <InfoNotFound message="Identificador de espaço inválido." />;
+  }
 
   if (isLoading) return <SkeletonDetails />;
 
-  if (allSpacesQuery.isError) {
+  if (spaceQuery.isError || !space) {
     return (
       <InfoNotFound message="Ocorreu um erro ao carregar as informações do espaço." />
-    );
-  }
-
-  if (!space) {
-    return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-3xl border border-white/10 bg-primary/40 p-8 text-center backdrop-blur-md">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-secondary">
-          <Store size={32} />
-        </div>
-        <h2 className="text-xl font-extrabold uppercase text-white">
-          Nenhum Espaço Cadastrado
-        </h2>
-        <p className="max-w-md text-xs font-semibold text-grays-100 leading-relaxed">
-          Você ainda não possui um espaço físico cadastrado no sistema. Crie o seu espaço para gerenciar mesas, horários e agendamentos dos seus clientes.
-        </p>
-        <Button
-          buttonStyle="primary"
-          size="md"
-          onClick={() => openModal("Criar Espaço", <ModalEditSpace />, "md")}
-          className="mt-2 !rounded-2xl shadow-lg hover:shadow-secondary/20"
-        >
-          <MdAdd />
-          Cadastrar Meu Espaço
-        </Button>
-      </div>
     );
   }
 
@@ -70,7 +47,15 @@ export function MySpacePage() {
     <div className="flex flex-col gap-6">
       {/* Header */}
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => navigate("/my-spaces")}
+            className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-secondary hover:underline w-fit"
+          >
+            <MdArrowBack size={16} />
+            Voltar para Meus Espaços
+          </button>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
               {space.name}
@@ -79,7 +64,7 @@ export function MySpacePage() {
               #{space.id}
             </span>
           </div>
-          <p className="text-xs font-semibold text-grays-100 mt-1">
+          <p className="text-xs font-semibold text-grays-100 mt-0.5">
             Gerencie as informações do seu espaço e mesas físicas.
           </p>
         </div>

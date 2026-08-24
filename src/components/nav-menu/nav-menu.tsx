@@ -16,8 +16,8 @@ import {
   Store,
   MessageSquareWarning,
 } from "lucide-react";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { useAuth } from "@/src/context/use-auth";
 import { useBoundStore } from "@/src/store";
@@ -53,18 +53,27 @@ export function NavMenu() {
   const toggleSidebar = useBoundStore((state) => state.toggleSidebar);
   const { user } = useAuth();
   const logo = useLogo();
+  const location = useLocation();
 
-  const canAccessSpaceItems = user?.type === "Organizer" || isAdminAuthType(user?.type);
+  const isAdmin = isAdminAuthType(user?.type);
+  const canAccessSpaceItems = user?.type === "Organizer" || isAdmin;
 
-  const spaceItems: INavItem[] = [
-    { to: "/my-space", label: "Meu Espaço", icon: Store },
-    { to: "/my-bookings", label: "Agendamentos", icon: ScrollText },
-  ];
+  const isSpaceRouteActive =
+    location.pathname.startsWith("/my-spaces") ||
+    location.pathname.startsWith("/spaces") ||
+    location.pathname.startsWith("/my-space");
 
-  const allItems = [
-    ...mainNavItems,
-    ...(canAccessSpaceItems ? spaceItems : []),
-    logItem,
+  const [isSpacesExpanded, setIsSpacesExpanded] = useState(isSpaceRouteActive);
+
+  useEffect(() => {
+    if (isSpaceRouteActive) {
+      setIsSpacesExpanded(true);
+    }
+  }, [isSpaceRouteActive]);
+
+  const spacesSubItems = [
+    { to: "/my-spaces", label: "Meus Espaços" },
+    ...(isAdmin ? [{ to: "/spaces", label: "Todos os Espaços" }] : []),
   ];
 
   return (
@@ -156,7 +165,7 @@ export function NavMenu() {
           isMobileOpen ? "mt-3 flex" : "hidden"
         } flex-col gap-1.5 lg:mt-4 lg:flex`}
       >
-        {allItems.map(({ to, label, icon: Icon, end }) => (
+        {mainNavItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -187,6 +196,131 @@ export function NavMenu() {
             {!isSidebarCollapsed && <span>{label}</span>}
           </NavLink>
         ))}
+
+        {/* Espaços Accordion Menu */}
+        {canAccessSpaceItems && (
+          <div className="flex flex-col gap-1">
+            <button
+              type="button"
+              onClick={() => setIsSpacesExpanded((prev) => !prev)}
+              title={isSidebarCollapsed ? "Espaços" : undefined}
+              className={[
+                "flex items-center w-full transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "justify-between rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isSpaceRouteActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex items-center justify-center rounded-xl ${
+                    isSidebarCollapsed
+                      ? "h-full w-full"
+                      : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+                  }`}
+                >
+                  <Store size={18} />
+                </div>
+                {!isSidebarCollapsed && <span>Espaços</span>}
+              </div>
+              {!isSidebarCollapsed && (
+                <div>
+                  {isSpacesExpanded ? (
+                    <ChevronUp size={16} />
+                  ) : (
+                    <ChevronDown size={16} />
+                  )}
+                </div>
+              )}
+            </button>
+
+            {/* Sub-items */}
+            {isSpacesExpanded && !isSidebarCollapsed && (
+              <div className="flex flex-col gap-1 pl-3.5 border-l border-white/10 ml-5 my-0.5">
+                {spacesSubItems.map((sub) => (
+                  <NavLink
+                    key={sub.to}
+                    to={sub.to}
+                    onClick={() => setIsMobileOpen(false)}
+                    className={({ isActive }) =>
+                      [
+                        "flex items-center gap-2 rounded-r-xl px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider transition-all duration-200 border-l-2",
+                        isActive
+                          ? "border-secondary bg-white/10 text-white shadow-sm"
+                          : "border-transparent text-grays-100 hover:bg-white/5 hover:text-white",
+                      ].join(" ")
+                    }
+                  >
+                    <span>{sub.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Agendamentos */}
+        {canAccessSpaceItems && (
+          <NavLink
+            to="/my-bookings"
+            title={isSidebarCollapsed ? "Agendamentos" : undefined}
+            onClick={() => setIsMobileOpen(false)}
+            className={({ isActive }) =>
+              [
+                "flex items-center transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")
+            }
+          >
+            <div
+              className={`flex items-center justify-center rounded-xl ${
+                isSidebarCollapsed
+                  ? "h-full w-full"
+                  : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+              }`}
+            >
+              <ScrollText size={18} />
+            </div>
+            {!isSidebarCollapsed && <span>Agendamentos</span>}
+          </NavLink>
+        )}
+
+        {/* Logs */}
+        <NavLink
+          to={logItem.to}
+          title={isSidebarCollapsed ? logItem.label : undefined}
+          onClick={() => setIsMobileOpen(false)}
+          className={({ isActive }) =>
+            [
+              "flex items-center transition-all duration-200",
+              isSidebarCollapsed
+                ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+              isActive
+                ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+            ].join(" ")
+          }
+        >
+          <div
+            className={`flex items-center justify-center rounded-xl ${
+              isSidebarCollapsed
+                ? "h-full w-full"
+                : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+            }`}
+          >
+            <logItem.icon size={18} />
+          </div>
+          {!isSidebarCollapsed && <span>{logItem.label}</span>}
+        </NavLink>
       </nav>
     </aside>
   );
