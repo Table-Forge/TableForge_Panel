@@ -10,9 +10,13 @@ import type { StateCreator } from "zustand";
 export interface AuthSlice {
   authData: ILoginResponse | null;
   isLoading: boolean;
+  verificationEmail: string | null;
+  recoveryEmail: string | null;
   hydrateAuth: () => void;
   signIn: (data: ILoginResponse) => void;
   signOut: () => void;
+  setVerificationEmail: (email: string | null) => void;
+  setRecoveryEmail: (email: string | null) => void;
 }
 
 export interface ToastSlice {
