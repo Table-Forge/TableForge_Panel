@@ -10,11 +10,11 @@ import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { PAGE_SIZE } from "@/src/constants/select-options";
+import { UserFeedbackPlatform } from "@/src/features/user-feedbacks/enums";
 import {
-  UserFeedbackCategory,
-  UserFeedbackStatus,
-  UserFeedbackPlatform,
-} from "@/src/features/user-feedbacks/enums";
+  useUserFeedbackCategoryEnum,
+  useUserFeedbackStatusEnum,
+} from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 
 import type { IUserFeedbackFilters } from "@/src/features/user-feedbacks/interfaces";
 
@@ -25,27 +25,6 @@ interface UserFeedbacksFiltersProps {
   setFilters: Dispatch<SetStateAction<IUserFeedbackFilterState>>;
 }
 
-const STATUS_OPTIONS: TSelectOptions[] = [
-  { value: "", name: "Todos os Status" },
-  { value: UserFeedbackStatus.New, name: "Novo" },
-  { value: UserFeedbackStatus.InAnalysis, name: "Em Análise" },
-  { value: UserFeedbackStatus.Planned, name: "Planejado" },
-  { value: UserFeedbackStatus.Resolved, name: "Resolvido" },
-  { value: UserFeedbackStatus.Declined, name: "Não Implementado" },
-  { value: UserFeedbackStatus.Duplicated, name: "Duplicado" },
-];
-
-const CATEGORY_OPTIONS: TSelectOptions[] = [
-  { value: "", name: "Todas as Categorias" },
-  { value: UserFeedbackCategory.Suggestion, name: "Sugestão" },
-  { value: UserFeedbackCategory.Bug, name: "Problema / Bug" },
-  { value: UserFeedbackCategory.Experience, name: "Experiência" },
-  { value: UserFeedbackCategory.Compliment, name: "Elogio" },
-  { value: UserFeedbackCategory.Complaint, name: "Reclamação" },
-  { value: UserFeedbackCategory.Question, name: "Dúvida" },
-  { value: UserFeedbackCategory.Other, name: "Outro" },
-];
-
 const PLATFORM_OPTIONS: TSelectOptions[] = [
   { value: "", name: "Todas as Plataformas" },
   { value: UserFeedbackPlatform.Android, name: "Android" },
@@ -55,6 +34,18 @@ const PLATFORM_OPTIONS: TSelectOptions[] = [
 
 function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersProps) {
   const { close } = useFilterContext();
+  const { statusEnum, isLoadingStatusEnum } = useUserFeedbackStatusEnum();
+  const { categoryEnum, isLoadingCategoryEnum } = useUserFeedbackCategoryEnum();
+
+  const statusOptions: TSelectOptions[] = [
+    { value: "", name: "Todos os Status" },
+    ...statusEnum,
+  ];
+
+  const categoryOptions: TSelectOptions[] = [
+    { value: "", name: "Todas as Categorias" },
+    ...categoryEnum,
+  ];
 
   const form = useForm<IUserFeedbackFilterState>({
     defaultValues: {
@@ -97,7 +88,8 @@ function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersPro
         <Select
           hookForm={form}
           name="status"
-          initialOptions={STATUS_OPTIONS}
+          initialOptions={statusOptions}
+          isLoading={isLoadingStatusEnum}
           title="Selecione o status"
         />
       </InputGroup>
@@ -107,7 +99,8 @@ function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersPro
         <Select
           hookForm={form}
           name="category"
-          initialOptions={CATEGORY_OPTIONS}
+          initialOptions={categoryOptions}
+          isLoading={isLoadingCategoryEnum}
           title="Selecione a categoria"
         />
       </InputGroup>

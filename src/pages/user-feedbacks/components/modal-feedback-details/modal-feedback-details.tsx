@@ -10,7 +10,12 @@ import { InputGroup } from "@/src/components/input-group/input-group";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
-import { UserFeedbackCategory, UserFeedbackStatus } from "@/src/features/user-feedbacks/enums";
+import { ModalImageCarousel } from "@/src/components/modals/modal-image-carousel/modal-image-carousel";
+import { UserFeedbackCategory } from "@/src/features/user-feedbacks/enums";
+import {
+  useUserFeedbackCategoryEnum,
+  useUserFeedbackStatusEnum,
+} from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 import { useUserFeedbacksMutations } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-mutations";
 import { useUserFeedbackDetailsQuery } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-queries";
 import { UserFeedbackStatusUpdateSchema } from "@/src/features/user-feedbacks/schemas/user-feedback.schema";
@@ -21,20 +26,26 @@ interface ModalFeedbackDetailsProps {
   feedbackId: number;
 }
 
-const STATUS_OPTIONS = [
-  { value: UserFeedbackStatus.InAnalysis, name: "Em análise" },
-  { value: UserFeedbackStatus.Planned, name: "Planejado" },
-  { value: UserFeedbackStatus.Resolved, name: "Resolvido" },
-  { value: UserFeedbackStatus.Declined, name: "Não será implementado" },
-  { value: UserFeedbackStatus.Duplicated, name: "Duplicado" },
-];
-
 export function ModalFeedbackDetails({ feedbackId }: ModalFeedbackDetailsProps) {
+  const openModal = useBoundStore((state) => state.openModal);
   const closeModal = useBoundStore((state) => state.closeModal);
   const addToast = useBoundStore((state) => state.addToast);
 
+  const { statusEnum, isLoadingStatusEnum } = useUserFeedbackStatusEnum();
+  const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
   const { data: feedback, isLoading } = useUserFeedbackDetailsQuery(feedbackId);
   const { updateStatusMutation, isUpdatingStatus } = useUserFeedbacksMutations();
+
+  const categoryOption = feedback ? categoryEnum.find((item) => item.value === feedback.category) : undefined;
+
+  const handleOpenImageModal = (initialIndex: number) => {
+    if (!feedback?.images?.length) return;
+    openModal(
+      "Visualização de Anexos",
+      <ModalImageCarousel images={feedback.images} initialIndex={initialIndex} />,
+      "md"
+    );
+  };
 
   const hookForm = useForm<IUserFeedbackStatusUpdate>({
     resolver: zodResolver(UserFeedbackStatusUpdateSchema),
@@ -78,7 +89,7 @@ export function ModalFeedbackDetails({ feedbackId }: ModalFeedbackDetailsProps) 
         <p className="text-sm text-grays-200">{feedback.content}</p>
 
         <div className="mt-4 flex flex-wrap gap-4 border-t border-grays-700 pt-4 text-xs text-grays-300">
-          <div className="flex items-center gap-1"><MdLayers /> {feedback.category}</div>
+          <div className="flex items-center gap-1"><MdLayers /> {categoryOption?.name || feedback.category}</div>
           {feedback.category === UserFeedbackCategory.Experience && feedback.rating && (
             <div className="flex items-center gap-1 text-warning"><MdStar /> {feedback.rating} / 5</div>
           )}
@@ -98,20 +109,19 @@ export function ModalFeedbackDetails({ feedbackId }: ModalFeedbackDetailsProps) 
         <div className="flex flex-col gap-2">
           <span className="text-sm font-bold text-grays-100">Anexos ({feedback.images.length})</span>
           <div className="flex flex-wrap gap-3">
-            {feedback.images.map((img) => (
-              <a
+            {feedback.images.map((img, index) => (
+              <button
                 key={img.id}
-                href={img.url}
-                target="_blank"
-                rel="noreferrer"
-                className="block h-24 w-24 overflow-hidden rounded-lg border border-grays-700"
+                type="button"
+                onClick={() => handleOpenImageModal(index)}
+                className="block h-24 w-24 overflow-hidden rounded-lg border border-grays-700 hover:border-accent transition-all cursor-pointer"
               >
                 <img
                   src={img.url}
-                  alt="Anexo"
+                  alt={`Anexo ${index + 1}`}
                   className="h-full w-full object-cover transition-transform hover:scale-110"
                 />
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -127,7 +137,8 @@ export function ModalFeedbackDetails({ feedbackId }: ModalFeedbackDetailsProps) 
             <Select
               hookForm={hookForm}
               name="status"
-              initialOptions={STATUS_OPTIONS}
+              initialOptions={statusEnum}
+              isLoading={isLoadingStatusEnum}
               title="Selecione o novo status"
             />
           </InputGroup>

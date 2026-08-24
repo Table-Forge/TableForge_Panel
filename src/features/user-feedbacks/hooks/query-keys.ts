@@ -8,4 +8,7 @@ export const USER_FEEDBACKS_KEYS = {
   detail: (id: number) => [...USER_FEEDBACKS_KEYS.details(), id] as const,
   summaries: () => [...USER_FEEDBACKS_KEYS.all, "summary"] as const,
   summary: (from?: string, to?: string) => [...USER_FEEDBACKS_KEYS.summaries(), { from, to }] as const,
+  enums: () => [...USER_FEEDBACKS_KEYS.all, "enums"] as const,
+  statusEnum: () => [...USER_FEEDBACKS_KEYS.enums(), "status"] as const,
+  categoryEnum: () => [...USER_FEEDBACKS_KEYS.enums(), "category"] as const,
 };

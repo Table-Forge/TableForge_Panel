@@ -33,6 +33,16 @@ export class UserFeedbackService {
     await api.put(`${CONTROLLER}/${id}/Status`, payload);
   }
 
+  static async getFeedbackStatusEnum() {
+    const { data } = await api.get(`${CONTROLLER}/enums/feedback-status`);
+    return data;
+  }
+
+  static async getFeedbackCategoryEnum() {
+    const { data } = await api.get(`${CONTROLLER}/enums/feedback-category`);
+    return data;
+  }
+
   static async getSummary(from?: string, to?: string): Promise<IUserFeedbackSummary> {
     const { data } = await api.get<IUserFeedbackSummary>(`${CONTROLLER}/summary`, {
       params: { from, to },
