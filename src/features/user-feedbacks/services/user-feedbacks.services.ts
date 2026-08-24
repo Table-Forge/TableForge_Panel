@@ -34,12 +34,16 @@ export class UserFeedbackService {
   }
 
   static async getFeedbackStatusEnum() {
-    const { data } = await api.get(`${CONTROLLER}/enums/feedback-status`);
+    const { data } = await api.get<
+      { id: number; value: string; name: string; allowSelect?: boolean }[]
+    >(`${CONTROLLER}/enums/feedback-status`);
     return data;
   }
 
   static async getFeedbackCategoryEnum() {
-    const { data } = await api.get(`${CONTROLLER}/enums/feedback-category`);
+    const { data } = await api.get<
+      { id: number; value: string; name: string; allowSelect?: boolean }[]
+    >(`${CONTROLLER}/enums/feedback-category`);
     return data;
   }
 

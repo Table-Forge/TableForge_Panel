@@ -83,6 +83,9 @@ export interface IControlledImageInput<TFieldValues extends FieldValues = FieldV
   canChangeImage?: boolean;
   maxSizeBytes?: number;
   acceptedTypes?: string[];
+  aspectRatio?: number;
+  cropShape?: "rect" | "round";
+  enableCrop?: boolean;
   onFileNameChange?: (name: string) => void;
   onClearImage?: () => void;
 }
