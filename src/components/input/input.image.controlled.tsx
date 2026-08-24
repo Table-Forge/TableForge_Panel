@@ -18,6 +18,9 @@ export function ControlledImageInput<
   canChangeImage = true,
   maxSizeBytes,
   acceptedTypes,
+  aspectRatio,
+  cropShape,
+  enableCrop,
   onFileNameChange,
   onClearImage,
   error,
@@ -57,6 +60,9 @@ export function ControlledImageInput<
       canChangeImage={canChangeImage}
       maxSizeBytes={maxSizeBytes}
       acceptedTypes={acceptedTypes}
+      aspectRatio={aspectRatio}
+      cropShape={cropShape}
+      enableCrop={enableCrop}
       error={message}
       onChange={(imageValue) => {
         setIgnoreExternalPreview(false);

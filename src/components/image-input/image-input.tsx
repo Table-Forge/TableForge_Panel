@@ -1,5 +1,5 @@
 import { Button } from "@/src/components/button/button";
-import { ImagePlus, Trash2 } from "lucide-react";
+import { Crop, ImagePlus, Trash2 } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import {
   ACCEPTED_IMAGE_MIME_TYPES,
@@ -7,6 +7,8 @@ import {
   toImageSource,
   validateImageFile,
 } from "@/src/utils/image";
+import { useBoundStore } from "@/src/store/use-bound-store";
+import { ModalCropImage } from "@/src/components/modals/modal-crop-image/modal-crop-image";
 import type { IImageInput } from "./image-input.interfaces";
 
 export const ImageInput: React.FC<IImageInput> = ({
@@ -17,6 +19,9 @@ export const ImageInput: React.FC<IImageInput> = ({
   error,
   maxSizeBytes = MAX_IMAGE_SIZE_BYTES,
   acceptedTypes = ACCEPTED_IMAGE_MIME_TYPES,
+  aspectRatio,
+  cropShape = "rect",
+  enableCrop = true,
   onChange,
   onClear,
   extraActions,
@@ -26,7 +31,27 @@ export const ImageInput: React.FC<IImageInput> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectionError, setSelectionError] = useState<string | null>(null);
 
+  const openModal = useBoundStore((state) => state.openModal);
   const previewSource = toImageSource(value);
+
+  const openCropModal = (src: string, fileName: string) => {
+    openModal(
+      "Ajustar e Cortar Imagem",
+      <ModalCropImage
+        imageSrc={src}
+        aspectRatio={aspectRatio}
+        cropShape={cropShape}
+        onCropComplete={(croppedContent) => {
+          onChange({
+            name: fileName,
+            content: croppedContent,
+            preview: croppedContent,
+          });
+        }}
+      />,
+      "md",
+    );
+  };
 
   const handleOpenFileSelector = () => {
     if (disabled || !canChangeImage) return;
@@ -58,11 +83,15 @@ export const ImageInput: React.FC<IImageInput> = ({
       const result = String(reader.result ?? "");
       if (!result) return;
 
-      onChange({
-        name: file.name,
-        content: result,
-        preview: result,
-      });
+      if (enableCrop) {
+        openCropModal(result, file.name);
+      } else {
+        onChange({
+          name: file.name,
+          content: result,
+          preview: result,
+        });
+      }
     };
 
     reader.readAsDataURL(file);
@@ -105,6 +134,19 @@ export const ImageInput: React.FC<IImageInput> = ({
                 size="xs"
               >
                 {previewSource ? "Trocar imagem" : "Selecionar imagem"}
+              </Button>
+            ) : null}
+
+            {canChangeImage && previewSource && enableCrop ? (
+              <Button
+                type="button"
+                onClick={() => openCropModal(previewSource, "cropped-image.png")}
+                disabled={disabled}
+                buttonStyle="soft"
+                size="xs"
+              >
+                <Crop size={14} />
+                Cortar
               </Button>
             ) : null}
 
