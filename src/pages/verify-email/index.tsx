@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
@@ -22,8 +22,9 @@ import { useLogo } from "@/src/constants/logos";
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const initialEmail = searchParams.get("email") || "";
+  const verificationEmail = useBoundStore((state) => state.verificationEmail);
+  const setVerificationEmail = useBoundStore((state) => state.setVerificationEmail);
+  const initialEmail = verificationEmail || "";
   const logo = useLogo();
 
   const addToast = useBoundStore((state) => state.addToast);
@@ -94,6 +95,7 @@ export default function VerifyEmailPage() {
         onSuccess: () => {
           setIsCodeInvalid(false);
           clearErrors("code");
+          setVerificationEmail(null);
           addToast("success", "Conta validada com sucesso! Você já pode acessar a plataforma.");
           navigate("/login", { replace: true });
         },
@@ -117,6 +119,7 @@ export default function VerifyEmailPage() {
     setError,
     addToast,
     navigate,
+    setVerificationEmail,
   ]);
 
   useEffect(() => {
@@ -127,11 +130,10 @@ export default function VerifyEmailPage() {
   }, [clearErrors, code, isCodeInvalid, lastAttemptedCode]);
 
   useEffect(() => {
-    if (searchParams.get("email")) {
+    if (initialEmail) {
       resendCooldown.start(RESEND_COOLDOWN_SECONDS);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialEmail, resendCooldown]);
 
   const onSendCode = handleSubmit(async () => {
     const isValidEmail = await trigger("email");
@@ -384,6 +386,7 @@ export default function VerifyEmailPage() {
           Lembrou sua senha?{" "}
           <Link
             to="/login"
+            onClick={() => setVerificationEmail(null)}
             className="font-semibold text-secondary hover:brightness-110"
           >
             Voltar ao login

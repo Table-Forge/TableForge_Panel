@@ -35,6 +35,8 @@ const initialAuth = parsePersistedAuth(
 export const createAuthSlice: SliceCreator<AuthSlice> = (set) => ({
   authData: initialAuth,
   isLoading: false,
+  verificationEmail: null,
+  recoveryEmail: null,
 
   hydrateAuth: () => {
     const persistedAuth = parsePersistedAuth(
@@ -60,4 +62,7 @@ export const createAuthSlice: SliceCreator<AuthSlice> = (set) => ({
     localStorage.removeItem(AUTH_STORAGE_KEY);
     set({ authData: null, isLoading: false });
   },
+
+  setVerificationEmail: (email) => set({ verificationEmail: email }),
+  setRecoveryEmail: (email) => set({ recoveryEmail: email }),
 });

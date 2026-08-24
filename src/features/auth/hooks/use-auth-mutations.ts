@@ -47,6 +47,7 @@ export const useAuthMutation = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const addToast = useBoundStore((state) => state.addToast);
+  const setVerificationEmail = useBoundStore((state) => state.setVerificationEmail);
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: ILoginRequest) => {
@@ -67,7 +68,8 @@ export const useAuthMutation = () => {
 
       if (message.includes("validar o seu e-mail")) {
         addToast("error", message);
-        navigate(`/verify-email?email=${encodeURIComponent(variables.login)}`);
+        setVerificationEmail(variables.login);
+        navigate("/verify-email");
         return;
       }
 
