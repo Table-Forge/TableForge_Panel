@@ -4,6 +4,7 @@ import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlle
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledNumberInput } from "@/src/components/input/input.number.controlled";
 import { DateInput } from "@/src/components/input/input.date.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
@@ -252,12 +253,12 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
       <FieldsWrapper>
         <InputGroup>
           <Label htmlFor="maxAttendees">Limite de Vagas</Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="maxAttendees"
-            type="number"
-            min={0}
-            step={1}
+            format="integer"
+            allowEmpty
+            inputMode="numeric"
             placeholder="Ilimitado"
             error={errors.maxAttendees?.message as string | undefined}
             disabled={isSubmitting}
@@ -271,12 +272,12 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
 
         <InputGroup>
           <Label htmlFor="entryFee">Valor (R$)</Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="entryFee"
-            type="number"
-            min={0}
-            step={0.01}
+            format="currency"
+            allowEmpty
+            inputMode="numeric"
             placeholder="Gratuito"
             error={errors.entryFee?.message as string | undefined}
             disabled={isSubmitting}

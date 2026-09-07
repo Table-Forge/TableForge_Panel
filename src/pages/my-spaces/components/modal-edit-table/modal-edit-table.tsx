@@ -5,6 +5,7 @@ import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledNumberInput } from "@/src/components/input/input.number.controlled";
 import { Label } from "@/src/components/label/label";
 import { Select } from "@/src/components/select/select";
 import {
@@ -121,10 +122,11 @@ export const ModalEditTable = ({ spaceId, data }: IProps) => {
           <Label htmlFor="seatCount" isRequired>
             Assentos
           </Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="seatCount"
-            type="number"
+            format="integer"
+            inputMode="numeric"
             placeholder="4"
             error={errors.seatCount?.message}
           />
@@ -132,11 +134,13 @@ export const ModalEditTable = ({ spaceId, data }: IProps) => {
 
         <InputGroup>
           <Label htmlFor="hourlyRate">Preço por Hora (R$)</Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="hourlyRate"
-            type="number"
-            placeholder="0"
+            format="currency"
+            allowEmpty
+            inputMode="numeric"
+            placeholder="Gratuito"
             error={errors.hourlyRate?.message}
           />
           <span className="text-xs text-grays-100">

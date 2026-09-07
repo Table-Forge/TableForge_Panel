@@ -25,6 +25,7 @@ export function ControlledNumberInput<
   defaultValue,
   isLoading,
   allowEmpty = false,
+  error: externalError,
   ...props
 }: INumberControllerInput<TFieldValues>) {
   const {
@@ -61,7 +62,7 @@ export function ControlledNumberInput<
   const handleChange = (inputValue: string) => {
     const clean = inputValue.replace(/[^\d]/g, "");
     if (!clean) {
-      const emptyValue = allowEmpty ? "" : 0;
+      const emptyValue = allowEmpty ? undefined : 0;
       onChange(emptyValue);
       onChangeValue?.(emptyValue);
       return;
@@ -75,16 +76,17 @@ export function ControlledNumberInput<
     onChangeValue?.(finalValue);
   };
 
+  const errorMessage = externalError || error?.message;
+
   return (
     <div className="flex w-full flex-col gap-1">
-      <div
-        className={getInputClasses(error?.message, isLoading, props.disabled)}
-      >
+      <div className={getInputClasses(errorMessage, isLoading, props.disabled)}>
         {isLoading ? (
           <div className="px-3 text-xs text-grays-100">Carregando...</div>
         ) : (
           <input
             {...props}
+            id={name}
             className={inputInnerClasses}
             value={displayValue}
             onChange={(event) => handleChange(event.target.value)}
@@ -92,7 +94,7 @@ export function ControlledNumberInput<
           />
         )}
       </div>
-      {error?.message ? <ErrorMessage>{error.message}</ErrorMessage> : null}
+      {errorMessage ? <ErrorMessage>{errorMessage}</ErrorMessage> : null}
     </div>
   );
 }

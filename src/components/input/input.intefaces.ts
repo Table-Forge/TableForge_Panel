@@ -25,7 +25,7 @@ export interface IMaskedControllerInput<TFieldValues extends FieldValues = Field
 export interface INumberControllerInput<TFieldValues extends FieldValues = FieldValues>
   extends IControllerInput<TFieldValues> {
   format?: "currency" | "percent" | "integer" | "float";
-  onChangeValue?: (value: number | "") => void;
+  onChangeValue?: (value?: number) => void;
   defaultValue?: string | number;
   allowEmpty?: boolean;
 }

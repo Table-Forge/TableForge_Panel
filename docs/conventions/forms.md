@@ -112,8 +112,10 @@ Each field is an `InputGroup` containing a `Label` and one controlled component;
 2. **Portuguese validation**: All validation messages must be in pt-BR. Use the shared primitives to guarantee this.
 3. **Submit = Mutation**: The `handleSubmit` callback assembles the payload and hands it to a mutation hook (e.g., `createOrUpdate` from `useUsersMutation`); success/error feedback lives in the mutation hook, not the form.
 4. **Labels**: Every field must have an explicit `<Label htmlFor="...">` inside its `InputGroup`, unless the design says otherwise.
+5. **Numbers go through `ControlledNumberInput`**: any numeric field uses it with an explicit `format`, never `ControlledInput type="number"`. Add `allowEmpty` when a blank field is a valid state ("no limit", "free", "no filter") so it submits `undefined` instead of `0`.
 
 ## What NOT to do
 - **Don't declare duplicate interfaces**: Never write a payload `interface`/`type` by hand if a Zod schema exists. Legacy counterexample not to copy: `ICampaignForm` in `pages/campaigns/components/modal-edit/modal-edit.tsx` (hand-written type, no resolver).
 - **Don't use raw native inputs**: Always use the components from `src/components/input/` (and `select/`, `checkbox/`, `multi-select/`).
+- **Don't type a number field as `<ControlledInput type="number" />`**: it hands the form a *string* and leaves parsing to the submit handler. `ControlledNumberInput` keeps the field as a number, formats it (`R$ 25,00`, thousands) and filters non-digits as the user types. Its `min`/`step` attributes are unnecessary — the component never renders a native number input.
 - **Don't skip the resolver on validated forms**: If the form has validation rules, they belong in the schema wired via `zodResolver`, not in the submit handler.

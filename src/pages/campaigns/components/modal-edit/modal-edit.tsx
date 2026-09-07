@@ -4,6 +4,7 @@ import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlle
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledNumberInput } from "@/src/components/input/input.number.controlled";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
 import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
 import { Label } from "@/src/components/label/label";
@@ -295,12 +296,11 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           <Label htmlFor="playersLimit" isRequired>
             Limite de jogadores
           </Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="playersLimit"
-            type="number"
-            min={1}
-            step={1}
+            format="integer"
+            inputMode="numeric"
             placeholder="1"
             disabled={isLoading || isSubmitting}
           />
