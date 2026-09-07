@@ -231,9 +231,7 @@ export function RequestHistoryDetailsPage() {
           <InfoBox>
             <CardLabel>Usuário</CardLabel>
             <CardValue>
-              {data.userLogin
-                ? `${data.userLogin} (${data.userId ?? "-"})`
-                : "Anônimo"}
+              {data.userLogin ? `${data.userLogin} (${data.userId ?? "-"})` : "-"}
             </CardValue>
           </InfoBox>
           <InfoBox>

@@ -16,8 +16,10 @@ import {
   useAllRequestHistory,
 } from "@/src/features/request-history/hooks/use-all-request-history";
 import type { IGetRequestHistory } from "@/src/features/request-history/hooks/types";
+import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import { useUsersSelect } from "@/src/features/users/hooks/use-users-select";
 import { useComponentStore } from "@/src/store";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 const MIN_TOTAL_MS_SHORTCUTS = [500, 1000, 3000];
@@ -26,6 +28,12 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
   const { close } = useFilterContext();
   const setFiltersGlobal = useComponentStore((state) => state.setFilters);
   const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
+  const { userOptions, isLoadingUsersSelect, onSearchUsers } = useUsersSelect();
+
+  const userSelectOptions = useMemo<TSelectOptions[]>(
+    () => [{ value: "", name: "Todos os usuários" }, ...userOptions],
+    [userOptions],
+  );
 
   const defaultValues: IGetRequestHistory = {
     ...filters,
@@ -121,14 +129,16 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
         </InputGroup>
 
         <InputGroup>
-          <Label htmlFor="userId">Usuário (ID)</Label>
-          <ControlledNumberInput
+          <Label htmlFor="userId">Usuário</Label>
+          <Select
             hookForm={form}
             name="userId"
-            format="integer"
-            allowEmpty
-            inputMode="numeric"
-            placeholder="Ex.: 5"
+            initialOptions={userSelectOptions}
+            title="Todos os usuários"
+            searchInput
+            searchPlaceholder="Buscar usuário"
+            onChangeInputSearch={onSearchUsers}
+            isLoading={isLoadingUsersSelect}
           />
         </InputGroup>
       </div>
