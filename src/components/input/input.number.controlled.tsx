@@ -24,6 +24,7 @@ export function ControlledNumberInput<
   onChangeValue,
   defaultValue,
   isLoading,
+  allowEmpty = false,
   ...props
 }: INumberControllerInput<TFieldValues>) {
   const {
@@ -32,15 +33,21 @@ export function ControlledNumberInput<
   } = useController({
     name,
     control: hookForm.control,
-    defaultValue: (defaultValue ?? 0) as PathValue<
+    defaultValue: (defaultValue ?? (allowEmpty ? "" : 0)) as PathValue<
       TFieldValues,
       Path<TFieldValues>
     >,
   });
 
   const [displayValue, setDisplayValue] = useState("");
+  const isEmpty = value === "" || value === null || value === undefined;
 
   useEffect(() => {
+    if (allowEmpty && isEmpty) {
+      setDisplayValue("");
+      return;
+    }
+
     const numeric = Number(value ?? 0);
     const valueByFormat: Record<string, string> = {
       currency: formatToBRL(numeric),
@@ -49,13 +56,14 @@ export function ControlledNumberInput<
       float: formatToFloat(numeric),
     };
     setDisplayValue(valueByFormat[format ?? ""] ?? numeric.toString());
-  }, [format, value]);
+  }, [allowEmpty, format, isEmpty, value]);
 
   const handleChange = (inputValue: string) => {
     const clean = inputValue.replace(/[^\d]/g, "");
     if (!clean) {
-      onChange(0);
-      onChangeValue?.(0);
+      const emptyValue = allowEmpty ? "" : 0;
+      onChange(emptyValue);
+      onChangeValue?.(emptyValue);
       return;
     }
 

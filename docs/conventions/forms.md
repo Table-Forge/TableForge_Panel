@@ -77,7 +77,7 @@ Generic wrappers consume React Hook Form's `useController` internally. All of th
 
 - `ControlledInput` — `components/input/input.default.controlled.tsx` (flags: `sanitize`, `sanitizeEmail`, `uppercase`, `removeSpaces`)
 - `ControlledMaskedInput` — `components/input/input.masked.controlled.tsx` (requires `mask`)
-- `ControlledNumberInput` — `components/input/input.number.controlled.tsx`
+- `ControlledNumberInput` — `components/input/input.number.controlled.tsx` (`format`: `currency` / `percent` / `integer` / `float`; `allowEmpty` for filters, where a blank field means "no filter" instead of `0`). Always set `format="integer"` for plain whole numbers — without a `format` the component divides the typed digits by 100.
 - `DateInput` — `components/input/input.date.controlled.tsx`
 - `ControlledTextarea` — `components/input/input.textarea.controlled.tsx`
 - `ControlledImageInput` — `components/input/input.image.controlled.tsx`

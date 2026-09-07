@@ -2,7 +2,7 @@ import { Button } from "@/src/components/button/button";
 import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlled";
 import { Filters } from "@/src/components/filters/filters";
 import { Input } from "@/src/components/input/input.default";
-import { ControlledInput } from "@/src/components/input/input.default.controlled";
+import { ControlledNumberInput } from "@/src/components/input/input.number.controlled";
 import { DateInput } from "@/src/components/input/input.date.controlled";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { Label } from "@/src/components/label/label";
@@ -110,24 +110,24 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
       <div className="grid gap-3 md:grid-cols-2">
         <InputGroup>
           <Label htmlFor="statusCode">Status HTTP</Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="statusCode"
-            type="number"
-            min={0}
-            step={1}
+            format="integer"
+            allowEmpty
+            inputMode="numeric"
             placeholder="Ex.: 404"
           />
         </InputGroup>
 
         <InputGroup>
           <Label htmlFor="userId">Usuário (ID)</Label>
-          <ControlledInput
+          <ControlledNumberInput
             hookForm={form}
             name="userId"
-            type="number"
-            min={0}
-            step={1}
+            format="integer"
+            allowEmpty
+            inputMode="numeric"
             placeholder="Ex.: 5"
           />
         </InputGroup>
@@ -135,12 +135,12 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
 
       <InputGroup>
         <Label htmlFor="minTotalMs">Tempo mínimo (ms)</Label>
-        <ControlledInput
+        <ControlledNumberInput
           hookForm={form}
           name="minTotalMs"
-          type="number"
-          min={0}
-          step={1}
+          format="integer"
+          allowEmpty
+          inputMode="numeric"
           placeholder="Ex.: 1000"
         />
         <div className="flex gap-2 pt-1">
