@@ -63,7 +63,7 @@ const dateRequired = z.preprocess(
 
     if (arg instanceof Date) {
       if (Number.isNaN(arg.getTime())) return "invalid";
-      return arg.toISOString().split("T")[0];
+      return dayjs(arg).format("YYYY-MM-DD");
     }
 
     return arg;
@@ -212,6 +212,18 @@ const dateOptional = z.preprocess((arg) => {
   return arg;
 }, z.coerce.date().optional());
 
+const dateOnlyOptional = z.preprocess(
+  (arg) => {
+    if (arg === null || arg === undefined || arg === "") return undefined;
+    if (arg instanceof Date) return dayjs(arg).format("YYYY-MM-DD");
+    return arg;
+  },
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, ERROR_MESSAGE.validate)
+    .optional(),
+);
+
 const stringOrStringArrayOptional = z
   .union([z.string(), z.array(z.string())])
   .optional();
@@ -224,6 +236,7 @@ export {
   addIssuesIfInvalid,
   cpfCnpjValidation,
   cpfValidation,
+  dateOnlyOptional,
   dateOptional,
   dateRequired,
   emailOptional,
