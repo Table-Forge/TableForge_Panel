@@ -21,6 +21,7 @@ import { useUserFeedbackDetailsQuery } from "@/src/features/user-feedbacks/hooks
 import { UserFeedbackStatusUpdateSchema } from "@/src/features/user-feedbacks/schemas/user-feedback.schema";
 import type { IUserFeedbackStatusUpdate } from "@/src/features/user-feedbacks/schemas/user-feedback.schema";
 import { useBoundStore } from "@/src/store";
+import { handleError } from "@/src/utils/error-handler";
 
 interface ModalFeedbackDetailsProps {
   feedbackId: number;
@@ -72,8 +73,7 @@ export function ModalFeedbackDetails({ feedbackId }: ModalFeedbackDetailsProps) 
       addToast("success", "Feedback atualizado com sucesso!");
       closeModal();
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      addToast("error", err?.response?.data?.message || "Erro ao atualizar feedback.");
+      handleError(error);
     }
   };
 

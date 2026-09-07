@@ -28,8 +28,9 @@ All API errors must funnel through `handleError(error)` in `src/utils/error-hand
 2. Reads `{ Message, Code, Title }` (PascalCase or lowercase variants).
 3. Detects HTML responses and replaces the message with "HTML retornado, verifique os logs para mais informações.".
 4. Maps status 413 to "Imagem muito grande. O tamanho máximo é de 8 MB (2 MB para avatar).".
-5. Falls back to "Ocorreu um erro inesperado" when nothing usable is found.
-6. Fires an error toast via `useBoundStore.getState().addToast` and returns an `IError` (`src/interfaces/error.interface.ts`).
+5. Maps the two axios failures that carry no response body: `ECONNABORTED` / `ETIMEDOUT` (the request timed out) and `ERR_NETWORK` (server unreachable). Without this, both would surface the raw English axios text ("timeout of 10000ms exceeded", "Network Error").
+6. Falls back to "Ocorreu um erro inesperado" when nothing usable is found.
+7. Fires an error toast via `useBoundStore.getState().addToast` and returns an `IError` (`src/interfaces/error.interface.ts`).
 
 ## Wiring patterns
 
