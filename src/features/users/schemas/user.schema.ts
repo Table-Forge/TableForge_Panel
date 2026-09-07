@@ -1,5 +1,6 @@
 import {
   createPasswordSchema,
+  dateOnlyOptional,
   dateOptional,
   dateRequired,
   emailOptional,
@@ -21,7 +22,7 @@ const BaseUserSchema = z.object({
   nickname: stringOptional,
   email: emailOptional,
   gender: stringOptional,
-  birthDate: dateOptional,
+  birthDate: dateOnlyOptional,
   avatarUrl: imageUrlOptional,
   password: stringOptional,
   confirmPassword: stringOptional,
