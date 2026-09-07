@@ -30,6 +30,12 @@ const formatDateToDownload = (date: Date | Dayjs | string) => {
   return dateISO;
 };
 
+const toRangeStart = (value?: Date | string) =>
+  value ? dayjs(value).startOf("day").toISOString() : undefined;
+
+const toRangeEnd = (value?: Date | string) =>
+  value ? dayjs(value).endOf("day").toISOString() : undefined;
+
 const normalizeString = (str: string, removeSpaces?: boolean) => {
   if (!str) return "";
 
@@ -226,4 +232,6 @@ export {
   formatDocument,
   normalizeCode,
   formatCooldown,
+  toRangeStart,
+  toRangeEnd,
 };

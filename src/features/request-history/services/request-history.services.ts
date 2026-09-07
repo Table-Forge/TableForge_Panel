@@ -1,38 +1,38 @@
 import { api } from "@/src/features/api";
-import type { ILog } from "@/src/features/logs/schemas/log.schema";
-import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import type { IRequestHistory } from "@/src/features/request-history/schemas/request-history.schema";
 import { toRangeEnd, toRangeStart } from "@/src/utils/format";
-import type { IGetAllLogsResponse, IGetLogs } from "../hooks/types";
+import type {
+  IGetAllRequestHistoryResponse,
+  IGetRequestHistory,
+} from "../hooks/types";
 
-const ENDPOINT = "/logs";
+const ENDPOINT = "/requesthistory";
 
-export const LogService = {
-  getAll: async (params: IGetLogs = {}): Promise<IGetAllLogsResponse> => {
+export const RequestHistoryService = {
+  getAll: async (
+    params: IGetRequestHistory = {},
+  ): Promise<IGetAllRequestHistoryResponse> => {
     const { enabled: _enabled, ...queryParams } = params;
     const normalizedParams = Object.fromEntries(
       Object.entries({
         ...queryParams,
         startDate: toRangeStart(queryParams.startDate),
         endDate: toRangeEnd(queryParams.endDate),
+        onlyWithDetails: queryParams.onlyWithDetails ? true : undefined,
       }).filter(
         ([, value]) => value !== undefined && value !== null && value !== "",
       ),
     );
 
-    const { data } = await api.get<IGetAllLogsResponse>(ENDPOINT, {
+    const { data } = await api.get<IGetAllRequestHistoryResponse>(ENDPOINT, {
       params: normalizedParams,
     });
 
     return data;
   },
 
-  getById: async (id: number): Promise<ILog> => {
+  getById: async (id: number): Promise<IRequestHistory> => {
     const { data } = await api.get(`${ENDPOINT}/${id}`);
-    return data;
-  },
-
-  getLogTypeEnum: async (): Promise<TSelectOptions[]> => {
-    const { data } = await api.get(`${ENDPOINT}/enums/log-type`);
     return data;
   },
 };

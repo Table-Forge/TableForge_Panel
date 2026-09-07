@@ -1,5 +1,6 @@
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import {
+  Activity,
   ChevronDown,
   ChevronUp,
   FileText,
@@ -46,6 +47,12 @@ const mainNavItems: INavItem[] = [
 ];
 
 const logItem: INavItem = { to: "/logs", label: "Logs", icon: FileText };
+
+const requestHistoryItem: INavItem = {
+  to: "/request-history",
+  label: "Requisições",
+  icon: Activity,
+};
 
 export function NavMenu() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -290,6 +297,37 @@ export function NavMenu() {
               <ScrollText size={18} />
             </div>
             {!isSidebarCollapsed && <span>Agendamentos</span>}
+          </NavLink>
+        )}
+
+        {/* Histórico de Requisições */}
+        {isAdmin && (
+          <NavLink
+            to={requestHistoryItem.to}
+            title={isSidebarCollapsed ? requestHistoryItem.label : undefined}
+            onClick={() => setIsMobileOpen(false)}
+            className={({ isActive }) =>
+              [
+                "flex items-center transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")
+            }
+          >
+            <div
+              className={`flex items-center justify-center rounded-xl ${
+                isSidebarCollapsed
+                  ? "h-full w-full"
+                  : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+              }`}
+            >
+              <requestHistoryItem.icon size={18} />
+            </div>
+            {!isSidebarCollapsed && <span>{requestHistoryItem.label}</span>}
           </NavLink>
         )}
 

@@ -16,6 +16,8 @@ import { ImageDetailsPage } from "@/src/pages/images/details";
 import { LoginPage } from "@/src/pages/login";
 import { LogDetailsPage } from "@/src/pages/logs/details";
 import { LogsPage } from "@/src/pages/logs";
+import { RequestHistoryDetailsPage } from "@/src/pages/request-history/details";
+import { RequestHistoryPage } from "@/src/pages/request-history";
 import { RacesPage } from "@/src/pages/races";
 import { RecoverPasswordPage } from "@/src/pages/recover-password";
 import VerifyEmailPage from "@/src/pages/verify-email";
@@ -63,6 +65,11 @@ function App() {
                 <Route path="images/:id" element={<ImageDetailsPage />} />
                 <Route path="logs" element={<LogsPage />} />
                 <Route path="logs/:id" element={<LogDetailsPage />} />
+                <Route path="request-history" element={<RequestHistoryPage />} />
+                <Route
+                  path="request-history/:id"
+                  element={<RequestHistoryDetailsPage />}
+                />
                 <Route path="events" element={<EventsPage />} />
                 <Route path="my-spaces" element={<MySpacesPage />} />
                 <Route path="my-spaces/:id" element={<MySpaceDetailsPage />} />
