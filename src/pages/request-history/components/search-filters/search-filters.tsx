@@ -2,6 +2,7 @@ import { Button } from "@/src/components/button/button";
 import { CheckboxControlled } from "@/src/components/checkbox/checkbox-controlled";
 import { Filters } from "@/src/components/filters/filters";
 import { Input } from "@/src/components/input/input.default";
+import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { DateInput } from "@/src/components/input/input.date.controlled";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { Label } from "@/src/components/label/label";
@@ -109,18 +110,24 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
       <div className="grid gap-3 md:grid-cols-2">
         <InputGroup>
           <Label htmlFor="statusCode">Status HTTP</Label>
-          <Input
-            {...form.register("statusCode")}
+          <ControlledInput
+            hookForm={form}
+            name="statusCode"
             type="number"
+            min={0}
+            step={1}
             placeholder="Ex.: 404"
           />
         </InputGroup>
 
         <InputGroup>
           <Label htmlFor="userId">Usuário (ID)</Label>
-          <Input
-            {...form.register("userId")}
+          <ControlledInput
+            hookForm={form}
+            name="userId"
             type="number"
+            min={0}
+            step={1}
             placeholder="Ex.: 5"
           />
         </InputGroup>
@@ -128,35 +135,39 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
 
       <InputGroup>
         <Label htmlFor="minTotalMs">Tempo mínimo (ms)</Label>
-        <Input
-          {...form.register("minTotalMs")}
+        <ControlledInput
+          hookForm={form}
+          name="minTotalMs"
           type="number"
+          min={0}
+          step={1}
           placeholder="Ex.: 1000"
         />
         <div className="flex gap-2 pt-1">
           {MIN_TOTAL_MS_SHORTCUTS.map((shortcut) => (
-            <button
+            <Button
               key={shortcut}
               type="button"
+              buttonStyle="soft"
+              size="xs"
               onClick={() =>
                 form.setValue("minTotalMs", shortcut, { shouldDirty: true })
               }
-              className="rounded-lg border border-white/10 px-2 py-1 text-xs font-bold text-grays-100 transition-all hover:border-white/25 hover:text-white"
             >
               {shortcut} ms
-            </button>
+            </Button>
           ))}
         </div>
       </InputGroup>
 
       <div className="grid gap-3 md:grid-cols-2 md:items-end">
-        <InputGroup>
+        <div className="flex h-12 items-center">
           <CheckboxControlled
             hookForm={form}
             name="onlyWithDetails"
             label="Somente com diagnóstico"
           />
-        </InputGroup>
+        </div>
 
         <InputGroup>
           <Label htmlFor="size">Itens por página</Label>

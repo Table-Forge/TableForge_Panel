@@ -5,6 +5,7 @@ import {
   GridBox,
   InfoBox,
 } from "@/src/components/card-box/card-box";
+import { Button } from "@/src/components/button/button";
 import { Code } from "@/src/components/code/code";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
@@ -260,14 +261,16 @@ export function RequestHistoryDetailsPage() {
           {errorCode && (
             <InfoBox>
               <CardLabel>Código do erro</CardLabel>
-              <CardValue>
-                <button
+              <CardValue className="flex flex-col items-start gap-2">
+                <span className="break-all font-mono">{errorCode}</span>
+                <Button
                   type="button"
+                  buttonStyle="soft"
+                  size="xs"
                   onClick={() => openLogsByErrorCode(errorCode)}
-                  className="break-all font-mono text-secondary-light underline underline-offset-4 transition-colors hover:text-white"
                 >
-                  {errorCode}
-                </button>
+                  Ver em Logs
+                </Button>
               </CardValue>
             </InfoBox>
           )}
