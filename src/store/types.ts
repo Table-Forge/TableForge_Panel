@@ -10,9 +10,13 @@ import type { StateCreator } from "zustand";
 export interface AuthSlice {
   authData: ILoginResponse | null;
   isLoading: boolean;
+  verificationEmail: string | null;
+  recoveryEmail: string | null;
   hydrateAuth: () => void;
   signIn: (data: ILoginResponse) => void;
   signOut: () => void;
+  setVerificationEmail: (email: string | null) => void;
+  setRecoveryEmail: (email: string | null) => void;
 }
 
 export interface ToastSlice {
@@ -27,6 +31,7 @@ export type ModalSize = TModalSize;
 export interface IOpenModalPayload {
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size?: ModalSize;
 }
 
@@ -35,6 +40,7 @@ export interface IModalState {
   isOpen: boolean;
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size: ModalSize;
 }
 
@@ -43,6 +49,7 @@ export interface IModalInstance {
   isOpen: boolean;
   title?: ReactNode;
   content?: ReactNode;
+  footer?: ReactNode;
   size: ModalSize;
 }
 
@@ -51,10 +58,15 @@ export interface ModalSlice {
   modals: IModalInstance[];
   openModal: {
     (payload: IOpenModalPayload): void;
-    (title: ReactNode, content: ReactNode, size?: ModalSize): void;
+    (title: ReactNode, content: ReactNode, size?: ModalSize, footer?: ReactNode): void;
   };
   closeModal: () => void;
 }
 
-export type BoundStore = AuthSlice & ToastSlice & ModalSlice;
+import type { SidebarSlice } from "@/src/store/slices/sidebar-slice";
+import type { ThemeSlice } from "@/src/store/slices/theme-slice";
+
+export type { SidebarSlice, ThemeSlice };
+
+export type BoundStore = AuthSlice & ToastSlice & ModalSlice & SidebarSlice & ThemeSlice;
 export type SliceCreator<TSlice> = StateCreator<BoundStore, [], [], TSlice>;

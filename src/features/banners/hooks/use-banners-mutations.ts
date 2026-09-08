@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BannersService } from "../services/banners.services";
-import type { IBannerCreate } from "../schemas/banner.schema";
+import type { IBanner, IBannerCreate } from "../schemas/banner.schema";
 import { useBoundStore } from "@/src/store";
 
 export const useBannersMutation = () => {
@@ -45,9 +45,40 @@ export const useBannersMutation = () => {
     },
   });
 
+  const reorderMutation = useMutation({
+    mutationFn: async (banners: IBanner[]) => {
+      const updates = banners.map((banner, index) => {
+        const newOrder = index + 1;
+        if (banner.id && banner.order !== newOrder) {
+          return BannersService.update({
+            id: banner.id,
+            order: newOrder,
+            title: banner.title,
+            description: banner.description,
+            tag: banner.tag,
+            link: banner.link,
+            imageId: banner.imageId,
+          });
+        }
+        return Promise.resolve();
+      });
+      await Promise.all(updates);
+    },
+    onSuccess: () => {
+      addToast("success", "Ordem dos banners atualizada com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["banners"] });
+    },
+    onError: () => {
+      addToast("error", "Erro ao atualizar a ordem dos banners.");
+      queryClient.invalidateQueries({ queryKey: ["banners"] });
+    },
+  });
+
   return {
     createMutation,
     updateMutation,
     deleteMutation,
+    reorderMutation,
   };
 };
+

@@ -31,6 +31,14 @@ const getStatusCode = (error: any, payload: any) =>
 const PAYLOAD_TOO_LARGE_MESSAGE =
   "Imagem muito grande. O tamanho máximo é de 8 MB (2 MB para avatar).";
 
+const TIMEOUT_MESSAGE =
+  "A conexão demorou demais. Verifique sua internet e tente novamente.";
+
+const NETWORK_MESSAGE =
+  "Não foi possível conectar ao servidor. Tente novamente em instantes.";
+
+const TIMEOUT_CODES = ["ECONNABORTED", "ETIMEDOUT"];
+
 export const handleError = (error: unknown): IError => {
   let finalError: IError = {
     status: 500,
@@ -76,6 +84,10 @@ export const handleError = (error: unknown): IError => {
 
   if (finalError.status === 413) {
     finalError.message = PAYLOAD_TOO_LARGE_MESSAGE;
+  } else if (TIMEOUT_CODES.includes(finalError.code ?? "")) {
+    finalError.message = TIMEOUT_MESSAGE;
+  } else if (finalError.code === "ERR_NETWORK") {
+    finalError.message = NETWORK_MESSAGE;
   }
 
   const { addToast } = useBoundStore.getState();

@@ -1,5 +1,6 @@
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
 import {
+  Activity,
   ChevronDown,
   ChevronUp,
   FileText,
@@ -10,33 +11,91 @@ import {
   ShieldUser,
   Sparkles,
   Swords,
+  CalendarDays,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Store,
+  MessageSquareWarning,
 } from "lucide-react";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
-const navItems = [
-  { to: "/", label: "Painel", icon: LayoutGrid, end: true },
+import { useAuth } from "@/src/context/use-auth";
+import { useBoundStore } from "@/src/store";
+import { isAdminAuthType } from "@/src/features/auth/schemas/auth.schema";
+
+import { useLogo } from "@/src/constants/logos";
+
+interface INavItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number }>;
+  end?: boolean;
+}
+
+const mainNavItems: INavItem[] = [
+  { to: "/", label: "Dashboard", icon: LayoutGrid, end: true },
+  { to: "/user-feedbacks", label: "Feedbacks", icon: MessageSquareWarning },
   { to: "/campaigns", label: "Campanhas", icon: ScrollText },
+  { to: "/events", label: "Eventos", icon: CalendarDays },
   { to: "/gamesystems", label: "Sistemas", icon: Gamepad2 },
   { to: "/banners", label: "Banners", icon: Image },
   { to: "/classes", label: "Classes", icon: Swords },
   { to: "/races", label: "Raças", icon: Sparkles },
   { to: "/users", label: "Usuários", icon: ShieldUser },
   { to: "/images", label: "Imagens", icon: Image },
-  { to: "/logs", label: "Logs", icon: FileText },
 ];
+
+const logItem: INavItem = { to: "/logs", label: "Logs", icon: FileText };
+
+const requestHistoryItem: INavItem = {
+  to: "/request-history",
+  label: "Requisições",
+  icon: Activity,
+};
 
 export function NavMenu() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const isSidebarCollapsed = useBoundStore((state) => state.isSidebarCollapsed);
+  const toggleSidebar = useBoundStore((state) => state.toggleSidebar);
+  const { user } = useAuth();
+  const logo = useLogo();
+  const location = useLocation();
+
+  const isAdmin = isAdminAuthType(user?.type);
+  const canAccessSpaceItems = user?.type === "Organizer" || isAdmin;
+
+  const isSpaceRouteActive =
+    location.pathname.startsWith("/my-spaces") ||
+    location.pathname.startsWith("/spaces") ||
+    location.pathname.startsWith("/my-space");
+
+  const [isSpacesExpanded, setIsSpacesExpanded] = useState(isSpaceRouteActive);
+
+  useEffect(() => {
+    if (isSpaceRouteActive) {
+      setIsSpacesExpanded(true);
+    }
+  }, [isSpaceRouteActive]);
+
+  const spacesSubItems = [
+    { to: "/my-spaces", label: "Meus Espaços" },
+    ...(isAdmin ? [{ to: "/spaces", label: "Todos os Espaços" }] : []),
+  ];
 
   return (
-    <aside className="border-b border-white/10 bg-primary/85 p-3 lg:border-b-0 lg:border-r lg:p-5">
+    <aside
+      className={`flex flex-col rounded-3xl border border-white/10 bg-primary/60 p-3.5 shadow-xl transition-all duration-300 ease-in-out lg:h-full lg:overflow-y-auto ${
+        isSidebarCollapsed ? "lg:items-center lg:px-2" : "lg:px-4"
+      }`}
+    >
+      {/* Mobile Topbar */}
       <div className="flex items-center justify-between gap-3 lg:hidden">
         <img
-          src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/0b85dfdf-3c07-4aad-b8fe-0c88e2bbfa3f.webp?v=1"
+          src={logo.horizontal}
           alt="TableForge Logo"
-          width={140}
-          height={140}
+          width={130}
+          height={130}
           className="object-contain"
         />
 
@@ -47,49 +106,259 @@ export function NavMenu() {
           hasHoverEffect
           isHighlighted
           size="40px"
-          className="border border-secondary/25 text-white hover:border-secondary/45"
+          className="border border-secondary/30 text-white hover:border-secondary/60 !rounded-2xl"
         >
           {isMobileOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </ButtonIcon>
       </div>
 
-      <div
-        className={`${isMobileOpen ? "mt-3 block" : "hidden"} rounded-2xl border border-secondary/30 bg-primary/90 px-4 py-5 lg:mt-0 lg:block`}
-      >
-        <img
-          src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
-          alt="TableForge Logo"
-          width={220}
-          height={220}
-          className="object-contain"
-        />
-        <p className="mt-2 text-center text-xs text-grays-100">
-          Painel administrativo do TableForge
-        </p>
+      {/* Desktop Header & Toggle Button */}
+      <div className="hidden lg:flex lg:w-full lg:items-center lg:justify-between lg:mb-2">
+        {!isSidebarCollapsed && (
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-grays-200 pl-1">
+            Navegação
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          className={`flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white ${
+            isSidebarCollapsed ? "mx-auto" : ""
+          }`}
+          title={isSidebarCollapsed ? "Expandir menu lateral" : "Minimizar menu lateral"}
+        >
+          {isSidebarCollapsed ? (
+            <PanelLeftOpen size={16} />
+          ) : (
+            <PanelLeftClose size={16} />
+          )}
+        </button>
       </div>
 
-      <nav
-        className={`${isMobileOpen ? "mt-3 flex" : "hidden"} flex-col gap-2 lg:mt-6 lg:flex`}
+      {/* Brand Header */}
+      <div
+        className={`${
+          isMobileOpen ? "mt-3 block" : "hidden"
+        } rounded-2xl border border-white/10 bg-background/50 p-3.5 text-center lg:mt-0 lg:block transition-all duration-300`}
       >
-        {navItems.map(({ to, label, icon: Icon, end }) => (
+        {isSidebarCollapsed ? (
+          <img
+            src={logo.minimal}
+            alt="TableForge Logo Simplificada"
+            width={38}
+            height={38}
+            className="mx-auto h-9 w-9 object-contain"
+            title="TableForge"
+          />
+        ) : (
+          <>
+            <img
+              src={logo.vertical}
+              alt="TableForge Logo"
+              width={160}
+              height={160}
+              className="mx-auto object-contain"
+            />
+            <p className="mt-1 text-[11px] font-medium text-grays-200">
+              Painel Administrativo
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* Navigation Items */}
+      <nav
+        className={`${
+          isMobileOpen ? "mt-3 flex" : "hidden"
+        } flex-col gap-1.5 lg:mt-4 lg:flex`}
+      >
+        {mainNavItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
+            title={isSidebarCollapsed ? label : undefined}
             onClick={() => setIsMobileOpen(false)}
             className={({ isActive }) =>
               [
-                "flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-semibold uppercase tracking-wide transition",
+                "flex items-center transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
                 isActive
-                  ? "border-tertiary bg-tertiary/15 text-white shadow-[0_0_0_1px_rgba(255,36,0,0.28)]"
-                  : "border-secondary/20 bg-secondary/10 text-grays-100 hover:border-secondary/40 hover:text-white",
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
               ].join(" ")
             }
           >
-            <Icon size={18} />
-            {label}
+            <div
+              className={`flex items-center justify-center rounded-xl ${
+                isSidebarCollapsed
+                  ? "h-full w-full"
+                  : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+              }`}
+            >
+              <Icon size={18} />
+            </div>
+            {!isSidebarCollapsed && <span>{label}</span>}
           </NavLink>
         ))}
+
+        {/* Espaços Accordion Menu */}
+        {canAccessSpaceItems && (
+          <div className="flex flex-col gap-1">
+            <button
+              type="button"
+              onClick={() => setIsSpacesExpanded((prev) => !prev)}
+              title={isSidebarCollapsed ? "Espaços" : undefined}
+              className={[
+                "flex items-center w-full transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "justify-between rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isSpaceRouteActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex items-center justify-center rounded-xl ${
+                    isSidebarCollapsed
+                      ? "h-full w-full"
+                      : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+                  }`}
+                >
+                  <Store size={18} />
+                </div>
+                {!isSidebarCollapsed && <span>Espaços</span>}
+              </div>
+              {!isSidebarCollapsed && (
+                <div>
+                  {isSpacesExpanded ? (
+                    <ChevronUp size={16} />
+                  ) : (
+                    <ChevronDown size={16} />
+                  )}
+                </div>
+              )}
+            </button>
+
+            {/* Sub-items */}
+            {isSpacesExpanded && !isSidebarCollapsed && (
+              <div className="flex flex-col gap-1 pl-3.5 border-l border-white/10 ml-5 my-0.5">
+                {spacesSubItems.map((sub) => (
+                  <NavLink
+                    key={sub.to}
+                    to={sub.to}
+                    onClick={() => setIsMobileOpen(false)}
+                    className={({ isActive }) =>
+                      [
+                        "flex items-center gap-2 rounded-r-xl px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider transition-all duration-200 border-l-2",
+                        isActive
+                          ? "border-secondary bg-white/10 text-white shadow-sm"
+                          : "border-transparent text-grays-100 hover:bg-white/5 hover:text-white",
+                      ].join(" ")
+                    }
+                  >
+                    <span>{sub.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Agendamentos */}
+        {canAccessSpaceItems && (
+          <NavLink
+            to="/my-bookings"
+            title={isSidebarCollapsed ? "Agendamentos" : undefined}
+            onClick={() => setIsMobileOpen(false)}
+            className={({ isActive }) =>
+              [
+                "flex items-center transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")
+            }
+          >
+            <div
+              className={`flex items-center justify-center rounded-xl ${
+                isSidebarCollapsed
+                  ? "h-full w-full"
+                  : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+              }`}
+            >
+              <ScrollText size={18} />
+            </div>
+            {!isSidebarCollapsed && <span>Agendamentos</span>}
+          </NavLink>
+        )}
+
+        {/* Histórico de Requisições */}
+        {isAdmin && (
+          <NavLink
+            to={requestHistoryItem.to}
+            title={isSidebarCollapsed ? requestHistoryItem.label : undefined}
+            onClick={() => setIsMobileOpen(false)}
+            className={({ isActive }) =>
+              [
+                "flex items-center transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ")
+            }
+          >
+            <div
+              className={`flex items-center justify-center rounded-xl ${
+                isSidebarCollapsed
+                  ? "h-full w-full"
+                  : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+              }`}
+            >
+              <requestHistoryItem.icon size={18} />
+            </div>
+            {!isSidebarCollapsed && <span>{requestHistoryItem.label}</span>}
+          </NavLink>
+        )}
+
+        {/* Logs */}
+        <NavLink
+          to={logItem.to}
+          title={isSidebarCollapsed ? logItem.label : undefined}
+          onClick={() => setIsMobileOpen(false)}
+          className={({ isActive }) =>
+            [
+              "flex items-center transition-all duration-200",
+              isSidebarCollapsed
+                ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
+                : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+              isActive
+                ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+            ].join(" ")
+          }
+        >
+          <div
+            className={`flex items-center justify-center rounded-xl ${
+              isSidebarCollapsed
+                ? "h-full w-full"
+                : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+            }`}
+          >
+            <logItem.icon size={18} />
+          </div>
+          {!isSidebarCollapsed && <span>{logItem.label}</span>}
+        </NavLink>
       </nav>
     </aside>
   );

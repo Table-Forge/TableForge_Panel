@@ -14,6 +14,9 @@ export interface IImageInput {
   error?: string;
   maxSizeBytes?: number;
   acceptedTypes?: string[];
+  aspectRatio?: number;
+  cropShape?: "rect" | "round";
+  enableCrop?: boolean;
   onChange: (value: IImageInputValue) => void;
   onClear?: () => void;
   extraActions?: ReactNode;

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
@@ -16,13 +16,16 @@ import { normalizeCode, formatCooldown } from "@/src/utils/format";
 import { useAuthMutation } from "@/src/features/auth/hooks/use-auth-mutations";
 import { useCountdown } from "@/src/hooks/utils/use-countdown";
 import { useBoundStore } from "@/src/store";
+import { useLogo } from "@/src/constants/logos";
 
 
 
 export default function VerifyEmailPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const initialEmail = searchParams.get("email") || "";
+  const verificationEmail = useBoundStore((state) => state.verificationEmail);
+  const setVerificationEmail = useBoundStore((state) => state.setVerificationEmail);
+  const initialEmail = verificationEmail || "";
+  const logo = useLogo();
 
   const addToast = useBoundStore((state) => state.addToast);
   const {
@@ -92,6 +95,7 @@ export default function VerifyEmailPage() {
         onSuccess: () => {
           setIsCodeInvalid(false);
           clearErrors("code");
+          setVerificationEmail(null);
           addToast("success", "Conta validada com sucesso! Você já pode acessar a plataforma.");
           navigate("/login", { replace: true });
         },
@@ -115,6 +119,7 @@ export default function VerifyEmailPage() {
     setError,
     addToast,
     navigate,
+    setVerificationEmail,
   ]);
 
   useEffect(() => {
@@ -125,11 +130,10 @@ export default function VerifyEmailPage() {
   }, [clearErrors, code, isCodeInvalid, lastAttemptedCode]);
 
   useEffect(() => {
-    if (searchParams.get("email")) {
+    if (initialEmail) {
       resendCooldown.start(RESEND_COOLDOWN_SECONDS);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialEmail, resendCooldown]);
 
   const onSendCode = handleSubmit(async () => {
     const isValidEmail = await trigger("email");
@@ -239,7 +243,7 @@ export default function VerifyEmailPage() {
         <header className="mb-6 flex flex-col items-center">
           <div className="mb-4 flex items-center justify-center ">
             <img
-              src="https://tableforge-bucket.s3.amazonaws.com/development/public/images/394a0616-6467-4be9-b6ad-6df1a5a57cc9.webp?v=1"
+              src={logo.vertical}
               alt="TableForge Logo"
               width={180}
               height={180}
@@ -382,6 +386,7 @@ export default function VerifyEmailPage() {
           Lembrou sua senha?{" "}
           <Link
             to="/login"
+            onClick={() => setVerificationEmail(null)}
             className="font-semibold text-secondary hover:brightness-110"
           >
             Voltar ao login

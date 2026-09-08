@@ -63,7 +63,7 @@ const dateRequired = z.preprocess(
 
     if (arg instanceof Date) {
       if (Number.isNaN(arg.getTime())) return "invalid";
-      return arg.toISOString().split("T")[0];
+      return dayjs(arg).format("YYYY-MM-DD");
     }
 
     return arg;
@@ -140,32 +140,25 @@ const fileRequired = z.any().superRefine((file, ctx) => {
   }
 });
 
-const cpfCnpjValidation = z.preprocess(
-  (arg) => {
-    if (typeof arg === "string") {
-      const trimmed = arg.trim();
-      if (trimmed === "") return undefined;
-      return arg;
+const cpfCnpjValidation = z
+  .string({
+    message: "Documento é obrigatório.",
+  })
+  .trim()
+  .refine((doc) => doc.toUpperCase().replace(/[^A-Z0-9]/g, "").length >= 11, {
+    message: "Documento deve conter no mínimo 11 caracteres.",
+  })
+  .refine((doc) => doc.toUpperCase().replace(/[^A-Z0-9]/g, "").length <= 14, {
+    message: "Documento deve conter no máximo 14 caracteres.",
+  })
+  .refine((doc) => {
+    const replacedDoc = doc.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (replacedDoc.length === 11 && /^\d{11}$/.test(replacedDoc)) {
+      return validateCPF(replacedDoc);
     }
-    return arg;
-  },
-  z
-    .string({
-      message: "Documento é obrigatório.",
-    })
-    .refine((doc) => doc.replace(/\D/g, "").length >= 11, {
-      message: "Documento deve conter no mínimo 11 caracteres.",
-    })
-    .refine((doc) => doc.replace(/\D/g, "").length <= 14, {
-      message: "Documento deve conter no máximo 14 caracteres.",
-    })
-    .refine((doc) => {
-      const replacedDoc = doc.replace(/\D/g, "");
-      if (replacedDoc.length === 11) return validateCPF(replacedDoc);
-      if (replacedDoc.length === 14) return validateCNPJ(replacedDoc);
-      return false;
-    }, "Documento inválido."),
-);
+    if (replacedDoc.length === 14) return validateCNPJ(replacedDoc);
+    return false;
+  }, "Documento inválido.");
 
 const cpfValidation = z
   .string({ message: "CPF é obrigatório." })
@@ -219,6 +212,18 @@ const dateOptional = z.preprocess((arg) => {
   return arg;
 }, z.coerce.date().optional());
 
+const dateOnlyOptional = z.preprocess(
+  (arg) => {
+    if (arg === null || arg === undefined || arg === "") return undefined;
+    if (arg instanceof Date) return dayjs(arg).format("YYYY-MM-DD");
+    return arg;
+  },
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, ERROR_MESSAGE.validate)
+    .optional(),
+);
+
 const stringOrStringArrayOptional = z
   .union([z.string(), z.array(z.string())])
   .optional();
@@ -231,6 +236,7 @@ export {
   addIssuesIfInvalid,
   cpfCnpjValidation,
   cpfValidation,
+  dateOnlyOptional,
   dateOptional,
   dateRequired,
   emailOptional,

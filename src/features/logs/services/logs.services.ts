@@ -1,6 +1,7 @@
 import { api } from "@/src/features/api";
 import type { ILog } from "@/src/features/logs/schemas/log.schema";
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
+import { toRangeEnd, toRangeStart } from "@/src/utils/format";
 import type { IGetAllLogsResponse, IGetLogs } from "../hooks/types";
 
 const ENDPOINT = "/logs";
@@ -9,7 +10,11 @@ export const LogService = {
   getAll: async (params: IGetLogs = {}): Promise<IGetAllLogsResponse> => {
     const { enabled: _enabled, ...queryParams } = params;
     const normalizedParams = Object.fromEntries(
-      Object.entries(queryParams).filter(
+      Object.entries({
+        ...queryParams,
+        startDate: toRangeStart(queryParams.startDate),
+        endDate: toRangeEnd(queryParams.endDate),
+      }).filter(
         ([, value]) => value !== undefined && value !== null && value !== "",
       ),
     );

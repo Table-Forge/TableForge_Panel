@@ -4,7 +4,6 @@ import {
   getPasswordError,
   stringRequired,
 } from "@/src/utils/custom-schema-validations";
-import { UserSchema } from "@/src/features/users/schemas/user.schema";
 
 export const LoginRequestSchema = z.object({
   login: stringRequired,
@@ -89,13 +88,24 @@ export const PasswordRecoveryFormSchema = z
   });
 
 export const TokenResponseSchema = z.object({
-  type: z.string(),
+  type: z.string().optional(),
   value: z.string(),
   expiration: z.coerce.date(),
 });
 
+export const AuthUserSchema = z
+  .object({
+    id: z.coerce.number().optional(),
+    username: z.string().optional().nullable(),
+    type: z.string().optional().nullable(),
+    nickname: z.string().optional().nullable(),
+    email: z.string().optional().nullable(),
+    avatarUrl: z.string().optional().nullable(),
+  })
+  .passthrough();
+
 export const LoginResponseSchema = z.object({
-  user: UserSchema,
+  user: AuthUserSchema.optional(),
   token: TokenResponseSchema,
 });
 

@@ -1,0 +1,228 @@
+import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
+import { ModalDelete } from "@/src/components/modals/modal-delete/modal-delete";
+import { MoreInfo } from "@/src/components/more-info/more-info";
+import { Paginate } from "@/src/components/paginate/paginate";
+import { Table } from "@/src/components/table/table";
+import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
+import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
+import type { ITableColumn } from "@/src/components/table/table.interfaces";
+import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
+import { useEvents } from "@/src/features/events/hooks/use-events-queries";
+import { useEventMutations } from "@/src/features/events/hooks/use-events-mutations";
+import type { IEvent } from "@/src/features/events/schemas/events.schema";
+import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
+import { useBoundStore } from "@/src/store";
+import { MdAdd, MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { useEventStatusEnum } from "@/src/features/events/hooks/enums/use-event-status-enum";
+import { EventForm } from "@/src/components/events/event-form";
+import { useAuth } from "@/src/context/use-auth";
+import { useState } from "react";
+
+export function EventsPage() {
+  const { user } = useAuth();
+  const openModal = useBoundStore((state) => state.openModal);
+  const { deleteMutation } = useEventMutations();
+
+  const [statusFilter, setStatusFilter] = useState<string[]>(["Published"]);
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isError } = useEvents({
+    organizerId: user?.type === "Organizer" ? user?.id : undefined,
+    status: statusFilter[0] !== "All" ? statusFilter[0] : undefined,
+    onlyUpcoming: false,
+    page,
+    size: 20,
+  });
+
+  const { data: eventStatusEnum } = useEventStatusEnum();
+
+  const getMoreInfoOptions = (item: IEvent): IMoreOptions[] => {
+    const isCanceled = item.status === "Canceled";
+
+    const options = [
+      {
+        label: "Editar",
+        icon: <MdModeEdit />,
+        show: !isCanceled,
+        onClick: () =>
+          openModal("Editar Evento", <EventForm data={item} />, "md"),
+      },
+      {
+        label: "Cancelar Evento",
+        icon: <MdDeleteForever />,
+        show: !isCanceled,
+        onClick: () =>
+          openModal(
+            "Cancelar Evento",
+            <ModalDelete
+              name={item.title || "Evento"}
+              id={item.id ?? 0}
+              deleteMutation={deleteMutation}
+              customMessage="Tem certeza de que deseja cancelar este evento? Todos os participantes serão notificados automaticamente."
+            />,
+            "sm",
+          ),
+      },
+    ];
+
+    return options.filter((opt) => opt.show);
+  };
+
+  const tableContents: ITableColumn<IEvent>[] = [
+    {
+      title: "ID",
+      key: "id",
+      width: "90px",
+      align: "center",
+      render: (event) => (
+        <span className="font-bold">{event.id ?? "-"}</span>
+      ),
+    },
+    {
+      title: "Capa",
+      key: "bannerUrl",
+      width: "100px",
+      align: "center",
+      normalCase: true,
+      render: (event) => (
+        <Thumbnail
+          image={event.bannerUrl}
+          width={40}
+          height={40}
+          alt={event.title || "Capa"}
+        />
+      ),
+    },
+    {
+      title: "Título",
+      key: "title",
+      width: "220px",
+      normalCase: true,
+      render: (event) => event.title || "-",
+    },
+    {
+      title: "Data de Início",
+      key: "startDate",
+      width: "180px",
+      normalCase: true,
+      render: (event) => new Date(event.startDate).toLocaleString("pt-BR") || "-",
+    },
+    {
+      title: "Status",
+      key: "status",
+      width: "180px",
+      normalCase: true,
+      render: (event) => event.status ? eventStatusEnum?.find(o => o.value === event.status)?.label || event.status : "-",
+    },
+    {
+      title: "Confirmados / Limite",
+      key: "maxAttendees",
+      width: "140px",
+      align: "center",
+      render: (event) => `${event.confirmedAttendeesCount ?? 0} / ${event.maxAttendees || "Sem limite"}`,
+    },
+    {
+      title: "Valor",
+      key: "isFree",
+      width: "110px",
+      align: "center",
+      normalCase: true,
+      render: (event) => (event.isFree ? "Gratuito" : `R$ ${event.entryFee?.toFixed(2)}`),
+    },
+    {
+      title: "",
+      key: "moreOptions",
+      width: "50px",
+      align: "center",
+      render: (row) => (
+        <MoreInfo
+          item={row}
+          options={getMoreInfoOptions(row)}
+          boxSide="right"
+        />
+      ),
+    },
+  ];
+
+  if (isLoading) return <SkeletonTable />;
+
+  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+  const publishedCount = data?.items?.filter((e) => e.status === "Published")?.length ?? 0;
+
+  return (
+    <>
+      <CrmPageHeader
+        title="Eventos"
+        subtitle="Crie e gerencie os eventos do seu espaço ou da sua comunidade."
+        count={totalItems}
+        actionLabel="Criar Evento"
+        actionIcon={<MdAdd />}
+        onActionClick={() => openModal("Criar Evento", <EventForm />, "md")}
+        stats={[
+          {
+            title: "Total Eventos",
+            value: totalItems,
+            badge: "Geral",
+            badgeType: "neutral",
+          },
+          {
+            title: "Publicados",
+            value: publishedCount,
+            badge: "Visíveis",
+            badgeType: "success",
+          },
+          {
+            title: "Exibindo",
+            value: data?.items?.length ?? 0,
+            badge: "Página Atual",
+            badgeType: "neutral",
+          },
+        ]}
+      />
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        {[{ label: "Todos", value: "All" }, ...(eventStatusEnum || [])].map((opt) => {
+          const isSelected = statusFilter[0] === opt.value;
+          return (
+            <button
+              key={String(opt.value ?? opt.label)}
+              type="button"
+              onClick={() => {
+                setStatusFilter([String(opt.value ?? "")]);
+                setPage(1);
+              }}
+              className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
+                isSelected
+                  ? "bg-secondary text-white"
+                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {isError ? (
+        <InfoNotFound message="Ocorreu um erro ao carregar os eventos." />
+      ) : (
+        <>
+          <Table
+            tableContents={tableContents}
+            bodyData={data?.items ?? []}
+            bodyHeight="100%"
+            detailsLink=""
+            emptyMessage="Nenhum evento encontrado."
+          />
+
+          {data && data.items.length > 0 && (
+            <Paginate
+              paginationData={data.pagination}
+              onPageChange={setPage}
+            />
+          )}
+        </>
+      )}
+    </>
+  );
+}

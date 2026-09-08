@@ -21,17 +21,20 @@ const transformStringToDate = (date: string): Date => {
 };
 
 const formatDateISO = (date: Date | Dayjs | string) => {
-  const dateISO = dayjs(date)
-    .utc(true)
-    .startOf("hour")
-    .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-  return dateISO;
+  const parsed = dayjs(date);
+  return parsed.isValid() ? parsed.toISOString() : "";
 };
 
 const formatDateToDownload = (date: Date | Dayjs | string) => {
   const dateISO = dayjs(date).utc(true).startOf("hour").format("DD-MM-YYYY");
   return dateISO;
 };
+
+const toRangeStart = (value?: Date | string) =>
+  value ? dayjs(value).startOf("day").toISOString() : undefined;
+
+const toRangeEnd = (value?: Date | string) =>
+  value ? dayjs(value).endOf("day").toISOString() : undefined;
 
 const normalizeString = (str: string, removeSpaces?: boolean) => {
   if (!str) return "";
@@ -229,4 +232,6 @@ export {
   formatDocument,
   normalizeCode,
   formatCooldown,
+  toRangeStart,
+  toRangeEnd,
 };

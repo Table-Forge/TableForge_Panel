@@ -11,7 +11,7 @@ export interface IInputStyles {
 export interface IControllerInput<TFieldValues extends FieldValues = FieldValues>
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "name">,
     IInputStyles {
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   name: Path<TFieldValues>;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
@@ -25,8 +25,9 @@ export interface IMaskedControllerInput<TFieldValues extends FieldValues = Field
 export interface INumberControllerInput<TFieldValues extends FieldValues = FieldValues>
   extends IControllerInput<TFieldValues> {
   format?: "currency" | "percent" | "integer" | "float";
-  onChangeValue?: (value: number) => void;
+  onChangeValue?: (value?: number) => void;
   defaultValue?: string | number;
+  allowEmpty?: boolean;
 }
 
 export interface IControlledDateInput<TFieldValues extends FieldValues = FieldValues>
@@ -65,7 +66,7 @@ export interface IControllerTextarea<
   TFieldValues extends FieldValues = FieldValues,
 > extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "name">,
     IInputStyles {
-  hookForm: UseFormReturn<TFieldValues>;
+  hookForm: UseFormReturn<TFieldValues, unknown, unknown>;
   name: Path<TFieldValues>;
   sanitize?: boolean;
   sanitizeEmail?: boolean;
@@ -83,6 +84,9 @@ export interface IControlledImageInput<TFieldValues extends FieldValues = FieldV
   canChangeImage?: boolean;
   maxSizeBytes?: number;
   acceptedTypes?: string[];
+  aspectRatio?: number;
+  cropShape?: "rect" | "round";
+  enableCrop?: boolean;
   onFileNameChange?: (name: string) => void;
   onClearImage?: () => void;
 }

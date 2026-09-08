@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/button/button";
+import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledImageInput } from "@/src/components/input/input.image.controlled";
@@ -35,7 +36,6 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
       description: "",
       tag: "",
       link: "",
-      order: 0,
       imageId: undefined,
       imageContent: "",
       ...data,
@@ -97,7 +97,7 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
     const payload: IBanner = {
       ...defaultValues,
       ...bannerValues,
-      order: Number(bannerValues.order) || 0,
+      order: data?.order ?? 0,
       imageId,
       id: data?.id ?? values.id ?? 0,
     };
@@ -136,28 +136,15 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
         </InputGroup>
       </FieldsWrapper>
 
-      <FieldsWrapper>
-        <InputGroup>
-          <Label htmlFor="link">Link (opcional)</Label>
-          <ControlledInput
-            hookForm={form}
-            name="link"
-            placeholder="Link de redirecionamento"
-            error={errors.link?.message}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="order">Ordem</Label>
-          <ControlledInput
-            hookForm={form}
-            name="order"
-            type="number"
-            placeholder="0"
-            error={errors.order?.message}
-          />
-        </InputGroup>
-      </FieldsWrapper>
+      <InputGroup className="basis-full">
+        <Label htmlFor="link">Link (opcional)</Label>
+        <ControlledInput
+          hookForm={form}
+          name="link"
+          placeholder="Link de redirecionamento"
+          error={errors.link?.message}
+        />
+      </InputGroup>
 
       <InputGroup className="basis-full">
         <Label htmlFor="description" isRequired>Descrição</Label>
@@ -187,7 +174,7 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
         />
       </InputGroup>
 
-      <div className="mt-6 flex justify-end gap-3">
+      <ModalFooter>
         <Button buttonStyle="hollow" onClick={closeModal} type="button">
           Cancelar
         </Button>
@@ -198,7 +185,8 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
         >
           {data?.id ? "Salvar alterações" : "Criar banner"}
         </Button>
-      </div>
+      </ModalFooter>
     </form>
   );
 };
+
