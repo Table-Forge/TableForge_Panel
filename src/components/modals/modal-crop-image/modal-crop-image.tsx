@@ -15,6 +15,7 @@ export function ModalCropImage({
   onCropComplete,
 }: IModalCropImageProps) {
   const closeModal = useBoundStore((state) => state.closeModal);
+  const addToast = useBoundStore((state) => state.addToast);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
@@ -45,6 +46,7 @@ export function ModalCropImage({
       closeModal();
     } catch (err) {
       console.error("Erro ao cortar imagem:", err);
+      addToast("error", "Não foi possível cortar a imagem.");
     } finally {
       setIsApplying(false);
     }

@@ -5,6 +5,8 @@ import { handleError } from "@/src/utils/error-handler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IMAGE_KEYS } from "./query-key";
 
+import type { IGetAllImagesResponse } from "./types";
+
 export const useImagesMutation = () => {
   const queryClient = useQueryClient();
   const addToast = useBoundStore((state) => state.addToast);
@@ -22,7 +24,21 @@ export const useImagesMutation = () => {
 
   const updateMutation = useMutation({
     mutationFn: (payload: IImage) => ImageService.update(payload),
-    onSuccess: (_image, variables) => {
+    onSuccess: (updatedImage, variables) => {
+      queryClient.setQueriesData<IGetAllImagesResponse>(
+        { queryKey: IMAGE_KEYS.lists() },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            items: old.items.map((item) =>
+              item.id === updatedImage.id
+                ? { ...item, ...updatedImage }
+                : item,
+            ),
+          };
+        },
+      );
       queryClient.invalidateQueries({ queryKey: IMAGE_KEYS.lists() });
       if (variables.id) {
         queryClient.invalidateQueries({

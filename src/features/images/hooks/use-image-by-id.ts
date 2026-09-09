@@ -7,5 +7,7 @@ export function useImageById(id?: number) {
     queryKey: IMAGE_KEYS.detail(id),
     queryFn: () => ImageService.getById(id!),
     enabled: id !== undefined && id !== null,
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 1000,
   });
 }

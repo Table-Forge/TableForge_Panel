@@ -5,13 +5,35 @@ export interface IArea {
   height: number;
 }
 
-export function createImage(url: string): Promise<HTMLImageElement> {
+export async function createImage(url: string): Promise<HTMLImageElement> {
+  let objectUrl = "";
+  let targetSrc = url;
+
+  if (/^https?:\/\//i.test(url)) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        targetSrc = objectUrl;
+      }
+    } catch {
+      targetSrc = url;
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.addEventListener("load", () => resolve(image));
-    image.addEventListener("error", (error) => reject(error));
+    image.addEventListener("load", () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    });
+    image.addEventListener("error", (error) => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      reject(error);
+    });
     image.setAttribute("crossOrigin", "anonymous");
-    image.src = url;
+    image.src = targetSrc;
   });
 }
 

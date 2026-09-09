@@ -30,6 +30,8 @@ export const ImageInput: React.FC<IImageInput> = ({
   const resolvedInputId = inputId ?? fallbackInputId;
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectionError, setSelectionError] = useState<string | null>(null);
+  const [originalSource, setOriginalSource] = useState<string | null>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
 
   const openModal = useBoundStore((state) => state.openModal);
   const previewSource = toImageSource(value);
@@ -51,6 +53,15 @@ export const ImageInput: React.FC<IImageInput> = ({
       />,
       "md",
     );
+  };
+
+  const handleClear = () => {
+    setOriginalSource(null);
+    setSelectedFileName("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    onClear?.();
   };
 
   const handleOpenFileSelector = () => {
@@ -82,6 +93,9 @@ export const ImageInput: React.FC<IImageInput> = ({
     reader.onload = () => {
       const result = String(reader.result ?? "");
       if (!result) return;
+
+      setOriginalSource(result);
+      setSelectedFileName(file.name);
 
       if (enableCrop) {
         openCropModal(result, file.name);
@@ -140,7 +154,13 @@ export const ImageInput: React.FC<IImageInput> = ({
             {canChangeImage && previewSource && enableCrop ? (
               <Button
                 type="button"
-                onClick={() => openCropModal(previewSource, "cropped-image.png")}
+                onClick={() => {
+                  const sourceToCrop = originalSource || previewSource;
+                  if (!originalSource) {
+                    setOriginalSource(previewSource);
+                  }
+                  openCropModal(sourceToCrop, selectedFileName || "cropped-image.png");
+                }}
                 disabled={disabled}
                 buttonStyle="soft"
                 size="xs"
@@ -153,7 +173,7 @@ export const ImageInput: React.FC<IImageInput> = ({
             {previewSource ? (
               <Button
                 type="button"
-                onClick={onClear}
+                onClick={handleClear}
                 disabled={disabled}
                 buttonStyle="softDanger"
                 size="xs"

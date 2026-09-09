@@ -13,11 +13,12 @@ import { useImagesMutation } from "@/src/features/images/hooks/use-images-mutati
 import { type IImage } from "@/src/features/images/schemas/image.schema";
 import { useBoundStore } from "@/src/store";
 import { toImageSource } from "@/src/utils/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export const ModalEdit = ({ data }: { data?: IImage }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
+  const isLoadedRef = useRef(false);
 
   const { data: dataEdit, isLoading } = useImageById(data?.id);
   const { createMutation, updateMutation } = useImagesMutation();
@@ -48,8 +49,12 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
   } = form;
 
   useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
+    if (!data?.id) return;
+    if (dataEdit && !isLoadedRef.current) {
+      reset(defaultValues);
+      isLoadedRef.current = true;
+    }
+  }, [data?.id, dataEdit, defaultValues, reset]);
 
   const onSubmit = handleSubmit((values) => {
     const { userId: _userId, campaignId: _campaignId, ...imageValues } = values;
@@ -111,7 +116,7 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           <ControlledImageInput
             hookForm={form}
             name="content"
-            previewValue={toImageSource(dataEdit?.url)}
+            previewValue={toImageSource(dataEdit?.url ?? data?.url)}
             disabled={isSubmitting || isLoading}
             error={errors.content?.message}
             onFileNameChange={(fileName) => {
