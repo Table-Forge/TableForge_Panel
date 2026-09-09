@@ -1,4 +1,5 @@
-﻿import type {
+import { useAuth } from "@/src/context/use-auth";
+import type {
   IUpdatePassword,
   IUser,
 } from "@/src/features/users/schemas/user.schema";
@@ -6,10 +7,13 @@ import { UserService } from "@/src/features/users/services/users.services";
 import { useBoundStore } from "@/src/store/use-bound-store";
 import { handleError } from "@/src/utils/error-handler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { USER_KEYS } from "./query-key";
 
 export const useUsersMutation = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const addToast = useBoundStore((state) => state.addToast);
   const closeModal = useBoundStore((state) => state.closeModal);
@@ -37,7 +41,19 @@ export const useUsersMutation = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => UserService.delete(id),
-    onSuccess: () => {
+    onSuccess: async (_data, id) => {
+      const isCurrentUser = Boolean(
+        user?.id && Number(user.id) === Number(id),
+      );
+
+      if (isCurrentUser) {
+        closeModal();
+        addToast("success", "Sua conta foi excluída com sucesso.");
+        await signOut();
+        navigate("/login", { replace: true });
+        return;
+      }
+
       queryClient.invalidateQueries({ queryKey: USER_KEYS.lists() });
       addToast("success", "Usuário removido com sucesso!");
       closeModal();

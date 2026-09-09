@@ -1,4 +1,5 @@
 import { AUTH_STORAGE_KEY } from "@/src/store/slices/auth-slice";
+import { useBoundStore } from "@/src/store/use-bound-store";
 import { ENV } from "@/src/config/env";
 import axios from "axios";
 
@@ -36,7 +37,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
+      useBoundStore.getState().signOut();
       if (
         typeof window !== "undefined" &&
         !window.location.pathname.startsWith("/login")
