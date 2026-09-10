@@ -21,8 +21,8 @@ export const SkeletonDetails = () => {
       {/* Hero Bento Box & KPI Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Media Banner Placeholder */}
-        <div className="flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse lg:col-span-1 min-h-[220px]">
-          <Skeleton className="h-36 w-full !rounded-2xl" />
+        <div className="flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse lg:col-span-1 min-h-[220px]">
+          <Skeleton className="h-36 w-full !rounded-lg" />
           <div className="mt-4 flex items-center justify-between">
             <Skeleton className="h-4 w-24 !rounded-lg" />
             <Skeleton className="h-6 w-20 !rounded-full" />
@@ -34,7 +34,7 @@ export const SkeletonDetails = () => {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl animate-pulse min-h-[140px]"
+              className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl animate-pulse min-h-[140px]"
             >
               <Skeleton className="h-4 w-20 !rounded-lg" />
               <Skeleton className="my-2 h-8 w-24 !rounded-xl" />
@@ -46,7 +46,7 @@ export const SkeletonDetails = () => {
 
       {/* Main Content Details Grid Skeleton */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-4">
+        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-4">
           <Skeleton className="h-5 w-40 !rounded-lg" />
           <div className="grid grid-cols-2 gap-4 pt-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -58,7 +58,7 @@ export const SkeletonDetails = () => {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-4">
+        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-4">
           <Skeleton className="h-5 w-40 !rounded-lg" />
           <div className="grid grid-cols-2 gap-4 pt-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -72,9 +72,9 @@ export const SkeletonDetails = () => {
       </div>
 
       {/* Description Section Skeleton */}
-      <div className="rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-3">
+      <div className="rounded-xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse space-y-3">
         <Skeleton className="h-5 w-44 !rounded-lg" />
-        <Skeleton className="h-20 w-full !rounded-2xl" />
+        <Skeleton className="h-20 w-full !rounded-lg" />
       </div>
     </div>
   );

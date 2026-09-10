@@ -41,7 +41,7 @@ export function GameSystemDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/gamesystems")}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
@@ -83,19 +83,19 @@ export function GameSystemDetailsPage() {
       {/* Hero Bento Box */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Image Preview Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
           {data.imageUrl ? (
-            <div className="relative overflow-hidden rounded-2xl border border-white/15 shadow-xl">
+            <div className="relative overflow-hidden rounded-lg border border-white/15 shadow-xl">
               <Thumbnail
                 image={data.imageUrl}
                 width={140}
                 height={140}
                 alt={data.name || "Imagem"}
-                className="rounded-2xl object-cover"
+                className="rounded-lg object-cover"
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               Sem Imagem
             </div>
           )}
@@ -106,7 +106,7 @@ export function GameSystemDetailsPage() {
 
         {/* Right Stats */}
         <div className="grid grid-cols-1 gap-3 lg:col-span-2 sm:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Criado em
             </span>
@@ -118,7 +118,7 @@ export function GameSystemDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Última Atualização
             </span>
@@ -148,7 +148,7 @@ export function GameSystemDetailsPage() {
 
       {/* Description */}
       <CardBox title="Descrição do Sistema">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
           {data.description || "Nenhuma descrição fornecida para este sistema."}
         </div>
       </CardBox>

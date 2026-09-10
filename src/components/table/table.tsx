@@ -208,7 +208,7 @@ export function Table<T extends { id?: number | string }>({
   if (!bodyData?.length) {
     return (
       <div className="h-full">
-        <p className="rounded-3xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200">
+        <p className="rounded-xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200">
           {emptyMessage || "Nenhum registro encontrado."}
         </p>
       </div>
@@ -220,7 +220,7 @@ export function Table<T extends { id?: number | string }>({
       ref={containerRef}
       aria-label="tabela"
       onDragOver={handleContainerDragOver}
-      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-3xl border border-white/10 bg-primary/40 shadow-2xl ${scrollable ? "max-w-full" : ""}`}
+      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-xl border border-white/10 bg-primary/40 shadow-2xl ${scrollable ? "max-w-full" : ""}`}
 
       style={{
         height: bodyHeight,
@@ -300,7 +300,7 @@ export function Table<T extends { id?: number | string }>({
       {contextMenu
         ? createPortal(
             <div
-              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
+              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-lg border border-white/15 bg-primary shadow-2xl"
               style={{ top: contextMenu.y, left: contextMenu.x }}
               onClick={(event) => event.stopPropagation()}
             >

@@ -400,7 +400,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
                 type="button"
                 data-option-index={index}
                 disabled={!isSelectable}
-                className={`w-full rounded-xl px-3.5 py-2.5 text-left text-sm font-medium transition-all duration-150 ${isSelected
+                className={`w-full rounded-lg px-3.5 py-2.5 text-left text-sm font-medium transition-all duration-150 ${isSelected
                     ? "bg-secondary/25 text-white font-bold"
                     : "text-white/85 hover:bg-white/10 hover:text-white"
                   } ${isFocused ? "ring-1 ring-secondary/45" : ""} ${isSelectable ? "opacity-100" : "opacity-50"
@@ -430,7 +430,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
         <div
           ref={listRef}
           data-portal="true"
-          className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-2xl"
+          className="absolute z-[1300] overflow-hidden rounded-xl border border-white/15 bg-primary shadow-2xl"
           style={{
             top: `${listStyle.top}px`,
             left: `${listStyle.left}px`,
@@ -484,7 +484,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           handleOpenList(!listOpen);
           headerRef.current?.focus();
         }}
-        className={`flex h-12 w-full items-center justify-between rounded-2xl px-4 text-left ${getInputClasses(
+        className={`flex h-12 w-full items-center justify-between rounded-lg px-4 text-left ${getInputClasses(
           message,
           isComponentLoading,
           disabled,

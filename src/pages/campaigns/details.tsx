@@ -59,7 +59,7 @@ export function CampaignDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/campaigns")}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
@@ -97,9 +97,9 @@ export function CampaignDetailsPage() {
       {/* Hero Bento Box & KPI Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Media Banner / Identity */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
           {data.bannerUrl ? (
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-lg">
+            <div className="relative overflow-hidden rounded-lg border border-white/10 shadow-lg">
               <Thumbnail
                 image={data.bannerUrl}
                 width="100%"
@@ -109,7 +109,7 @@ export function CampaignDetailsPage() {
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               Sem Imagem
             </div>
           )}
@@ -126,7 +126,7 @@ export function CampaignDetailsPage() {
 
         {/* Right: 4 Quick Stat KPIs */}
         <div className="grid grid-cols-2 gap-3 lg:col-span-2 sm:grid-cols-4">
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Jogadores
             </span>
@@ -138,7 +138,7 @@ export function CampaignDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Dificuldade
             </span>
@@ -150,7 +150,7 @@ export function CampaignDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Frequência
             </span>
@@ -162,7 +162,7 @@ export function CampaignDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Privacidade
             </span>
@@ -223,7 +223,7 @@ export function CampaignDetailsPage() {
 
       {/* Description Section */}
       <CardBox title="Descrição da Campanha">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
           {data.description || "Nenhuma descrição fornecida para esta campanha."}
         </div>
       </CardBox>

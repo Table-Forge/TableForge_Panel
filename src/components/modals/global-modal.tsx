@@ -123,7 +123,7 @@ const ModalItem = memo(
           role="dialog"
           aria-modal="true"
           tabIndex={-1}
-          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-3xl border border-white/15 bg-primary shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
+          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-xl border border-white/15 bg-primary shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
           style={{
             width: SIZES[size],
             maxWidth: size === "full" ? "100vw" : "95vw",

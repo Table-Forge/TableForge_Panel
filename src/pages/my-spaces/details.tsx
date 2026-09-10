@@ -87,9 +87,9 @@ export function MySpaceDetailsPage() {
       {/* Hero Bento Box & KPI Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Media / Identity Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
           {space.bannerUrl ? (
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-lg">
+            <div className="relative overflow-hidden rounded-lg border border-white/10 shadow-lg">
               <Thumbnail
                 image={space.bannerUrl}
                 width="100%"
@@ -99,7 +99,7 @@ export function MySpaceDetailsPage() {
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               <Store size={28} />
               Sem Banner
             </div>
@@ -115,7 +115,7 @@ export function MySpaceDetailsPage() {
 
         {/* Right: 4 Quick Stat KPIs */}
         <div className="grid grid-cols-2 gap-3 lg:col-span-2 sm:grid-cols-4">
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <div className="flex items-center gap-2 text-grays-200">
               <Phone size={16} className="text-secondary" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
@@ -130,7 +130,7 @@ export function MySpaceDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <div className="flex items-center gap-2 text-grays-200">
               <Clock size={16} className="text-amber-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
@@ -147,7 +147,7 @@ export function MySpaceDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <div className="flex items-center gap-2 text-grays-200">
               <CalendarDays size={16} className="text-purple-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
@@ -162,7 +162,7 @@ export function MySpaceDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <div className="flex items-center gap-2 text-grays-200">
               <Store size={16} className="text-emerald-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">

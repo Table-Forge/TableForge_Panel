@@ -113,12 +113,12 @@ export const ImageInput: React.FC<IImageInput> = ({
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div className="flex items-center gap-3 rounded-2xl border border-white/15 bg-primary/60 p-3">
+      <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-primary/60 p-3">
         <button
           type="button"
           onClick={handleOpenFileSelector}
           disabled={disabled}
-          className={`group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-background/70 transition disabled:cursor-not-allowed disabled:opacity-60 ${
+          className={`group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-background/70 transition disabled:cursor-not-allowed disabled:opacity-60 ${
             canChangeImage ? "hover:border-secondary/50" : "cursor-default"
           }`}
         >

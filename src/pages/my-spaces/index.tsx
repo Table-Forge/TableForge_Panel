@@ -170,8 +170,8 @@ export function MySpacesPage() {
           onActionClick={() => openModal("Criar Espaço", <ModalEditSpace />, "md")}
         />
 
-        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-3xl border border-white/10 bg-primary/40 p-8 text-center backdrop-blur-md">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-secondary">
+        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-white/10 bg-primary/40 p-8 text-center backdrop-blur-md">
+          <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-secondary">
             <Store size={32} />
           </div>
           <h2 className="text-xl font-extrabold uppercase text-white">

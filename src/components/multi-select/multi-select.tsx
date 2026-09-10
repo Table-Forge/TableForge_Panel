@@ -1,4 +1,4 @@
-﻿import { createPortal } from "react-dom";
+import { createPortal } from "react-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type FieldValues, useController } from "react-hook-form";
 import { Check, ChevronDown, Plus, Search, X } from "lucide-react";
@@ -507,7 +507,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
               <button
                 type="button"
                 data-option-index={index}
-                className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition ${
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition ${
                   isSelected
                     ? "bg-secondary/20 text-white"
                     : "text-white/85 hover:bg-white/10"
@@ -541,7 +541,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
           <div
             ref={listRef}
             data-portal="true"
-            className="absolute z-[1300] overflow-hidden rounded-2xl border border-white/15 bg-primary shadow-xl"
+            className="absolute z-[1300] overflow-hidden rounded-xl border border-white/15 bg-primary shadow-xl"
             style={{
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,

@@ -101,7 +101,7 @@ export function CampaignsSearchFilters() {
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="w-full flex flex-row gap-3 items-center rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
+      <div className="w-full flex flex-row gap-3 items-center rounded-xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
           {...form.register("search")}
           placeholder="Buscar campanha por título, sistema, mestre ou local"

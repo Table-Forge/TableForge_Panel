@@ -101,7 +101,7 @@ function ProtectedRoute() {
   if (isLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background p-4 text-white">
-        <div className="rounded-2xl border border-white/15 bg-primary/70 px-6 py-4 text-sm tracking-wide">
+        <div className="rounded-xl border border-white/15 bg-primary/70 px-6 py-4 text-sm tracking-wide">
           Carregando sessão...
         </div>
       </main>

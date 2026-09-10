@@ -65,19 +65,19 @@ export const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-primary/60 px-6 py-3.5 shadow-lg">
+    <header className="flex items-center justify-between rounded-xl border border-white/10 bg-primary/60 px-6 py-3.5 shadow-lg">
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={handleEditProfile}
           title="Editar meu perfil"
-          className="cursor-pointer relative flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-secondary/40 bg-secondary/15 text-xs font-bold text-white shadow-inner transition-all hover:scale-105 hover:border-secondary/80 hover:ring-2 hover:ring-secondary/40 focus:outline-none"
+          className="cursor-pointer relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-secondary/40 bg-secondary/15 text-xs font-bold text-white shadow-inner transition-all hover:scale-105 hover:border-secondary/80 hover:ring-2 hover:ring-secondary/40 focus:outline-none"
         >
           {avatarSource ? (
             <img
               src={avatarSource}
               alt={displayName}
-              className="h-full w-full rounded-2xl object-cover"
+              className="h-full w-full rounded-lg object-cover"
             />
           ) : (
             initial

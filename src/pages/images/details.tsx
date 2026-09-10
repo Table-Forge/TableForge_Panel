@@ -42,7 +42,7 @@ export function ImageDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/images")}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
@@ -78,19 +78,19 @@ export function ImageDetailsPage() {
       </header>
 
       {/* Hero Media Preview Bento Card */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center">
-        <div className="relative overflow-hidden rounded-2xl border border-white/15 shadow-2xl p-2 bg-black/40 max-w-full flex items-center justify-center">
+      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center">
+        <div className="relative overflow-hidden rounded-lg border border-white/15 shadow-2xl p-2 bg-black/40 max-w-full flex items-center justify-center">
           <Thumbnail
             image={data}
             width="auto"
             height="auto"
-            className="max-h-[460px] w-auto max-w-full rounded-xl object-contain"
+            className="max-h-[460px] w-auto max-w-full rounded-lg object-contain"
             alt={data.name || "Imagem"}
           />
         </div>
 
         {data.url && (
-          <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xs">
+          <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xs">
             <span className="truncate text-xs font-semibold text-white/80">
               {data.url}
             </span>

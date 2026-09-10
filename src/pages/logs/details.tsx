@@ -47,7 +47,7 @@ export function LogDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/logs")}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
@@ -76,7 +76,7 @@ export function LogDetailsPage() {
 
       {/* KPI Stat Cards Grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Status HTTP
           </span>
@@ -92,7 +92,7 @@ export function LogDetailsPage() {
           </span>
         </div>
 
-        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Tipo de Log
           </span>
@@ -104,7 +104,7 @@ export function LogDetailsPage() {
           </span>
         </div>
 
-        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Endereço IP
           </span>
@@ -116,7 +116,7 @@ export function LogDetailsPage() {
           </span>
         </div>
 
-        <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Data e Hora
           </span>
@@ -155,7 +155,7 @@ export function LogDetailsPage() {
 
       {/* Log Content Sections */}
       <CardBox title="Mensagem Principal">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-white/90">
+        <div className="rounded-lg border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-white/90">
           {structuredContent.message}
         </div>
       </CardBox>
@@ -168,7 +168,7 @@ export function LogDetailsPage() {
 
       {structuredContent.innerExceptionMessage !== "-" && (
         <CardBox title="Exceção Interna">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-red-300">
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-red-300">
             {structuredContent.innerExceptionMessage}
           </div>
         </CardBox>

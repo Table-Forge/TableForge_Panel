@@ -85,7 +85,7 @@ export function NavMenu() {
 
   return (
     <aside
-      className={`flex flex-col rounded-3xl border border-white/10 bg-primary/60 p-3.5 shadow-xl transition-all duration-300 ease-in-out lg:h-full lg:overflow-y-auto ${
+      className={`flex flex-col rounded-xl border border-white/10 bg-primary/60 p-3.5 shadow-xl transition-all duration-300 ease-in-out lg:h-full lg:overflow-y-auto ${
         isSidebarCollapsed ? "lg:items-center lg:px-2" : "lg:px-4"
       }`}
     >
@@ -122,7 +122,7 @@ export function NavMenu() {
         <button
           type="button"
           onClick={toggleSidebar}
-          className={`flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white ${
+          className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white ${
             isSidebarCollapsed ? "mx-auto" : ""
           }`}
           title={isSidebarCollapsed ? "Expandir menu lateral" : "Minimizar menu lateral"}
@@ -139,7 +139,7 @@ export function NavMenu() {
       <div
         className={`${
           isMobileOpen ? "mt-3 block" : "hidden"
-        } rounded-2xl border border-white/10 bg-background/50 p-3.5 text-center lg:mt-0 lg:block transition-all duration-300`}
+        } rounded-xl border border-white/10 bg-background/50 p-3.5 text-center lg:mt-0 lg:block transition-all duration-300`}
       >
         {isSidebarCollapsed ? (
           <img
@@ -183,8 +183,8 @@ export function NavMenu() {
               [
                 "flex items-center transition-all duration-200",
                 isSidebarCollapsed
-                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
-                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                  ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                  : "gap-3 rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
                 isActive
                   ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
                   : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
@@ -192,7 +192,7 @@ export function NavMenu() {
             }
           >
             <div
-              className={`flex items-center justify-center rounded-xl ${
+              className={`flex items-center justify-center rounded-lg ${
                 isSidebarCollapsed
                   ? "h-full w-full"
                   : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
@@ -214,8 +214,8 @@ export function NavMenu() {
               className={[
                 "flex items-center w-full transition-all duration-200",
                 isSidebarCollapsed
-                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
-                  : "justify-between rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                  ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                  : "justify-between rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
                 isSpaceRouteActive
                   ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
                   : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
@@ -223,7 +223,7 @@ export function NavMenu() {
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`flex items-center justify-center rounded-xl ${
+                  className={`flex items-center justify-center rounded-lg ${
                     isSidebarCollapsed
                       ? "h-full w-full"
                       : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
@@ -254,7 +254,7 @@ export function NavMenu() {
                     onClick={() => setIsMobileOpen(false)}
                     className={({ isActive }) =>
                       [
-                        "flex items-center gap-2 rounded-r-xl px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider transition-all duration-200 border-l-2",
+                        "flex items-center gap-2 rounded-r-lg px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider transition-all duration-200 border-l-2",
                         isActive
                           ? "border-secondary bg-white/10 text-white shadow-sm"
                           : "border-transparent text-grays-100 hover:bg-white/5 hover:text-white",
@@ -279,8 +279,8 @@ export function NavMenu() {
               [
                 "flex items-center transition-all duration-200",
                 isSidebarCollapsed
-                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
-                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                  ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                  : "gap-3 rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
                 isActive
                   ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
                   : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
@@ -288,7 +288,7 @@ export function NavMenu() {
             }
           >
             <div
-              className={`flex items-center justify-center rounded-xl ${
+              className={`flex items-center justify-center rounded-lg ${
                 isSidebarCollapsed
                   ? "h-full w-full"
                   : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
@@ -310,8 +310,8 @@ export function NavMenu() {
               [
                 "flex items-center transition-all duration-200",
                 isSidebarCollapsed
-                  ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
-                  : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                  ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                  : "gap-3 rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
                 isActive
                   ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
                   : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
@@ -319,7 +319,7 @@ export function NavMenu() {
             }
           >
             <div
-              className={`flex items-center justify-center rounded-xl ${
+              className={`flex items-center justify-center rounded-lg ${
                 isSidebarCollapsed
                   ? "h-full w-full"
                   : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
@@ -340,8 +340,8 @@ export function NavMenu() {
             [
               "flex items-center transition-all duration-200",
               isSidebarCollapsed
-                ? "h-11 w-11 justify-center rounded-2xl border mx-auto"
-                : "gap-3 rounded-2xl border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                : "gap-3 rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
               isActive
                 ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
                 : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
@@ -349,7 +349,7 @@ export function NavMenu() {
           }
         >
           <div
-            className={`flex items-center justify-center rounded-xl ${
+            className={`flex items-center justify-center rounded-lg ${
               isSidebarCollapsed
                 ? "h-full w-full"
                 : "h-7 w-7 bg-white/5 group-hover:bg-white/10"

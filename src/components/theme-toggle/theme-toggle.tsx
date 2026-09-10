@@ -11,7 +11,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="relative flex h-9 w-9 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white transition-all hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary active:scale-95 focus-visible:outline-hidden"
+      className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition-all hover:border-secondary/40 hover:bg-secondary/10 hover:text-secondary active:scale-95 focus-visible:outline-hidden"
       title={isLight ? "Mudar para Modo Escuro" : "Mudar para Modo Claro"}
       aria-label={isLight ? "Mudar para Modo Escuro" : "Mudar para Modo Claro"}
     >

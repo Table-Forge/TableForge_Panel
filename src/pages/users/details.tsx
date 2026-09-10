@@ -44,7 +44,7 @@ export function UserDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/users")}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
@@ -82,14 +82,14 @@ export function UserDetailsPage() {
       {/* Hero Profile Bento Box */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Avatar & Identity Header Card */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
-          <div className="relative mb-3 overflow-hidden rounded-2xl border border-white/15 shadow-xl">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
+          <div className="relative mb-3 overflow-hidden rounded-lg border border-white/15 shadow-xl">
             <Thumbnail
               image={data.avatarUrl}
               width={110}
               height={110}
               alt={data.nickname || data.username || "Avatar"}
-              className="rounded-2xl object-cover"
+              className="rounded-lg object-cover"
             />
           </div>
           <h2 className="text-lg font-extrabold text-white">
@@ -105,7 +105,7 @@ export function UserDetailsPage() {
 
         {/* Right: 3 Key Metric Cards */}
         <div className="grid grid-cols-1 gap-3 lg:col-span-2 sm:grid-cols-3">
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Tipo de Perfil
             </span>
@@ -117,7 +117,7 @@ export function UserDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Gênero
             </span>
@@ -129,7 +129,7 @@ export function UserDetailsPage() {
             </span>
           </div>
 
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Membro Desde
             </span>

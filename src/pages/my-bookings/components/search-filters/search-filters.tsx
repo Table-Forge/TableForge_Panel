@@ -116,7 +116,7 @@ export function BookingsSearchFilters({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="flex w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
+      <div className="flex w-full flex-row items-center gap-3 rounded-xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
           {...form.register("search")}
           placeholder="Buscar agendamento por cliente ou ID"

@@ -13,7 +13,7 @@ export const SkeletonTable = () => {
       </div>
 
       {/* Search Filters Capsule Skeleton */}
-      <div className="rounded-3xl border border-white/10 bg-primary/40 p-4 backdrop-blur-md shadow-xl animate-pulse">
+      <div className="rounded-xl border border-white/10 bg-primary/40 p-4 backdrop-blur-md shadow-xl animate-pulse">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Skeleton className="h-10 w-72 !rounded-lg" />
           <div className="flex items-center gap-2">
@@ -24,7 +24,7 @@ export const SkeletonTable = () => {
       </div>
 
       {/* Main Table Bento Container Skeleton */}
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse">
+      <div className="overflow-hidden rounded-xl border border-white/10 bg-primary/40 p-6 backdrop-blur-md shadow-2xl animate-pulse">
         {/* Table Header Row */}
         <div className="grid grid-cols-5 gap-4 border-b border-white/10 pb-4">
           <Skeleton className="h-5 w-full !rounded-lg" />
