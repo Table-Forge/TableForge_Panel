@@ -43,7 +43,7 @@ export function ButtonIcon({
       type={type}
       disabled={disabled}
       className={[
-        "relative inline-flex shrink-0 items-center justify-center overflow-visible rounded-xl border-0 bg-transparent transition",
+        "relative inline-flex shrink-0 items-center justify-center overflow-visible rounded-lg border-0 bg-transparent transition",
         isActive ? "text-secondary" : "text-grays-100",
         isHighlighted ? "bg-white/10" : "",
         hasHoverEffect

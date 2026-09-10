@@ -106,7 +106,7 @@ export function NavMenu() {
           hasHoverEffect
           isHighlighted
           size="40px"
-          className="border border-secondary/30 text-white hover:border-secondary/60 !rounded-2xl"
+          className="border border-secondary/30 text-white hover:border-secondary/60"
         >
           {isMobileOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </ButtonIcon>

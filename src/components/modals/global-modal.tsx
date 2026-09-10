@@ -142,7 +142,7 @@ const ModalItem = memo(
               aria-label="Fechar modal"
               hasHoverEffect
               size="34px"
-              className="!rounded-2xl border border-white/10 text-white/80 hover:text-white hover:border-secondary/40 hover:bg-secondary/20 transition-all disabled:pointer-events-none disabled:opacity-40"
+              className="border border-white/10 text-white/80 hover:text-white hover:border-secondary/40 hover:bg-secondary/20 transition-all disabled:pointer-events-none disabled:opacity-40"
             >
               <X size={18} />
             </ButtonIcon>

@@ -74,7 +74,7 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
           type="button"
           size="sm"
           buttonStyle="soft"
-          className="!rounded-2xl border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
+          className="border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
           onClick={handleToggle}
         >
           <Filter size={14} />

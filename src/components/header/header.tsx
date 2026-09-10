@@ -100,7 +100,8 @@ export const Header = () => {
         <Button
           type="button"
           buttonStyle="soft"
-          className="!h-9 !px-4 !py-2 !rounded-2xl border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
+          size="sm"
+          className="border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20 transition-all"
           onClick={handleSignOut}
         >
           <LogOut size={15} />

@@ -72,7 +72,7 @@ export function GameSystemDetailsPage() {
                 "md",
               )
             }
-            className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
+            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Sistema

@@ -57,7 +57,7 @@ export function CrmPageHeader({
               buttonStyle="primary"
               size="sm"
               onClick={onActionClick}
-              className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
+              className="shadow-lg hover:shadow-secondary/20"
             >
               {actionIcon}
               {actionLabel}

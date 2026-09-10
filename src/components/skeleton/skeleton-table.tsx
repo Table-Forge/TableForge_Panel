@@ -9,16 +9,16 @@ export const SkeletonTable = () => {
           <Skeleton className="h-7 w-48 !rounded-xl" />
           <Skeleton className="h-4 w-64 !rounded-lg" />
         </div>
-        <Skeleton className="h-10 w-36 !rounded-2xl" />
+        <Skeleton className="h-10 w-36 !rounded-lg" />
       </div>
 
       {/* Search Filters Capsule Skeleton */}
       <div className="rounded-3xl border border-white/10 bg-primary/40 p-4 backdrop-blur-md shadow-xl animate-pulse">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Skeleton className="h-10 w-72 !rounded-2xl" />
+          <Skeleton className="h-10 w-72 !rounded-lg" />
           <div className="flex items-center gap-2">
-            <Skeleton className="h-10 w-32 !rounded-2xl" />
-            <Skeleton className="h-10 w-24 !rounded-2xl" />
+            <Skeleton className="h-10 w-32 !rounded-lg" />
+            <Skeleton className="h-10 w-24 !rounded-lg" />
           </div>
         </div>
       </div>

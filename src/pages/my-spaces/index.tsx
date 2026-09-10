@@ -184,7 +184,7 @@ export function MySpacesPage() {
             buttonStyle="primary"
             size="md"
             onClick={() => openModal("Criar Espaço", <ModalEditSpace />, "md")}
-            className="mt-2 !rounded-2xl shadow-lg hover:shadow-secondary/20"
+            className="mt-2 shadow-lg hover:shadow-secondary/20"
           >
             <MdAdd />
             Cadastrar Meu Espaço

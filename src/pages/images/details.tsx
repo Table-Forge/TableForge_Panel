@@ -69,7 +69,7 @@ export function ImageDetailsPage() {
             onClick={() =>
               openModal("Editar Imagem", <ModalEdit data={data} />, "md")
             }
-            className="!rounded-2xl shadow-lg hover:shadow-secondary/20"
+            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Imagem
