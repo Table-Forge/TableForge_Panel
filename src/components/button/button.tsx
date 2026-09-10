@@ -19,15 +19,15 @@ export const Button: React.FC<IButton> = ({
   ...props
 }) => {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 rounded-2xl border text-xs font-bold uppercase tracking-wider transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-60";
+    "inline-flex items-center justify-center gap-2 border font-medium transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-60";
 
   const widthStyles = maxWidth ? "w-full" : "w-max";
   const sizeStyles: Record<NonNullable<IButton["size"]>, string> = {
-    xs: "h-8 px-3",
-    sm: "h-10 px-4",
-    md: "h-12 px-5",
-    lg: "h-14 px-6",
-    xl: "h-16 px-7",
+    xs: "h-7 px-2.5 text-xs rounded-md",
+    sm: "h-8 px-3 text-xs rounded-md",
+    md: "h-10 px-4 text-sm rounded-lg",
+    lg: "h-11 px-5 text-sm font-semibold rounded-lg",
+    xl: "h-12 px-6 text-base font-semibold rounded-xl",
   };
 
   const variants: Record<NonNullable<IButton["buttonStyle"]>, string> = {

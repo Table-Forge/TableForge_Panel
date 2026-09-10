@@ -41,6 +41,7 @@ Custom CSS lives only in `src/index.css` under `@layer base`, and only for what 
 3. **Use tokens**: never use arbitrary hex values (e.g., `text-[#FF0000]`) in components — the codebase has zero. Add the color to `@theme` and use the named token.
 4. **Responsive design**: use Tailwind's default breakpoints (`sm:`, `md:`, `xl:`) — e.g., `md:grid-cols-2` in `src/pages/dashboard/index.tsx`.
 5. **Inline `style` objects**: only for values Tailwind can't express statically — dynamic color on the `hollow` variant in `button.tsx`, stacked z-index and modal width in `modals/global-modal.tsx`.
+6. **Button styling**: buttons follow sleek, compact proportions with `rounded-lg` (and `rounded-md` for xs/sm, `rounded-xl` for xl), natural-case typography (`font-medium` / `font-semibold text-sm`), and scaled heights (`h-7` to `h-12`). They avoid bulky pill shapes (`rounded-2xl`) and forced uppercase, preserving interface density and visual lightness.
 
 ## What NOT to do
 - **Don't install CSS-in-JS libraries**: do not use `styled-components` or `@emotion/styled`.
