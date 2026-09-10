@@ -79,12 +79,10 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
   const currentAddress = useWatch({ control, name: "address" });
 
   const hasLocationLatitude =
-    currentLatitude !== "" &&
     currentLatitude != null &&
     Number.isFinite(Number(currentLatitude)) &&
     Number(currentLatitude) !== 0;
   const hasLocationLongitude =
-    currentLongitude !== "" &&
     currentLongitude != null &&
     Number.isFinite(Number(currentLongitude)) &&
     Number(currentLongitude) !== 0;
