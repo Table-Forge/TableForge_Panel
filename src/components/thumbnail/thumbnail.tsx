@@ -10,6 +10,7 @@ type TThumbnailProps = {
   width?: number | string;
   height?: number | string;
   alt?: string;
+  rounded?: "default" | "full";
   className?: string;
 };
 
@@ -18,6 +19,7 @@ export function Thumbnail({
   width = 40,
   height = 40,
   alt,
+  rounded = "default",
   className = "",
 }: TThumbnailProps) {
   const openModal = useBoundStore((state) => state.openModal);
@@ -29,6 +31,7 @@ export function Thumbnail({
   if (!source) return "-";
 
   const finalAlt = alt || imageName || "Imagem";
+  const roundedClass = rounded === "full" ? "rounded-full object-cover" : "rounded-lg object-contain";
 
   return (
     <img
@@ -41,7 +44,7 @@ export function Thumbnail({
         openModal("Visualização", <ModalImage alt={finalAlt} src={source} />, "md");
       }}
       role="button"
-      className={`cursor-pointer rounded-lg border border-white/15 object-contain p-0.5 hover:border-white/40 transition-colors ${className}`}
+      className={`cursor-pointer ${roundedClass} border border-white/15 p-0.5 hover:border-white/40 transition-colors ${className}`}
     />
   );
 }

@@ -38,6 +38,7 @@ export function BookingsTable({ data }: IProps) {
             alt={booking.userName || "Avatar"}
             width={32}
             height={32}
+            rounded="full"
           />
           <span className="font-medium text-white">
             {booking.userName || `Usuário #${booking.userId}`}

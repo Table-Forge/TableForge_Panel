@@ -73,6 +73,7 @@ export default function UsersPage() {
           image={user.avatarUrl}
           width={40}
           height={40}
+          rounded="full"
           alt={user.nickname || user.username || "Avatar"}
         />
       ),

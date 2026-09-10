@@ -118,7 +118,9 @@ export const ImageInput: React.FC<IImageInput> = ({
           type="button"
           onClick={handleOpenFileSelector}
           disabled={disabled}
-          className={`group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-background/70 transition disabled:cursor-not-allowed disabled:opacity-60 ${
+          className={`group relative flex h-20 w-20 items-center justify-center overflow-hidden ${
+            cropShape === "round" ? "rounded-full" : "rounded-lg"
+          } border border-white/15 bg-background/70 transition disabled:cursor-not-allowed disabled:opacity-60 ${
             canChangeImage ? "hover:border-secondary/50" : "cursor-default"
           }`}
         >
@@ -126,7 +128,9 @@ export const ImageInput: React.FC<IImageInput> = ({
             <img
               src={previewSource}
               alt="Prévia da imagem"
-              className="h-full w-full object-cover"
+              className={`h-full w-full object-cover ${
+                cropShape === "round" ? "rounded-full" : ""
+              }`}
             />
           ) : (
             <ImagePlus size={20} className="text-grays-100 group-hover:text-white" />

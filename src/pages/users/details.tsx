@@ -83,13 +83,14 @@ export function UserDetailsPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Avatar & Identity Header Card */}
         <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
-          <div className="relative mb-3 overflow-hidden rounded-lg border border-white/15 shadow-xl">
+          <div className="relative mb-3 overflow-hidden rounded-full border border-white/15 shadow-xl">
             <Thumbnail
               image={data.avatarUrl}
               width={110}
               height={110}
+              rounded="full"
               alt={data.nickname || data.username || "Avatar"}
-              className="rounded-lg object-cover"
+              className="rounded-full object-cover"
             />
           </div>
           <h2 className="text-lg font-extrabold text-white">

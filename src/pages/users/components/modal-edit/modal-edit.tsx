@@ -380,6 +380,8 @@ export const ModalEdit = ({ data }: { data?: IUser }) => {
           name="avatarUrl"
           previewValue={toImageSource(dataEdit?.avatarUrl)}
           canChangeImage={canEditAvatar}
+          cropShape="round"
+          aspectRatio={1}
           maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
           disabled={isLoading || isPending || isLoadingImage}
         />
