@@ -22,8 +22,9 @@ import {
   isImageDataUrl,
   toImageSource,
 } from "@/src/utils/image";
+import { ControlledLocationAutocomplete } from "@/src/components/location-autocomplete/location-autocomplete.controlled";
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 interface ISpaceForm extends ISpaceCreate {
   id?: number;
@@ -68,8 +69,31 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
   const {
     handleSubmit,
     reset,
+    setValue,
+    control,
     formState: { errors, isDirty },
   } = form;
+
+  const currentLatitude = useWatch({ control, name: "latitude" });
+  const currentLongitude = useWatch({ control, name: "longitude" });
+  const currentAddress = useWatch({ control, name: "address" });
+
+  const hasLocationLatitude =
+    currentLatitude !== "" &&
+    currentLatitude != null &&
+    Number.isFinite(Number(currentLatitude)) &&
+    Number(currentLatitude) !== 0;
+  const hasLocationLongitude =
+    currentLongitude !== "" &&
+    currentLongitude != null &&
+    Number.isFinite(Number(currentLongitude)) &&
+    Number(currentLongitude) !== 0;
+  const isLocationSelectionValid =
+    Boolean(currentAddress?.trim()) &&
+    hasLocationLatitude &&
+    hasLocationLongitude;
+  const locationSelectionError =
+    Boolean(currentAddress) && !isLocationSelectionValid;
 
   useEffect(() => {
     reset(defaultValues);
@@ -163,39 +187,50 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
       </InputGroup>
 
       <FieldsWrapper>
-        <InputGroup className="col-span-2">
+        <InputGroup className="basis-full">
           <Label htmlFor="address" isRequired>
             Endereço Completo
           </Label>
-          <ControlledInput
+          <ControlledLocationAutocomplete
             hookForm={form}
             name="address"
-            placeholder="Ex: Rua X, 123"
-            error={errors.address?.message}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="latitude" isRequired>
-            Latitude
-          </Label>
-          <ControlledInput
-            hookForm={form}
-            name="latitude"
-            placeholder="-00.0000"
-            error={errors.latitude?.message}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <Label htmlFor="longitude" isRequired>
-            Longitude
-          </Label>
-          <ControlledInput
-            hookForm={form}
-            name="longitude"
-            placeholder="-00.0000"
-            error={errors.longitude?.message}
+            hasSelectionError={locationSelectionError}
+            isSelectionValid={isLocationSelectionValid}
+            disabled={isPending || isLoadingImage}
+            onClearSelection={() => {
+              setValue("address", "", {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("latitude", 0, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("longitude", 0, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+            }}
+            onSelectLocation={(location) => {
+              setValue("address", location.address, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("latitude", location.latitude, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+              setValue("longitude", location.longitude, {
+                shouldDirty: true,
+                shouldTouch: true,
+                shouldValidate: true,
+              });
+            }}
           />
         </InputGroup>
       </FieldsWrapper>
