@@ -23,19 +23,7 @@ const getEnvironment = (): TEnvironment => {
 const environment = getEnvironment();
 
 const getApiUrl = () => {
-  const sharedUrl = import.meta.env.VITE_API_URL as string | undefined;
-  const devUrl = import.meta.env.VITE_API_DEVELOPMENT_URL as
-    | string
-    | undefined;
-  const prodUrl = import.meta.env.VITE_API_PRODUCTION_URL as
-    | string
-    | undefined;
-
-  if (environment === "prod") {
-    return sharedUrl ?? prodUrl ?? devUrl ?? "";
-  }
-
-  return sharedUrl ?? devUrl ?? prodUrl ?? "";
+  return (import.meta.env.VITE_API_URL as string | undefined) ?? "";
 };
 
 export const ENV = {

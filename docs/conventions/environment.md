@@ -24,7 +24,7 @@ ENV.ENVIRONMENT; // TEnvironment: "dev" | "prod" | "local"
 
 Resolution logic in `env.ts`:
 - `ENVIRONMENT` comes from `VITE_ENV`, falling back to Vite's `MODE`, normalized via a map (`development` → `dev`, `production` → `prod`, anything unknown → `local`).
-- `API_URL` prefers `VITE_API_URL`; otherwise `prod` uses `VITE_API_PRODUCTION_URL` and every other environment uses `VITE_API_DEVELOPMENT_URL` (with cross-fallbacks).
+- `API_URL` comes from `VITE_API_URL`.
 
 Real consumers: [features/api.ts](../../src/features/api.ts) (`baseURL`) and [components/env-flag/env-flag.tsx](../../src/components/env-flag/env-flag.tsx) (corner ribbon shown outside `prod`).
 
@@ -34,10 +34,8 @@ Real consumers: [features/api.ts](../../src/features/api.ts) (`baseURL`) and [co
 
 Variables in use:
 - `VITE_API_URL`
-- `VITE_API_DEVELOPMENT_URL`
-- `VITE_API_PRODUCTION_URL`
 - `VITE_ENV`
-- `VITE_GEOAPIFY_API_KEY` — read directly via `import.meta.env` in `components/location-autocomplete/location-autocomplete.tsx` (known exception to the `ENV` rule) and currently missing from [.env.example](../../.env.example).
+- `VITE_GEOAPIFY_API_KEY` — read directly via `import.meta.env` in `components/location-autocomplete/location-autocomplete.tsx` (known exception to the `ENV` rule).
 
 Env files: `.env.development` and `.env.production` are selected by Vite's `--mode` flag. `.gitignore` excludes `.env*` except `.env.example`, which is the only committed template.
 
