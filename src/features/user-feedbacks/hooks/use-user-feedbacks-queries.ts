@@ -7,6 +7,7 @@ export const useUserFeedbacksQuery = (filters: IUserFeedbackFilters) => {
   return useQuery({
     queryKey: USER_FEEDBACKS_KEYS.list(filters),
     queryFn: () => UserFeedbackService.getAll(filters),
+    placeholderData: (previousData) => previousData,
   });
 };
 

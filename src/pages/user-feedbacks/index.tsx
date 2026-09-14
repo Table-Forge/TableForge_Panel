@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
@@ -7,14 +6,14 @@ import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
 import { useBoundStore } from "@/src/store";
 import { MdForum, MdImage, MdModeEdit } from "react-icons/md";
-import { useUserFeedbacksQuery } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-queries";
+import { useAllUserFeedbacks } from "@/src/features/user-feedbacks/hooks/use-all-user-feedbacks";
 import type { IUserFeedbackListDto } from "@/src/features/user-feedbacks/interfaces";
 import { UserFeedbackStatus } from "@/src/features/user-feedbacks/enums";
 import { ModalFeedbackDetails } from "./components/modal-feedback-details/modal-feedback-details";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import dayjs from "dayjs";
-import { UserFeedbacksFilters, type IUserFeedbackFilterState } from "./components/filters/user-feedbacks-filters";
+import { UserFeedbacksSearchFilters } from "./components/search-filters/search-filters";
 import { MatrixTag } from "@/src/components/matrix-tag/matrix-tag";
 import {
   useUserFeedbackCategoryEnum,
@@ -26,13 +25,7 @@ export function UserFeedbacksPage() {
   const { statusEnum } = useUserFeedbackStatusEnum(true, false);
   const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
-  const [filters, setFilters] = useState<IUserFeedbackFilterState>({
-    status: UserFeedbackStatus.New,
-    page: 1,
-    size: 20,
-  });
-
-  const { data, isLoading, isError } = useUserFeedbacksQuery(filters);
+  const { data, isLoading, isError, filters, setFilters } = useAllUserFeedbacks();
 
   const getStatusColor = (status: UserFeedbackStatus) => {
     switch (status) {
@@ -179,7 +172,7 @@ export function UserFeedbacksPage() {
         count={totalItems}
       />
 
-      <UserFeedbacksFilters filters={filters} setFilters={setFilters} />
+      <UserFeedbacksSearchFilters />
 
       <Table
         tableContents={tableContents}

@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/src/components/button/button";
@@ -15,15 +14,13 @@ import {
   useUserFeedbackCategoryEnum,
   useUserFeedbackStatusEnum,
 } from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
-
+import {
+  INITIAL_USER_FEEDBACKS_FILTERS,
+  USER_FEEDBACKS_COMPONENT_FILTER_KEY,
+  useAllUserFeedbacks,
+} from "@/src/features/user-feedbacks/hooks/use-all-user-feedbacks";
 import type { IUserFeedbackFilters } from "@/src/features/user-feedbacks/interfaces";
-
-export type IUserFeedbackFilterState = IUserFeedbackFilters;
-
-interface UserFeedbacksFiltersProps {
-  filters: IUserFeedbackFilterState;
-  setFilters: Dispatch<SetStateAction<IUserFeedbackFilterState>>;
-}
+import { useComponentStore } from "@/src/store";
 
 const PLATFORM_OPTIONS: TSelectOptions[] = [
   { value: "", name: "Todas as Plataformas" },
@@ -32,8 +29,10 @@ const PLATFORM_OPTIONS: TSelectOptions[] = [
   { value: UserFeedbackPlatform.Web, name: "Web" },
 ];
 
-function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersProps) {
+function AdvancedFiltersContent({ filters }: { filters: IUserFeedbackFilters }) {
   const { close } = useFilterContext();
+  const setFiltersGlobal = useComponentStore((state) => state.setFilters);
+  const resetFiltersGlobal = useComponentStore((state) => state.resetFilters);
   const { statusEnum, isLoadingStatusEnum } = useUserFeedbackStatusEnum();
   const { categoryEnum, isLoadingCategoryEnum } = useUserFeedbackCategoryEnum();
 
@@ -47,37 +46,37 @@ function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersPro
     ...categoryEnum,
   ];
 
-  const form = useForm<IUserFeedbackFilterState>({
-    defaultValues: {
-      status: filters.status ?? "",
-      category: filters.category ?? "",
-      platform: filters.platform ?? "",
-      size: filters.size ?? 20,
-    },
+  const defaultValues: IUserFeedbackFilters = {
+    ...filters,
+    status: filters.status ?? "",
+    category: filters.category ?? "",
+    platform: filters.platform ?? "",
+    size: filters.size ?? INITIAL_USER_FEEDBACKS_FILTERS.size,
+  };
+
+  const form = useForm<IUserFeedbackFilters>({
+    defaultValues,
   });
 
-  const handleApplyFilters = (data: IUserFeedbackFilterState) => {
-    setFilters((prev) => ({
-      ...prev,
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [filters.status, filters.category, filters.platform, filters.size, form]);
+
+  const handleApplyFilters = (data: IUserFeedbackFilters) => {
+    setFiltersGlobal(USER_FEEDBACKS_COMPONENT_FILTER_KEY, {
+      ...filters,
       ...data,
       page: 1,
-    }));
+    });
     close();
   };
 
-  const handleClearFilters = () => {
-    const cleared = {
-      status: "",
-      category: "",
-      platform: "",
-      size: 20,
-    };
-    form.reset(cleared);
-    setFilters((prev) => ({
-      ...prev,
-      ...cleared,
-      page: 1,
-    }));
+  const clearSearch = () => {
+    resetFiltersGlobal(
+      USER_FEEDBACKS_COMPONENT_FILTER_KEY,
+      INITIAL_USER_FEEDBACKS_FILTERS,
+    );
+    form.reset(INITIAL_USER_FEEDBACKS_FILTERS);
     close();
   };
 
@@ -126,7 +125,7 @@ function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersPro
       </InputGroup>
 
       <div className="flex justify-end gap-2 border-t border-white/10 pt-3">
-        <Button type="button" buttonStyle="primary" onClick={handleClearFilters}>
+        <Button type="button" buttonStyle="primary" onClick={clearSearch}>
           Limpar
         </Button>
         <Button type="submit" buttonStyle="secondary">
@@ -137,30 +136,36 @@ function AdvancedFiltersContent({ filters, setFilters }: UserFeedbacksFiltersPro
   );
 }
 
-export function UserFeedbacksFilters({ filters, setFilters }: UserFeedbacksFiltersProps) {
+export function UserFeedbacksSearchFilters() {
+  const { filters, onSearchChange } = useAllUserFeedbacks();
+
   const form = useForm<{ search: string }>({
-    defaultValues: { search: filters.search ?? "" },
+    defaultValues: { search: String(filters.search ?? "") },
   });
 
   const watchedSearch = form.watch("search");
 
   useEffect(() => {
-    setFilters((prev) => {
-      if (prev.search === watchedSearch) return prev;
-      return { ...prev, search: watchedSearch, page: 1 };
-    });
-  }, [watchedSearch, setFilters]);
+    onSearchChange(watchedSearch);
+  }, [watchedSearch, onSearchChange]);
+
+  useEffect(() => {
+    const next = String(filters.search ?? "");
+    if (next !== form.getValues("search")) {
+      form.setValue("search", next);
+    }
+  }, [filters.search, form]);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="w-full flex flex-row gap-3 items-center rounded-xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
         <Input
           {...form.register("search")}
-          placeholder="Buscar por título ou descrição..."
+          placeholder="Buscar feedback por título ou descrição..."
           wrapperClassName="w-full"
         />
         <Filters
-          filters={<AdvancedFiltersContent filters={filters} setFilters={setFilters} />}
+          filters={<AdvancedFiltersContent filters={filters} />}
           align="left"
         />
       </div>
