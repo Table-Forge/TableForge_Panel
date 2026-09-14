@@ -11,6 +11,7 @@ import { useBookingStatusEnum } from "@/src/features/spaces/hooks/enums/use-spac
 import type { IGetPaginatedParams } from "@/src/interfaces";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useDebouncedCallback } from "@/src/hooks/utils/useDebouncedCallback";
 
 export interface IBookingParams extends IGetPaginatedParams {
   status?: string;
@@ -110,9 +111,20 @@ export function BookingsSearchFilters({
 
   const watchedSearch = useWatch({ control: form.control, name: "search" });
 
+  const debouncedSearchChange = useDebouncedCallback((value: string) => {
+    onSearchChange(value);
+  }, 500);
+
   useEffect(() => {
-    onSearchChange(watchedSearch ?? "");
-  }, [watchedSearch, onSearchChange]);
+    debouncedSearchChange(watchedSearch ?? "");
+  }, [watchedSearch, debouncedSearchChange]);
+
+  useEffect(() => {
+    const next = String(filters.search ?? "");
+    if (next !== form.getValues("search")) {
+      form.setValue("search", next);
+    }
+  }, [filters.search, form]);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

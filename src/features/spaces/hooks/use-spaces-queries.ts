@@ -73,12 +73,13 @@ export const useAllBookings = (params: Record<string, unknown> = {}, enabled = t
   const bookingsQuery = useQuery({
     queryKey: SPACE_KEYS.bookingList(params),
     queryFn: () => SpaceService.getBookings(params),
+    placeholderData: (previousData) => previousData,
     enabled,
   });
 
   return {
     data: bookingsQuery.data,
-    isLoading: bookingsQuery.isPending,
+    isLoading: bookingsQuery.isLoading,
     bookingsQuery,
   };
 };
