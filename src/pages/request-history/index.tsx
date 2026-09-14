@@ -20,15 +20,8 @@ const getTotalMsClass = (totalMs?: number) => {
 };
 
 export function RequestHistoryPage() {
-  const {
-    data,
-    isLoading,
-    isError,
-    filters,
-    setFilters,
-    refetch,
-    isFetching,
-  } = useAllRequestHistory();
+  const { data, isLoading, isError, filters, setFilters, refetch, isFetching } =
+    useAllRequestHistory();
 
   const tableContents: ITableColumn<IRequestHistoryItem>[] = [
     {
@@ -63,6 +56,7 @@ export function RequestHistoryPage() {
       key: "userAgent",
       width: "140px",
       align: "center",
+      normalCase: true,
       render: (request) => <DevicePill userAgent={request.userAgent} />,
     },
     {
