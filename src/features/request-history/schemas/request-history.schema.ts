@@ -15,6 +15,7 @@ export const RequestHistoryListSchema = z.object({
   userId: numberOptional,
   userLogin: stringOptional,
   ipAddress: stringOptional,
+  userAgent: stringOptional,
   pipelineMs: numberOptional,
   actionMs: numberOptional,
   responseMs: numberOptional,
@@ -30,7 +31,6 @@ export const RequestHistoryListSchema = z.object({
 export const RequestHistorySchema = RequestHistoryListSchema.extend({
   ttl: dateOptional,
   query: stringOptional,
-  userAgent: stringOptional,
   responseSize: numberOptional,
   details: stringOptional,
 });

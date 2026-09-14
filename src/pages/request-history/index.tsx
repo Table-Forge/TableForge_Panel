@@ -9,6 +9,7 @@ import { useAllRequestHistory } from "@/src/features/request-history/hooks/use-a
 import type { IRequestHistoryItem } from "@/src/features/request-history/schemas/request-history.schema";
 import { formatDate } from "@/src/utils/format";
 import { RequestHistorySearchFilters } from "./components/search-filters/search-filters";
+import { DevicePill } from "./components/device-pill";
 import { StatusPill } from "./components/status-pill";
 
 const getTotalMsClass = (totalMs?: number) => {
@@ -56,6 +57,13 @@ export function RequestHistoryPage() {
       width: "140px",
       normalCase: true,
       render: (request) => request.userLogin || "-",
+    },
+    {
+      title: "Origem",
+      key: "userAgent",
+      width: "140px",
+      align: "center",
+      render: (request) => <DevicePill userAgent={request.userAgent} />,
     },
     {
       title: "Total",

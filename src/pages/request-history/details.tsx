@@ -23,6 +23,7 @@ import { formatDate } from "@/src/utils/format";
 import { useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { DevicePill } from "./components/device-pill";
 import { StatusPill } from "./components/status-pill";
 
 const COLD_START_UPTIME_SECONDS = 120;
@@ -92,11 +93,12 @@ export function RequestHistoryDetailsPage() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
                 Requisição #{data.id}
               </h1>
               <StatusPill statusCode={data.statusCode} />
+              <DevicePill userAgent={data.userAgent} />
             </div>
             <p className="truncate text-xs font-semibold text-grays-100">
               {data.method || "-"} {data.path || data.route || ""}
@@ -244,7 +246,10 @@ export function RequestHistoryDetailsPage() {
           </InfoBox>
           <InfoBox className="lg:col-span-3">
             <CardLabel>User agent</CardLabel>
-            <CardValue className="break-all">{data.userAgent ?? "-"}</CardValue>
+            <div className="flex flex-wrap items-center gap-2">
+              <DevicePill userAgent={data.userAgent} />
+              <CardValue className="break-all">{data.userAgent ?? "-"}</CardValue>
+            </div>
           </InfoBox>
           <InfoBox>
             <CardLabel>Data</CardLabel>
