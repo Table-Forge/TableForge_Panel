@@ -4,6 +4,7 @@ import type {
   IUserFeedback,
   IUserFeedbackFilters,
   IUserFeedbackListDto,
+  IUserFeedbackSendMessage,
   IUserFeedbackSummary,
 } from "../interfaces";
 import type { IUserFeedbackStatusUpdate } from "../schemas/user-feedback.schema";
@@ -26,12 +27,24 @@ export class UserFeedbackService {
     return data;
   }
 
+  static async sendMessage(
+    id: number,
+    payload: IUserFeedbackSendMessage
+  ): Promise<IUserFeedback> {
+    const { data } = await api.post<IUserFeedback>(
+      `${CONTROLLER}/${id}/Messages`,
+      payload
+    );
+    return data;
+  }
+
   static async updateStatus(
     id: number,
     payload: IUserFeedbackStatusUpdate
   ): Promise<void> {
     await api.put(`${CONTROLLER}/${id}/Status`, payload);
   }
+
 
   static async getFeedbackStatusEnum() {
     const { data } = await api.get<

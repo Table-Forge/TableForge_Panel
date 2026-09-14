@@ -13,6 +13,31 @@ export interface IUserFeedbackImage {
   createdAt: string;
 }
 
+export interface IUserFeedbackMessageImage {
+  id: number;
+  messageId: number;
+  imageId: number;
+  url: string;
+  createdAt: string;
+}
+
+export interface IUserFeedbackMessage {
+  id: number;
+  feedbackId: number;
+  createdAt: string;
+  userId?: number;
+  userName?: string;
+  userAvatarUrl?: string;
+  isFromTeam: boolean;
+  content: string;
+  images: IUserFeedbackMessageImage[];
+}
+
+export interface IUserFeedbackSendMessage {
+  content: string;
+  imageIds?: number[];
+}
+
 export interface IUserFeedback {
   id: number;
   createdAt: string;
@@ -34,7 +59,9 @@ export interface IUserFeedback {
   respondedByName?: string;
   respondedAt?: string;
   isEditable: boolean;
+  reopensOnNewMessage: boolean;
   images: IUserFeedbackImage[];
+  messages: IUserFeedbackMessage[];
 }
 
 export interface IUserFeedbackListDto {
@@ -53,11 +80,14 @@ export interface IUserFeedbackListDto {
   hasResponse: boolean;
   respondedAt?: string;
   imageCount: number;
+  messageCount: number;
+  waitingForTeam: boolean;
 }
 
 export interface IUserFeedbackSummary {
   total: number;
   pending: number;
+
   averageRating?: number;
   ratingCount: number;
   byStatus: { value: UserFeedbackStatus; total: number }[];

@@ -6,7 +6,7 @@ import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
 import { useBoundStore } from "@/src/store";
-import { MdImage, MdModeEdit } from "react-icons/md";
+import { MdForum, MdImage, MdModeEdit } from "react-icons/md";
 import { useUserFeedbacksQuery } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-queries";
 import type { IUserFeedbackListDto } from "@/src/features/user-feedbacks/interfaces";
 import { UserFeedbackStatus } from "@/src/features/user-feedbacks/enums";
@@ -82,7 +82,14 @@ export function UserFeedbacksPage() {
       title: "Título",
       key: "title",
       width: "250px",
-      render: (item) => item.title,
+      render: (item) => (
+        <div className="flex flex-col items-start gap-1">
+          <span className="text-grays-100">{item.title}</span>
+          {item.waitingForTeam && (
+            <MatrixTag matrixName="Aguardando retorno" lineColor="#f59e0b" />
+          )}
+        </div>
+      ),
     },
     {
       title: "Assunto",
@@ -115,9 +122,20 @@ export function UserFeedbacksPage() {
       },
     },
     {
+      title: "Mensagens",
+      key: "messageCount",
+      width: "100px",
+      align: "center",
+      render: (item) => (
+        <div className="flex items-center justify-center gap-1 text-grays-200">
+          <MdForum /> <span>{item.messageCount ?? 0}</span>
+        </div>
+      ),
+    },
+    {
       title: "Anexos",
       key: "imageCount",
-      width: "100px",
+      width: "90px",
       align: "center",
       render: (item) => (
         <div className="flex items-center justify-center gap-1 text-grays-200">
@@ -128,7 +146,7 @@ export function UserFeedbacksPage() {
     {
       title: "Respondido",
       key: "hasResponse",
-      width: "120px",
+      width: "110px",
       align: "center",
       render: (item) => (
         <MatrixTag
