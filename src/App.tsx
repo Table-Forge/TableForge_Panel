@@ -28,7 +28,11 @@ import { MySpacesPage } from "@/src/pages/my-spaces";
 import { MySpaceDetailsPage } from "@/src/pages/my-spaces/details";
 import { AllSpacesPage } from "@/src/pages/all-spaces";
 import { MyBookingsPage } from "@/src/pages/my-bookings";
-import { UserFeedbacksPage, UserFeedbacksDashboardPage } from "@/src/pages/user-feedbacks/exports";
+import {
+  UserFeedbacksPage,
+  UserFeedbacksDashboardPage,
+  UserFeedbackDetailsPage,
+} from "@/src/pages/user-feedbacks/exports";
 import {
   BrowserRouter,
   Navigate,
@@ -78,6 +82,7 @@ function App() {
                 <Route path="my-space" element={<Navigate to="/my-spaces" replace />} />
                 <Route path="my-bookings" element={<MyBookingsPage />} />
                 <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
+                <Route path="user-feedbacks/:id" element={<UserFeedbackDetailsPage />} />
                 <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />
               </Route>
             </Route>

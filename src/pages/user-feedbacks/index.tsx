@@ -1,15 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
-import { useBoundStore } from "@/src/store";
 import { MdForum, MdImage, MdModeEdit } from "react-icons/md";
 import { useAllUserFeedbacks } from "@/src/features/user-feedbacks/hooks/use-all-user-feedbacks";
 import type { IUserFeedbackListDto } from "@/src/features/user-feedbacks/interfaces";
 import { UserFeedbackStatus } from "@/src/features/user-feedbacks/enums";
-import { ModalFeedbackDetails } from "./components/modal-feedback-details/modal-feedback-details";
 import { MoreInfo } from "@/src/components/more-info/more-info";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import dayjs from "dayjs";
@@ -21,7 +20,7 @@ import {
 } from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 
 export function UserFeedbacksPage() {
-  const openModal = useBoundStore((state) => state.openModal);
+  const navigate = useNavigate();
   const { statusEnum } = useUserFeedbackStatusEnum(true, false);
   const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
@@ -42,11 +41,10 @@ export function UserFeedbacksPage() {
   const getMoreInfoOptions = (item: IUserFeedbackListDto): IMoreOptions[] => {
     return [
       {
-        label: "Triagem / Detalhes",
+        label: "Ver Detalhes / Triagem",
         icon: <MdModeEdit />,
         show: true,
-        onClick: () =>
-          openModal("Detalhes do Feedback", <ModalFeedbackDetails feedbackId={item.id} />, "lg"),
+        onClick: () => navigate(`/user-feedbacks/${item.id}`),
       },
     ];
   };
@@ -178,6 +176,7 @@ export function UserFeedbacksPage() {
         tableContents={tableContents}
         bodyData={data?.items ?? []}
         bodyHeight="100%"
+        detailsLink="/user-feedbacks"
         emptyMessage="Nenhum feedback encontrado na fila."
       />
 
