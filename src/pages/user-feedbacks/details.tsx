@@ -16,7 +16,6 @@ import {
   CardBox,
   CardLabel,
   CardValue,
-  GridBox,
   InfoBox,
 } from "@/src/components/card-box/card-box";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
@@ -228,37 +227,39 @@ export function UserFeedbackDetailsPage() {
               </div>
             )}
 
-            <GridBox className="lg:grid-cols-2 mt-4">
-              <InfoBox>
-                <CardLabel>Categoria</CardLabel>
-                <div className="mt-1 flex items-center gap-1 text-sm font-semibold text-white">
-                  <MdLayers className="text-accent" />
-                  {categoryOption?.name || feedback.category}
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <InfoBox className="min-w-0">
+                <CardLabel className="truncate">Categoria</CardLabel>
+                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-white min-w-0 truncate">
+                  <MdLayers className="text-accent shrink-0" />
+                  <span className="truncate">{categoryOption?.name || feedback.category}</span>
                 </div>
               </InfoBox>
 
               {feedback.category === UserFeedbackCategory.Experience && feedback.rating && (
-                <InfoBox>
-                  <CardLabel>Avaliação</CardLabel>
-                  <div className="mt-1 flex items-center gap-1 text-sm font-bold text-warning">
-                    <MdStar /> {feedback.rating} / 5
+                <InfoBox className="min-w-0">
+                  <CardLabel className="truncate">Avaliação</CardLabel>
+                  <div className="mt-1 flex items-center gap-1 text-sm font-bold text-warning min-w-0 truncate">
+                    <MdStar className="shrink-0" /> {feedback.rating} / 5
                   </div>
                 </InfoBox>
               )}
 
-              <InfoBox>
-                <CardLabel>Plataforma</CardLabel>
-                <div className="mt-1 flex items-center gap-1 text-sm font-semibold text-white">
-                  <MdPhoneIphone className="text-grays-300" />
-                  {feedback.platform || "Não informada"}
+              <InfoBox className="min-w-0">
+                <CardLabel className="truncate">Plataforma</CardLabel>
+                <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-white min-w-0 truncate">
+                  <MdPhoneIphone className="text-grays-300 shrink-0" />
+                  <span className="truncate">{feedback.platform || "Não informada"}</span>
                 </div>
               </InfoBox>
 
-              <InfoBox>
-                <CardLabel>Versão do App</CardLabel>
-                <CardValue>{feedback.appVersion ? `v${feedback.appVersion}` : "Não informada"}</CardValue>
+              <InfoBox className="min-w-0">
+                <CardLabel className="truncate">Versão do App</CardLabel>
+                <CardValue className="truncate">
+                  {feedback.appVersion ? `v${feedback.appVersion}` : "Não informada"}
+                </CardValue>
               </InfoBox>
-            </GridBox>
+            </div>
 
             {feedback.deviceInfo && (
               <div className="mt-3 rounded-lg border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
