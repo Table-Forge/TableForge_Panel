@@ -6,7 +6,7 @@ interface MatrixTagProps {
 export const MatrixTag = ({ matrixName, lineColor }: MatrixTagProps) => {
   if (!lineColor) {
     return (
-      <span className="rounded border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase text-white/80">
+      <span className="inline-flex items-center justify-center whitespace-nowrap rounded border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-bold uppercase text-white/80">
         {matrixName}
       </span>
     );
@@ -14,7 +14,7 @@ export const MatrixTag = ({ matrixName, lineColor }: MatrixTagProps) => {
 
   return (
     <span
-      className="rounded border px-2 py-0.5 text-[10px] font-bold uppercase"
+      className="inline-flex items-center justify-center whitespace-nowrap rounded border px-2.5 py-1 text-[11px] font-bold uppercase"
       style={{
         color: lineColor,
         backgroundColor: `${lineColor}20`,
