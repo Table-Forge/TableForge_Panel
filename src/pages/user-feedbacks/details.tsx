@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import { ArrowLeft } from "lucide-react";
 import {
   MdForum,
   MdLayers,
+  MdModeEdit,
   MdPhoneIphone,
   MdSend,
   MdStar,
@@ -20,16 +19,13 @@ import {
   GridBox,
   InfoBox,
 } from "@/src/components/card-box/card-box";
-import { FieldsWrapper } from "@/src/components/fields-wrapper/fields-wrapper";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { InputGroup } from "@/src/components/input-group/input-group";
-import { Label } from "@/src/components/label/label";
 import { MatrixTag } from "@/src/components/matrix-tag/matrix-tag";
 import { ModalImageCarousel } from "@/src/components/modals/modal-image-carousel/modal-image-carousel";
-import { Select } from "@/src/components/select/select";
 import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
-import { ControlledTextarea } from "@/src/components/input/input.textarea.controlled";
+import { Textarea } from "@/src/components/input/input.textarea";
+import { ModalTriage } from "./components/modal-triage/modal-triage";
 import {
   UserFeedbackCategory,
   UserFeedbackStatus,
@@ -40,8 +36,6 @@ import {
 } from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 import { useUserFeedbacksMutations } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-mutations";
 import { useUserFeedbackDetailsQuery } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-queries";
-import { UserFeedbackStatusUpdateSchema } from "@/src/features/user-feedbacks/schemas/user-feedback.schema";
-import type { IUserFeedbackStatusUpdate } from "@/src/features/user-feedbacks/schemas/user-feedback.schema";
 import { useBoundStore } from "@/src/store";
 import { handleError } from "@/src/utils/error-handler";
 
@@ -79,34 +73,10 @@ export function UserFeedbackDetailsPage() {
   }, [id]);
 
   const { data: feedback, isLoading, isError } = useUserFeedbackDetailsQuery(feedbackId);
-  const { statusEnum, isLoadingStatusEnum } = useUserFeedbackStatusEnum();
+  const { statusEnum } = useUserFeedbackStatusEnum();
   const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
-  const {
-    updateStatusMutation,
-    isUpdatingStatus,
-    sendMessageMutation,
-    isSendingMessage,
-  } = useUserFeedbacksMutations();
-
-  const hookForm = useForm<IUserFeedbackStatusUpdate>({
-    resolver: zodResolver(UserFeedbackStatusUpdateSchema),
-    defaultValues: {
-      status: undefined,
-      priority: undefined,
-      response: "",
-    },
-  });
-
-  useEffect(() => {
-    if (feedback) {
-      hookForm.reset({
-        status: feedback.status,
-        priority: feedback.priority,
-        response: feedback.adminResponse || "",
-      });
-    }
-  }, [feedback, hookForm]);
+  const { sendMessageMutation, isSendingMessage } = useUserFeedbacksMutations();
 
   useEffect(() => {
     if (feedback?.messages?.length) {
@@ -123,13 +93,13 @@ export function UserFeedbackDetailsPage() {
     );
   };
 
-  const onSubmitStatus = async (data: IUserFeedbackStatusUpdate) => {
-    try {
-      await updateStatusMutation.mutateAsync({ id: feedbackId, payload: data });
-      addToast("success", "Situação do feedback atualizada com sucesso!");
-    } catch (error: unknown) {
-      handleError(error);
-    }
+  const handleOpenTriageModal = () => {
+    if (!feedback) return;
+    openModal(
+      "Alterar Situação do Feedback",
+      <ModalTriage feedback={feedback} />,
+      "md",
+    );
   };
 
   const handleSendThreadMessage = async () => {
@@ -157,13 +127,13 @@ export function UserFeedbackDetailsPage() {
   const statusOption = statusEnum.find((item) => item.value === feedback.status);
 
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-1 min-h-0 flex-col gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shrink-0">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate("/user-feedbacks")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer"
             title="Voltar para a fila"
           >
             <ArrowLeft size={18} />
@@ -188,10 +158,23 @@ export function UserFeedbackDetailsPage() {
             </p>
           </div>
         </div>
+
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            buttonStyle="secondary"
+            size="sm"
+            onClick={handleOpenTriageModal}
+            className="flex items-center gap-1.5"
+          >
+            <MdModeEdit />
+            Alterar Situação
+          </Button>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="flex flex-col gap-6 lg:col-span-5">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="flex flex-col gap-6 lg:col-span-5 overflow-y-auto pr-0.5">
           <CardBox title="Informações do Usuário e Contexto">
             <div className="flex items-center gap-4 border-b border-white/10 pb-4">
               <Thumbnail
@@ -208,7 +191,44 @@ export function UserFeedbackDetailsPage() {
               </div>
             </div>
 
-            <GridBox className="lg:grid-cols-2 mt-2">
+            <div className="mt-4 flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-grays-300">
+                  Situação Atual
+                </span>
+                <div className="flex items-center gap-2">
+                  <MatrixTag
+                    matrixName={statusOption?.name || feedback.status}
+                    lineColor={getStatusColor(feedback.status)}
+                  />
+                  {feedback.priority && (
+                    <span className="text-xs text-grays-300">
+                      • Prioridade: {feedback.priority}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                buttonStyle="hollow"
+                size="xs"
+                onClick={handleOpenTriageModal}
+                className="flex items-center gap-1.5"
+              >
+                <MdModeEdit size={14} />
+                Alterar
+              </Button>
+            </div>
+
+            {feedback.adminResponse && (
+              <div className="mt-3 rounded-lg border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
+                <span className="font-semibold text-grays-100">Resposta da equipe: </span>
+                {feedback.adminResponse}
+              </div>
+            )}
+
+            <GridBox className="lg:grid-cols-2 mt-4">
               <InfoBox>
                 <CardLabel>Categoria</CardLabel>
                 <div className="mt-1 flex items-center gap-1 text-sm font-semibold text-white">
@@ -279,48 +299,11 @@ export function UserFeedbackDetailsPage() {
               )}
             </div>
           </CardBox>
-
-          <CardBox title="Triagem & Mudança de Situação">
-            <form onSubmit={hookForm.handleSubmit(onSubmitStatus)} className="flex flex-col gap-4">
-              <FieldsWrapper>
-                <InputGroup>
-                  <Label htmlFor="status" isRequired>
-                    Situação Atual
-                  </Label>
-                  <Select
-                    hookForm={hookForm}
-                    name="status"
-                    initialOptions={statusEnum}
-                    isLoading={isLoadingStatusEnum}
-                    title="Selecione a situação"
-                  />
-                </InputGroup>
-              </FieldsWrapper>
-
-              <InputGroup>
-                <Label htmlFor="response">
-                  Resposta / Motivo (entra automaticamente na conversa)
-                </Label>
-                <ControlledTextarea
-                  hookForm={hookForm}
-                  name="response"
-                  placeholder="Escreva a resposta oficial ao mudar a situação..."
-                  rows={3}
-                />
-              </InputGroup>
-
-              <div className="flex justify-end pt-2">
-                <Button type="submit" isLoading={isUpdatingStatus}>
-                  Salvar Triagem
-                </Button>
-              </div>
-            </form>
-          </CardBox>
         </div>
 
-        <div className="flex flex-col lg:col-span-7">
-          <div className="flex h-[760px] flex-col rounded-xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 bg-white/5 rounded-t-xl">
+        <div className="flex min-h-0 flex-1 flex-col lg:col-span-7">
+          <div className="flex h-full min-h-[600px] flex-col rounded-xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 bg-white/5 rounded-t-xl shrink-0">
               <div className="flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/20 text-accent border border-accent/30">
                   <MdForum size={20} />
@@ -340,7 +323,7 @@ export function UserFeedbackDetailsPage() {
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div className="flex-1 min-h-0 overflow-y-auto p-5 space-y-4">
               {(!feedback.messages || feedback.messages.length === 0) ? (
                 <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-grays-300 p-8">
                   <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-grays-400">
@@ -405,34 +388,38 @@ export function UserFeedbackDetailsPage() {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="border-t border-white/10 bg-primary/60 p-4 rounded-b-xl flex flex-col gap-2">
-              <div className="flex flex-col rounded-lg border border-grays-700 bg-grays-900 focus-within:border-accent transition-colors">
-                <textarea
-                  id="threadMessage"
-                  value={threadMessage}
-                  onChange={(e) => setThreadMessage(e.target.value)}
-                  placeholder="Digite uma mensagem para o usuário nesta conversa..."
-                  maxLength={2000}
-                  rows={3}
-                  className="w-full resize-none bg-transparent p-3 text-sm text-white placeholder-grays-400 focus:outline-none"
-                />
-                <div className="flex items-center justify-between border-t border-white/5 px-3 py-2 text-xs text-grays-400">
-                  <span className="text-[11px]">
-                    {threadMessage.length} / 2000 caracteres • Responder na conversa não move o status
-                  </span>
-                  <Button
-                    type="button"
-                    buttonStyle="secondary"
-                    size="sm"
-                    disabled={!threadMessage.trim() || isSendingMessage}
-                    isLoading={isSendingMessage}
-                    onClick={handleSendThreadMessage}
-                    className="flex items-center gap-1.5"
-                  >
-                    <MdSend />
-                    Enviar Mensagem
-                  </Button>
-                </div>
+            <div className="shrink-0 border-t border-white/10 bg-primary/40 p-4 rounded-b-xl flex flex-col gap-3">
+              <Textarea
+                id="threadMessage"
+                value={threadMessage}
+                onChange={(e) => setThreadMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    handleSendThreadMessage();
+                  }
+                }}
+                placeholder="Digite uma mensagem para o usuário nesta conversa..."
+                maxLength={2000}
+                disabled={isSendingMessage}
+                className="h-24 max-h-32"
+              />
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-grays-300">
+                  Responder na conversa não altera a situação do chamado. Pressione Ctrl+Enter para enviar.
+                </span>
+                <Button
+                  type="button"
+                  buttonStyle="secondary"
+                  size="sm"
+                  disabled={!threadMessage.trim() || isSendingMessage}
+                  isLoading={isSendingMessage}
+                  onClick={handleSendThreadMessage}
+                  className="flex items-center gap-1.5 shrink-0"
+                >
+                  <MdSend />
+                  Enviar Mensagem
+                </Button>
               </div>
             </div>
           </div>
