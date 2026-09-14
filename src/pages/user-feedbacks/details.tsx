@@ -346,7 +346,7 @@ export function UserFeedbackDetailsPage() {
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1.5 px-1 text-xs">
-                        <span className={`font-bold ${isTeam ? "text-emerald-400" : "text-accent"}`}>
+                        <span className={`font-bold ${isTeam ? "text-emerald-400" : "text-orange-400"}`}>
                           {msg.userName || (isTeam ? "Equipe TableForge" : "Usuário")}
                         </span>
                         <span className="text-[11px] text-grays-400">
@@ -358,7 +358,7 @@ export function UserFeedbackDetailsPage() {
                         className={`rounded-2xl p-4 shadow-lg ${
                           isTeam
                             ? "rounded-tr-sm border border-emerald-500/30 bg-emerald-950/40 text-white"
-                            : "rounded-tl-sm border border-grays-700 bg-grays-800 text-grays-100"
+                            : "rounded-tl-sm border border-orange-500/30 bg-orange-950/40 text-white"
                         }`}
                       >
                         <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</p>
