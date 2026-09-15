@@ -25,6 +25,7 @@ export function Table<T extends { id?: number | string }>({
   scrollable = true,
   emptyMessage,
   getRowColor,
+  getRowAccent,
   getContextOptions,
   isDraggable,
   onReorder,
@@ -284,6 +285,7 @@ export function Table<T extends { id?: number | string }>({
               handleRowClick={handleRowClick}
               handleContextMenu={handleContextMenu}
               customRowColor={getRowColor?.(row)}
+              rowAccent={getRowAccent?.(row)}
               isDraggable={canDrag}
               draggedIndex={draggedIndex}
               dragOverIndex={dragOverIndex}
@@ -335,6 +337,7 @@ function TableRowComponent<T extends { id?: number | string }>({
   handleRowClick,
   handleContextMenu,
   customRowColor,
+  rowAccent,
   isDraggable,
   draggedIndex,
   dragOverIndex,
@@ -365,7 +368,10 @@ function TableRowComponent<T extends { id?: number | string }>({
       } ${
         isClickable ? "cursor-pointer hover:bg-white/5" : "cursor-default"
       }`}
-      style={{ color: customRowColor }}
+      style={{
+        color: customRowColor,
+        boxShadow: rowAccent ? `inset 3px 0 0 ${rowAccent}` : undefined,
+      }}
     >
       {isDraggable ? (
         <div

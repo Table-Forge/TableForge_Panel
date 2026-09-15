@@ -20,6 +20,7 @@ interface ITable<T extends { id?: number | string }> {
   scrollable?: boolean;
   emptyMessage?: string;
   getRowColor?: (row: T) => string | undefined;
+  getRowAccent?: (row: T) => string | undefined;
   getContextOptions?: (row: T) => IMoreOptions[];
   isDraggable?: boolean;
   onReorder?: (newData: T[], draggedItem: T, targetIndex: number) => void;
@@ -34,6 +35,7 @@ interface TableRowProps<T extends { id?: number | string }> {
   handleRowClick: (row: T) => void;
   handleContextMenu: (event: MouseEvent<HTMLDivElement>, row: T) => void;
   customRowColor?: string;
+  rowAccent?: string;
   isDraggable?: boolean;
   draggedIndex?: number | null;
   dragOverIndex?: number | null;

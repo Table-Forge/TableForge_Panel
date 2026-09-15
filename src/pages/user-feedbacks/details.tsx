@@ -21,7 +21,7 @@ import {
   InfoBox,
 } from "@/src/components/card-box/card-box";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
-import { MatrixTag } from "@/src/components/matrix-tag/matrix-tag";
+import { Tag } from "@/src/components/tag/tag";
 import { ModalImageCarousel } from "@/src/components/modals/modal-image-carousel/modal-image-carousel";
 import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { Thumbnail } from "@/src/components/thumbnail/thumbnail";
@@ -148,9 +148,9 @@ export function UserFeedbackDetailsPage() {
               <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
                 #{feedback.id}
               </span>
-              <MatrixTag
-                matrixName={statusOption?.name || feedback.status}
-                lineColor={getStatusColor(feedback.status)}
+              <Tag
+                label={statusOption?.name || feedback.status}
+                color={getStatusColor(feedback.status)}
               />
             </div>
             <p className="text-xs font-semibold text-grays-100">
@@ -199,9 +199,9 @@ export function UserFeedbackDetailsPage() {
                   Situação Atual
                 </span>
                 <div className="flex items-center gap-2">
-                  <MatrixTag
-                    matrixName={statusOption?.name || feedback.status}
-                    lineColor={getStatusColor(feedback.status)}
+                  <Tag
+                    label={statusOption?.name || feedback.status}
+                    color={getStatusColor(feedback.status)}
                   />
                   {feedback.priority && (
                     <span className="text-xs text-grays-300">

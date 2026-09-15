@@ -6,30 +6,45 @@ import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
 import { useAllUserFeedbacks } from "@/src/features/user-feedbacks/hooks/use-all-user-feedbacks";
 import type { IUserFeedbackListDto } from "@/src/features/user-feedbacks/interfaces";
-import { UserFeedbackCategory, UserFeedbackStatus } from "@/src/features/user-feedbacks/enums";
+import {
+  UserFeedbackCategory,
+  UserFeedbackStatus,
+} from "@/src/features/user-feedbacks/enums";
 import dayjs from "dayjs";
 import { UserFeedbacksSearchFilters } from "./components/search-filters/search-filters";
-import { MatrixTag } from "@/src/components/matrix-tag/matrix-tag";
+import { Tag } from "@/src/components/tag/tag";
+import { Tooltip } from "@/src/components/tooltip/tooltip";
+import { Clock } from "lucide-react";
 import {
   useUserFeedbackCategoryEnum,
   useUserFeedbackStatusEnum,
 } from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 
+const WAITING_FOR_TEAM_COLOR = "#f59e0b";
+
 export function UserFeedbacksPage() {
   const { statusEnum } = useUserFeedbackStatusEnum(true, false);
   const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
-  const { data, isLoading, isError, filters, setFilters } = useAllUserFeedbacks();
+  const { data, isLoading, isError, filters, setFilters } =
+    useAllUserFeedbacks();
 
   const getStatusColor = (status: UserFeedbackStatus) => {
     switch (status) {
-      case UserFeedbackStatus.New: return "#0ea5e9";
-      case UserFeedbackStatus.InAnalysis: return "#f59e0b";
-      case UserFeedbackStatus.Planned: return "#6366f1";
-      case UserFeedbackStatus.Resolved: return "#10b981";
-      case UserFeedbackStatus.Declined: return "#ef4444";
-      case UserFeedbackStatus.Duplicated: return "#6b7280";
-      default: return "#6b7280";
+      case UserFeedbackStatus.New:
+        return "#0ea5e9";
+      case UserFeedbackStatus.InAnalysis:
+        return "#f59e0b";
+      case UserFeedbackStatus.Planned:
+        return "#6366f1";
+      case UserFeedbackStatus.Resolved:
+        return "#10b981";
+      case UserFeedbackStatus.Declined:
+        return "#ef4444";
+      case UserFeedbackStatus.Duplicated:
+        return "#6b7280";
+      default:
+        return "#6b7280";
     }
   };
 
@@ -70,12 +85,25 @@ export function UserFeedbacksPage() {
       title: "Título",
       key: "title",
       width: "320px",
+      normalCase: true,
       render: (item) => (
-        <div className="flex flex-col items-start gap-1">
-          <span className="text-grays-100">{item.title}</span>
+        <div className="flex min-w-0 items-center gap-2">
           {item.waitingForTeam && (
-            <MatrixTag matrixName="Aguardando retorno" lineColor="#f59e0b" />
+            <Tooltip
+              text="Aguardando retorno do time"
+              side="right"
+              style={{ flexShrink: 0 }}
+            >
+              <Clock size={14} color={WAITING_FOR_TEAM_COLOR} />
+            </Tooltip>
           )}
+          <span
+            className={`min-w-0 overflow-hidden text-ellipsis whitespace-nowrap ${
+              item.waitingForTeam ? "font-semibold text-white" : "text-grays-100"
+            }`}
+          >
+            {item.title}
+          </span>
         </div>
       ),
     },
@@ -87,12 +115,7 @@ export function UserFeedbacksPage() {
       render: (row) => {
         const option = categoryEnum.find((item) => item.value === row.category);
         const displayName = option?.name || row.category;
-        return (
-          <MatrixTag
-            matrixName={displayName}
-            lineColor={getCategoryColor(row.category)}
-          />
-        );
+        return <Tag label={displayName} color={getCategoryColor(row.category)} />;
       },
     },
     {
@@ -110,9 +133,7 @@ export function UserFeedbacksPage() {
       render: (row) => {
         const option = statusEnum.find((item) => item.value === row.status);
         const displayName = option?.name || row.status;
-        return (
-          <MatrixTag matrixName={displayName} lineColor={getStatusColor(row.status)} />
-        );
+        return <Tag label={displayName} color={getStatusColor(row.status)} />;
       },
     },
     {
@@ -121,18 +142,20 @@ export function UserFeedbacksPage() {
       width: "120px",
       align: "center",
       render: (item) => (
-        <MatrixTag
-          matrixName={item.hasResponse ? "Sim" : "Não"}
-          lineColor={item.hasResponse ? "#10b981" : "#6b7280"}
+        <Tag
+          label={item.hasResponse ? "Sim" : "Não"}
+          color={item.hasResponse ? "#10b981" : "#6b7280"}
         />
       ),
     },
   ];
 
   if (isLoading) return <SkeletonTable />;
-  if (isError) return <InfoNotFound message="Ocorreu um erro ao carregar os feedbacks." />;
+  if (isError)
+    return <InfoNotFound message="Ocorreu um erro ao carregar os feedbacks." />;
 
-  const totalItems = data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
+  const totalItems =
+    data?.pagination?.filteredItems ?? data?.items?.length ?? 0;
 
   return (
     <>
@@ -150,12 +173,17 @@ export function UserFeedbacksPage() {
         bodyHeight="100%"
         detailsLink="/user-feedbacks"
         emptyMessage="Nenhum feedback encontrado na fila."
+        getRowAccent={(item) =>
+          item.waitingForTeam ? WAITING_FOR_TEAM_COLOR : undefined
+        }
       />
 
       {data && data.items.length > 0 && (
         <Paginate
           paginationData={data?.pagination}
-          onPageChange={(nextPage) => setFilters({ ...filters, page: nextPage })}
+          onPageChange={(nextPage) =>
+            setFilters({ ...filters, page: nextPage })
+          }
         />
       )}
     </>
