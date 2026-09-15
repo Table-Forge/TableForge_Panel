@@ -16,6 +16,7 @@ import {
   PanelLeftOpen,
   Store,
   MessageSquareWarning,
+  Settings,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -81,6 +82,19 @@ export function NavMenu() {
   const spacesSubItems = [
     { to: "/my-spaces", label: "Meus Espaços" },
     ...(isAdmin ? [{ to: "/spaces", label: "Todos os Espaços" }] : []),
+  ];
+
+  const isSettingsRouteActive = location.pathname.startsWith("/settings");
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(isSettingsRouteActive);
+
+  useEffect(() => {
+    if (isSettingsRouteActive) {
+      setIsSettingsExpanded(true);
+    }
+  }, [isSettingsRouteActive]);
+
+  const settingsSubItems = [
+    { to: "/settings/terms", label: "Termos e Condições" },
   ];
 
   return (
@@ -298,6 +312,69 @@ export function NavMenu() {
             </div>
             {!isSidebarCollapsed && <span>Agendamentos</span>}
           </NavLink>
+        )}
+
+        {isAdmin && (
+          <div className="flex flex-col gap-1">
+            <button
+              type="button"
+              onClick={() => setIsSettingsExpanded((prev) => !prev)}
+              title={isSidebarCollapsed ? "Configurações" : undefined}
+              className={[
+                "flex items-center w-full transition-all duration-200",
+                isSidebarCollapsed
+                  ? "h-11 w-11 justify-center rounded-lg border mx-auto"
+                  : "justify-between rounded-lg border px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider",
+                isSettingsRouteActive
+                  ? "border-secondary/60 bg-gradient-to-r from-secondary/25 via-secondary/15 to-transparent text-white shadow-[0_4px_20px_rgba(255,36,0,0.18)]"
+                  : "border-transparent text-grays-100 hover:border-white/10 hover:bg-white/5 hover:text-white",
+              ].join(" ") || undefined}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex items-center justify-center rounded-lg ${
+                    isSidebarCollapsed
+                      ? "h-full w-full"
+                      : "h-7 w-7 bg-white/5 group-hover:bg-white/10"
+                  }`}
+                >
+                  <Settings size={18} />
+                </div>
+                {!isSidebarCollapsed && <span>Configurações</span>}
+              </div>
+              {!isSidebarCollapsed && (
+                <div>
+                  {isSettingsExpanded ? (
+                    <ChevronUp size={16} />
+                  ) : (
+                    <ChevronDown size={16} />
+                  )}
+                </div>
+              )}
+            </button>
+
+            {isSettingsExpanded && !isSidebarCollapsed && (
+              <div className="flex flex-col gap-1 pl-3.5 border-l border-white/10 ml-5 my-0.5">
+                {settingsSubItems.map((sub) => (
+                  <NavLink
+                    key={sub.to}
+                    to={sub.to}
+                    onClick={() => setIsMobileOpen(false)}
+                    className={({ isActive }) =>
+                      [
+                        "flex items-center gap-2 rounded-r-lg px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider transition-all duration-200 border-l-2",
+                        isActive
+                          ? "border-secondary bg-white/10 text-white shadow-sm"
+                          : "border-transparent text-grays-100 hover:bg-white/5 hover:text-white",
+                      ].join(" ")
+                    }
+                  >
+                    <span>{sub.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {/* Histórico de Requisições */}

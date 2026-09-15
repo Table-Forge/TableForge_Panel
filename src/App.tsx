@@ -34,6 +34,8 @@ import {
   UserFeedbacksDashboardPage,
   UserFeedbackDetailsPage,
 } from "@/src/pages/user-feedbacks/exports";
+import { TermsPage } from "@/src/pages/terms";
+import { TermsDetailsPage } from "@/src/pages/terms/details";
 import {
   BrowserRouter,
   Navigate,
@@ -86,6 +88,8 @@ function App() {
                   <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
                   <Route path="user-feedbacks/:id" element={<UserFeedbackDetailsPage />} />
                   <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />
+                  <Route path="settings/terms" element={<TermsPage />} />
+                  <Route path="settings/terms/:id" element={<TermsDetailsPage />} />
                 </Route>
               </Route>
 
