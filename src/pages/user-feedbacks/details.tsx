@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { ArrowLeft } from "lucide-react";
 import {
+  MdAccessTime,
+  MdDone,
   MdForum,
   MdLayers,
   MdModeEdit,
@@ -61,7 +63,6 @@ export function UserFeedbackDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const openModal = useBoundStore((state) => state.openModal);
-  const addToast = useBoundStore((state) => state.addToast);
 
   const [threadMessage, setThreadMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,7 @@ export function UserFeedbackDetailsPage() {
   const { statusEnum } = useUserFeedbackStatusEnum();
   const { categoryEnum } = useUserFeedbackCategoryEnum(true, false);
 
-  const { sendMessageMutation, isSendingMessage } = useUserFeedbacksMutations();
+  const { sendMessageMutation } = useUserFeedbacksMutations();
 
   useEffect(() => {
     if (feedback?.messages?.length) {
@@ -101,20 +102,22 @@ export function UserFeedbackDetailsPage() {
     );
   };
 
-  const handleSendThreadMessage = async () => {
+  const handleSendThreadMessage = () => {
     const content = threadMessage.trim();
     if (!content) return;
 
-    try {
-      await sendMessageMutation.mutateAsync({
+    setThreadMessage("");
+    sendMessageMutation.mutate(
+      {
         id: feedbackId,
         payload: { content },
-      });
-      setThreadMessage("");
-      addToast("success", "Mensagem enviada com sucesso!");
-    } catch (error: unknown) {
-      handleError(error);
-    }
+      },
+      {
+        onError: (error: unknown) => {
+          handleError(error);
+        },
+      }
+    );
   };
 
   if (isLoading) return <SkeletonDetails />;
@@ -338,6 +341,7 @@ export function UserFeedbackDetailsPage() {
               ) : (
                 feedback.messages.map((msg) => {
                   const isTeam = msg.isFromTeam;
+                  const isOptimistic = Boolean(msg.isOptimistic || msg.id < 0);
                   return (
                     <div
                       key={msg.id}
@@ -349,9 +353,17 @@ export function UserFeedbackDetailsPage() {
                         <span className={`font-bold ${isTeam ? "text-emerald-400" : "text-orange-400"}`}>
                           {msg.userName || (isTeam ? "Equipe TableForge" : "Usuário")}
                         </span>
-                        <span className="text-[11px] text-grays-400">
-                          {dayjs(msg.createdAt).format("DD/MM/YYYY HH:mm")}
-                        </span>
+                        {isOptimistic ? (
+                          <span className="flex items-center gap-1 text-[11px] text-amber-400">
+                            <MdAccessTime className="animate-spin" size={12} />
+                            Enviando...
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-[11px] text-grays-400">
+                            <MdDone size={12} className="text-emerald-400" />
+                            {dayjs(msg.createdAt).format("DD/MM/YYYY HH:mm")}
+                          </span>
+                        )}
                       </div>
 
                       <div
@@ -402,7 +414,6 @@ export function UserFeedbackDetailsPage() {
                 }}
                 placeholder="Digite uma mensagem para o usuário nesta conversa..."
                 maxLength={2000}
-                disabled={isSendingMessage}
                 className="h-24 max-h-32"
               />
               <div className="flex items-center justify-between gap-3">
@@ -413,8 +424,7 @@ export function UserFeedbackDetailsPage() {
                   type="button"
                   buttonStyle="secondary"
                   size="sm"
-                  disabled={!threadMessage.trim() || isSendingMessage}
-                  isLoading={isSendingMessage}
+                  disabled={!threadMessage.trim()}
                   onClick={handleSendThreadMessage}
                   className="flex items-center gap-1.5 shrink-0"
                 >

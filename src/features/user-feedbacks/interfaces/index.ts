@@ -31,6 +31,7 @@ export interface IUserFeedbackMessage {
   isFromTeam: boolean;
   content: string;
   images: IUserFeedbackMessageImage[];
+  isOptimistic?: boolean;
 }
 
 export interface IUserFeedbackSendMessage {
