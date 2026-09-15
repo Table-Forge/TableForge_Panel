@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { ArrowLeft } from "lucide-react";
+import { ArrowDown, ArrowLeft } from "lucide-react";
 import {
   MdAccessTime,
   MdDone,
@@ -37,8 +37,11 @@ import {
 } from "@/src/features/user-feedbacks/hooks/enums/use-user-feedback-enums";
 import { useUserFeedbacksMutations } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-mutations";
 import { useUserFeedbackDetailsQuery } from "@/src/features/user-feedbacks/hooks/use-user-feedbacks-queries";
+import { useNewMessagesNotice } from "@/src/hooks/utils/use-new-messages-notice";
 import { useBoundStore } from "@/src/store";
 import { handleError } from "@/src/utils/error-handler";
+
+const AT_BOTTOM_THRESHOLD = 40;
 
 const getStatusColor = (status?: UserFeedbackStatus) => {
   switch (status) {
@@ -66,6 +69,9 @@ export function UserFeedbackDetailsPage() {
 
   const [threadMessage, setThreadMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const isAtBottomRef = useRef(true);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   const feedbackId = useMemo(() => {
     const parsed = Number(id);
@@ -78,11 +84,35 @@ export function UserFeedbackDetailsPage() {
 
   const { sendMessageMutation } = useUserFeedbacksMutations();
 
+  const messagesCount = feedback?.messages?.length ?? 0;
+  const { pendingCount, markAllSeen } = useNewMessagesNotice(
+    messagesCount,
+    isAtBottom,
+  );
+
+  const handleThreadScroll = () => {
+    const thread = threadRef.current;
+    if (!thread) return;
+
+    const distanceToBottom =
+      thread.scrollHeight - thread.scrollTop - thread.clientHeight;
+
+    isAtBottomRef.current = distanceToBottom <= AT_BOTTOM_THRESHOLD;
+    setIsAtBottom(isAtBottomRef.current);
+  };
+
+  const scrollToLatest = () => {
+    isAtBottomRef.current = true;
+    setIsAtBottom(true);
+    markAllSeen();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    if (feedback?.messages?.length) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [feedback?.messages?.length]);
+    if (!messagesCount || !isAtBottomRef.current) return;
+
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messagesCount]);
 
   const handleOpenImageModal = (images: { id: number; url: string }[], initialIndex: number) => {
     if (!images?.length) return;
@@ -118,6 +148,8 @@ export function UserFeedbackDetailsPage() {
         },
       }
     );
+
+    scrollToLatest();
   };
 
   if (isLoading) return <SkeletonDetails />;
@@ -327,78 +359,99 @@ export function UserFeedbackDetailsPage() {
               )}
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto p-5 space-y-4">
-              {(!feedback.messages || feedback.messages.length === 0) ? (
-                <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-grays-300 p-8">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-grays-400">
-                    <MdForum size={28} />
+            <div className="relative flex min-h-0 flex-1 flex-col">
+              <div
+                ref={threadRef}
+                onScroll={handleThreadScroll}
+                className="flex-1 min-h-0 overflow-y-auto p-5 space-y-4"
+              >
+                {(!feedback.messages || feedback.messages.length === 0) ? (
+                  <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-grays-300 p-8">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-grays-400">
+                      <MdForum size={28} />
+                    </div>
+                    <h4 className="text-base font-bold text-white">Nenhuma mensagem ainda</h4>
+                    <p className="max-w-xs text-xs text-grays-300 leading-relaxed">
+                      Utilize a caixa abaixo para tirar dúvidas, complementar informações ou responder ao usuário sem alterar o status.
+                    </p>
                   </div>
-                  <h4 className="text-base font-bold text-white">Nenhuma mensagem ainda</h4>
-                  <p className="max-w-xs text-xs text-grays-300 leading-relaxed">
-                    Utilize a caixa abaixo para tirar dúvidas, complementar informações ou responder ao usuário sem alterar o status.
-                  </p>
-                </div>
-              ) : (
-                feedback.messages.map((msg) => {
-                  const isTeam = msg.isFromTeam;
-                  const isOptimistic = Boolean(msg.isOptimistic || msg.id < 0);
-                  return (
-                    <div
-                      key={msg.id}
-                      className={`flex flex-col max-w-[85%] ${
-                        isTeam ? "ml-auto items-end" : "mr-auto items-start"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1.5 px-1 text-xs">
-                        <span className={`font-bold ${isTeam ? "text-emerald-400" : "text-orange-400"}`}>
-                          {msg.userName || (isTeam ? "Equipe TableForge" : "Usuário")}
-                        </span>
-                        {isOptimistic ? (
-                          <span className="flex items-center gap-1 text-[11px] text-amber-400">
-                            <MdAccessTime className="animate-spin" size={12} />
-                            Enviando...
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1 text-[11px] text-grays-400">
-                            <MdDone size={12} className="text-emerald-400" />
-                            {dayjs(msg.createdAt).format("DD/MM/YYYY HH:mm")}
-                          </span>
-                        )}
-                      </div>
-
+                ) : (
+                  feedback.messages.map((msg) => {
+                    const isTeam = msg.isFromTeam;
+                    const isOptimistic = Boolean(msg.isOptimistic || msg.id < 0);
+                    return (
                       <div
-                        className={`rounded-2xl p-4 shadow-lg ${
-                          isTeam
-                            ? "rounded-tr-sm border border-emerald-500/30 bg-emerald-950/40 text-white"
-                            : "rounded-tl-sm border border-orange-500/30 bg-orange-950/40 text-white"
+                        key={msg.id}
+                        className={`flex flex-col max-w-[85%] ${
+                          isTeam ? "ml-auto items-end" : "mr-auto items-start"
                         }`}
                       >
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</p>
+                        <div className="flex items-center gap-2 mb-1.5 px-1 text-xs">
+                          <span className={`font-bold ${isTeam ? "text-emerald-400" : "text-orange-400"}`}>
+                            {msg.userName || (isTeam ? "Equipe TableForge" : "Usuário")}
+                          </span>
+                          {isOptimistic ? (
+                            <span className="flex items-center gap-1 text-[11px] text-amber-400">
+                              <MdAccessTime className="animate-spin" size={12} />
+                              Enviando...
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1 text-[11px] text-grays-400">
+                              <MdDone size={12} className="text-emerald-400" />
+                              {dayjs(msg.createdAt).format("DD/MM/YYYY HH:mm")}
+                            </span>
+                          )}
+                        </div>
 
-                        {msg.images && msg.images.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-2.5">
-                            {msg.images.map((img, imgIdx) => (
-                              <button
-                                key={img.id}
-                                type="button"
-                                onClick={() => handleOpenImageModal(msg.images, imgIdx)}
-                                className="h-16 w-16 overflow-hidden rounded-lg border border-white/15 hover:border-accent transition-all cursor-pointer"
-                              >
-                                <img
-                                  src={img.url}
-                                  alt={`Anexo ${imgIdx + 1}`}
-                                  className="h-full w-full object-cover"
-                                />
-                              </button>
-                            ))}
-                          </div>
-                        )}
+                        <div
+                          className={`rounded-2xl p-4 shadow-lg ${
+                            isTeam
+                              ? "rounded-tr-sm border border-emerald-500/30 bg-emerald-950/40 text-white"
+                              : "rounded-tl-sm border border-orange-500/30 bg-orange-950/40 text-white"
+                          }`}
+                        >
+                          <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</p>
+
+                          {msg.images && msg.images.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-2.5">
+                              {msg.images.map((img, imgIdx) => (
+                                <button
+                                  key={img.id}
+                                  type="button"
+                                  onClick={() => handleOpenImageModal(msg.images, imgIdx)}
+                                  className="h-16 w-16 overflow-hidden rounded-lg border border-white/15 hover:border-accent transition-all cursor-pointer"
+                                >
+                                  <img
+                                    src={img.url}
+                                    alt={`Anexo ${imgIdx + 1}`}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })
+                    );
+                  })
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {pendingCount > 0 && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={scrollToLatest}
+                    className="pointer-events-auto flex cursor-pointer items-center gap-1.5 rounded-full border border-accent/40 bg-primary px-3.5 py-2 text-xs font-bold text-accent shadow-2xl transition hover:bg-accent/10"
+                  >
+                    <ArrowDown size={14} />
+                    {pendingCount === 1
+                      ? "1 nova mensagem"
+                      : `${pendingCount} novas mensagens`}
+                  </button>
+                </div>
               )}
-              <div ref={messagesEndRef} />
             </div>
 
             <div className="shrink-0 border-t border-white/10 bg-primary/40 p-4 rounded-b-xl flex flex-col gap-3">
