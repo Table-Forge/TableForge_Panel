@@ -1,5 +1,6 @@
 import { ENV } from "@/src/config/env";
 import { useAuth } from "@/src/context/use-auth";
+import { NOTIFICATION_KEYS } from "@/src/features/notifications/hooks/query-key";
 import { USER_FEEDBACKS_KEYS } from "@/src/features/user-feedbacks/hooks/query-keys";
 import type {
   IUserFeedback,
@@ -45,6 +46,11 @@ export function SignalRProvider({ children }: PropsWithChildren) {
 
       queryClient.invalidateQueries({ queryKey: USER_FEEDBACKS_KEYS.lists() });
       queryClient.invalidateQueries({ queryKey: USER_FEEDBACKS_KEYS.summaries() });
+    });
+
+    connection.on("ReceiveNotification", () => {
+      queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.unreads() });
     });
 
     const started = connection

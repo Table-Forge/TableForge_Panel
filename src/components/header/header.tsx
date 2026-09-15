@@ -5,6 +5,7 @@ import { toImageSource } from "@/src/utils/image";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../button/button";
+import { NotificationsBell } from "../notifications-bell/notifications-bell";
 import { ThemeToggle } from "../theme-toggle/theme-toggle";
 
 export const Header = () => {
@@ -95,6 +96,8 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-3">
+        <NotificationsBell />
+
         <ThemeToggle />
 
         <Button
