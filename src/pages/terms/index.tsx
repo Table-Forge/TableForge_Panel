@@ -1,4 +1,4 @@
-import { Plus, Eye } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useBoundStore } from "@/src/store";
 import { CrmPageHeader } from "@/src/components/crm-page-header/crm-page-header";
 import { Table } from "@/src/components/table/table";
@@ -6,8 +6,6 @@ import { Paginate } from "@/src/components/paginate/paginate";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { type ITableColumn } from "@/src/components/table/table.interfaces";
-import { MoreInfo } from "@/src/components/more-info/more-info";
-import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 import { formatDate } from "@/src/utils/format";
 import { useAllTerms } from "@/src/features/terms/hooks/use-all-terms";
 import {
@@ -18,33 +16,15 @@ import { type ITermsDocumentList } from "@/src/features/terms/schemas/terms.sche
 import { TermsSearchFilters } from "./components/search-filters/search-filters";
 import { TermsStatusBadge } from "./components/terms-status-badge/terms-status-badge";
 import { ModalEdit } from "./components/modal-edit/modal-edit";
-import { useNavigate } from "react-router-dom";
 
 export function TermsPage() {
-  const navigate = useNavigate();
   const openModal = useBoundStore((state) => state.openModal);
 
   const { data, isLoading, isError, filters, setFilters } = useAllTerms();
   const { data: statusEnum } = useTermsStatusEnum(false);
   const { data: audienceEnum } = useTermsAudienceEnum(false);
 
-  const getMoreInfoOptions = (row: ITermsDocumentList): IMoreOptions[] => [
-    {
-      label: "Visualizar detalhes",
-      icon: <Eye size={16} />,
-      show: true,
-      onClick: () => navigate(`/settings/terms/${row.id}`),
-    },
-  ];
-
   const tableContents: ITableColumn<ITermsDocumentList>[] = [
-    {
-      title: "ID",
-      key: "id",
-      width: "70px",
-      align: "center",
-      render: (item) => <span className="font-extrabold text-white">#{item.id}</span>,
-    },
     {
       title: "Público",
       key: "audience",
@@ -60,7 +40,7 @@ export function TermsPage() {
       width: "90px",
       align: "center",
       render: (item) => (
-        <span className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-black text-secondary">
+        <span className="shrink-0 whitespace-nowrap rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-black text-secondary">
           v{item.version}
         </span>
       ),
@@ -68,10 +48,10 @@ export function TermsPage() {
     {
       title: "Título",
       key: "title",
-      width: "280px",
+      width: "340px",
       normalCase: true,
       render: (item) => (
-        <span className="font-bold text-white hover:text-secondary transition-colors">
+        <span className="font-bold text-white hover:text-secondary transition-colors break-words">
           {item.title}
         </span>
       ),
@@ -145,19 +125,6 @@ export function TermsPage() {
         ) : (
           <span className="text-grays-300 text-xs">-</span>
         ),
-    },
-    {
-      title: "",
-      key: "moreOptions",
-      width: "50px",
-      align: "center",
-      render: (row) => (
-        <MoreInfo
-          item={row}
-          options={getMoreInfoOptions(row)}
-          boxSide="right"
-        />
-      ),
     },
   ];
 

@@ -172,12 +172,12 @@ export function UserFeedbackDetailsPage() {
           >
             <ArrowLeft size={18} />
           </button>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="min-w-0 break-words text-2xl font-extrabold uppercase tracking-tight text-white">
                 {feedback.title}
               </h1>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
                 #{feedback.id}
               </span>
               <Tag

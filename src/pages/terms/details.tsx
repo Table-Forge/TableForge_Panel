@@ -142,7 +142,7 @@ export function TermsDetailsPage() {
       width: "80px",
       align: "center",
       render: (item) => (
-        <span className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-bold text-secondary">
+        <span className="shrink-0 whitespace-nowrap rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-bold text-secondary">
           v{item.version}
         </span>
       ),
@@ -196,15 +196,15 @@ export function TermsDetailsPage() {
           >
             <ArrowLeft size={18} />
           </button>
-          <div>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2.5">
+              <h1 className="min-w-0 break-words text-2xl font-extrabold uppercase tracking-tight text-white">
                 {data.title}
               </h1>
-              <span className="rounded-full border border-secondary/30 bg-secondary/15 px-3 py-0.5 text-xs font-black text-secondary">
+              <span className="shrink-0 whitespace-nowrap rounded-full border border-secondary/30 bg-secondary/15 px-3 py-0.5 text-xs font-black text-secondary">
                 v{data.version}
               </span>
-              <TermsStatusBadge value={data.status} options={statusEnum} />
+              <TermsStatusBadge className="shrink-0" value={data.status} options={statusEnum} />
             </div>
             <p className="text-xs font-semibold text-grays-100 mt-1">
               Contrato #{data.id} • Público:{" "}
@@ -373,7 +373,7 @@ export function TermsDetailsPage() {
         ) : data.contentHtml ? (
           <div className="rounded-xl border border-white/10 bg-primary/30 p-6">
             <div
-              className="prose prose-invert max-w-none text-sm text-white/90 leading-relaxed overflow-x-auto"
+              className="tf-contract-content overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: data.contentHtml }}
             />
           </div>
