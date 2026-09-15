@@ -59,11 +59,9 @@ export function TermsDetailsPage() {
         description={`Ao ativar a v${data.version}, a versão anterior passa a Depreciada e a v${data.version} começa a ser exigida de todo novo cadastro. Esta ação não pode ser desfeita.`}
         confirmLabel="Aprovar e Ativar"
         buttonStyle="secondary"
-        isLoading={approveMutation.isPending}
-        onConfirm={() => {
-          approveMutation.mutate(data.id, {
-            onSuccess: () => closeModal(),
-          });
+        onConfirm={async () => {
+          await approveMutation.mutateAsync(data.id);
+          closeModal();
         }}
       />,
       "md",
@@ -78,11 +76,9 @@ export function TermsDetailsPage() {
         description="O público ficará sem contrato vigente até que uma nova versão seja aprovada, e o aceite deixará de ser exigido no cadastro."
         confirmLabel="Depreciar Contrato"
         buttonStyle="danger"
-        isLoading={deprecateMutation.isPending}
-        onConfirm={() => {
-          deprecateMutation.mutate(data.id, {
-            onSuccess: () => closeModal(),
-          });
+        onConfirm={async () => {
+          await deprecateMutation.mutateAsync(data.id);
+          closeModal();
         }}
       />,
       "md",
@@ -219,7 +215,6 @@ export function TermsDetailsPage() {
               buttonStyle="secondary"
               size="sm"
               onClick={handleApprove}
-              isLoading={approveMutation.isPending}
             >
               <CheckCircle2 size={16} />
               Aprovar e Ativar
@@ -231,7 +226,6 @@ export function TermsDetailsPage() {
               buttonStyle="danger"
               size="sm"
               onClick={handleDeprecate}
-              isLoading={deprecateMutation.isPending}
             >
               <AlertOctagon size={16} />
               Depreciar

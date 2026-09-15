@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/src/components/button/button";
 import { ModalFooter } from "@/src/components/modals/modal-footer";
 import { useBoundStore } from "@/src/store/use-bound-store";
@@ -6,7 +7,7 @@ interface ModalActionConfirmProps {
   description: string;
   confirmLabel: string;
   buttonStyle?: "primary" | "secondary" | "danger";
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<unknown>;
   isLoading?: boolean;
 }
 
@@ -15,9 +16,21 @@ export function ModalActionConfirm({
   confirmLabel,
   buttonStyle = "secondary",
   onConfirm,
-  isLoading,
+  isLoading: externalLoading,
 }: ModalActionConfirmProps) {
   const closeModal = useBoundStore((state) => state.closeModal);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      await onConfirm();
+    } catch {
+      setIsSubmitting(false);
+    }
+  };
+
+  const loading = externalLoading || isSubmitting;
 
   return (
     <>
@@ -30,17 +43,17 @@ export function ModalActionConfirm({
           type="button"
           buttonStyle="hollow"
           onClick={closeModal}
-          disabled={isLoading}
+          disabled={loading}
         >
           Cancelar
         </Button>
 
         <Button
           type="button"
-          onClick={onConfirm}
+          onClick={handleConfirm}
           buttonStyle={buttonStyle}
-          isLoading={isLoading}
-          disabled={isLoading}
+          isLoading={loading}
+          disabled={loading}
         >
           {confirmLabel}
         </Button>
