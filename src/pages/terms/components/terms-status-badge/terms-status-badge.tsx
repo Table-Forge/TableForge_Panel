@@ -16,9 +16,21 @@ const STATUS_PRESENTATION: Record<string, { label: string; classes: string }> = 
     label: "Ativo",
     classes: "bg-green-500/10 text-green-400 border-green-500/30",
   },
+  approved: {
+    label: "Ativo",
+    classes: "bg-green-500/10 text-green-400 border-green-500/30",
+  },
+  vigente: {
+    label: "Vigente",
+    classes: "bg-green-500/10 text-green-400 border-green-500/30",
+  },
   deprecated: {
     label: "Depreciado",
-    classes: "bg-zinc-500/10 text-zinc-400 border-zinc-500/30",
+    classes: "bg-red-500/10 text-red-400 border-red-500/30",
+  },
+  depreciado: {
+    label: "Depreciado",
+    classes: "bg-red-500/10 text-red-400 border-red-500/30",
   },
   default: {
     label: "Indefinido",
