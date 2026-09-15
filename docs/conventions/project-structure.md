@@ -19,7 +19,7 @@ The `src/` directory is organized by technical concern and feature domains. Top-
 - `components/` — Reusable UI components. Each component gets its own kebab-case directory, with optional sibling files like `*.interfaces.ts`, `*.styles.ts`, `*.constants.ts` (e.g., `components/toast/`, `components/input/`). See [components.md](./components.md).
 - `config/` — Environment configuration. Contains only `env.ts`.
 - `constants/` — Application-wide constants: `paginate.tsx` (`INITIAL_PAGINATE`), `select-options.tsx`, `keyed-lists.ts`.
-- `context/` — React Context providers: `auth.tsx` (`AuthProvider`) and `use-auth.ts`.
+- `context/` — App-level providers mounted in `App.tsx`: `auth.tsx` (`AuthProvider`), `use-auth.ts`, and `signalr.tsx` (`SignalRProvider`, the realtime channel). Neither provider creates a Context — see [state-management.md](./state-management.md).
 - `features/` — Domain feature modules; this is where all data fetching lives. Each domain follows `features/<domain>/{hooks,schemas,services}`, with `hooks/query-key.ts`, `hooks/types.ts`, and `hooks/enums/` for backend enum hooks (e.g., `features/campaigns/`). The shared Axios instance is `features/api.ts`. See [data-fetching.md](./data-fetching.md).
 - `hooks/` — Shared, cross-cutting hooks, currently under `hooks/utils/` (e.g., `use-countdown.ts`, `useDebouncedCallback.ts`).
 - `interfaces/` — Shared request/pagination interfaces (`IGetPaginatedParams`, `IPaginationResponse` in `index.ts`, plus `error.interface.ts` and `get-more-options.interface.ts`). Domain types live in `features/`.

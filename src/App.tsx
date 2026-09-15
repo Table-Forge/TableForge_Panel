@@ -3,6 +3,7 @@ import { GlobalModal } from "@/src/components/modals/global-modal";
 import { EnvFlag } from "@/src/components/env-flag/env-flag";
 import { ToastContainer } from "@/src/components/toast/toast-container";
 import { AuthProvider } from "@/src/context/auth";
+import { SignalRProvider } from "@/src/context/signalr";
 import { useAuth } from "@/src/context/use-auth";
 import { CampaignDetailsPage } from "@/src/pages/campaigns/details";
 import { CampaignsPage } from "@/src/pages/campaigns";
@@ -47,54 +48,56 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/recover-password" element={<RecoverPasswordPage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <SignalRProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/recover-password" element={<RecoverPasswordPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-            <Route element={<ProtectedRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="campaigns" element={<CampaignsPage />} />
-                <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
-                <Route path="gamesystems" element={<GameSystemsPage />} />
-                <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
-                <Route path="banners" element={<BannersPage />} />
-                <Route path="classes" element={<ClassesPage />} />
-                <Route path="races" element={<RacesPage />} />
-                <Route path="users" element={<UsersPage />} />
-                <Route path="users/:id" element={<UserDetailsPage />} />
-                <Route path="images" element={<ImagesPage />} />
-                <Route path="images/:id" element={<ImageDetailsPage />} />
-                <Route path="logs" element={<LogsPage />} />
-                <Route path="logs/:id" element={<LogDetailsPage />} />
-                <Route path="request-history" element={<RequestHistoryPage />} />
-                <Route
-                  path="request-history/:id"
-                  element={<RequestHistoryDetailsPage />}
-                />
-                <Route path="events" element={<EventsPage />} />
-                <Route path="my-spaces" element={<MySpacesPage />} />
-                <Route path="my-spaces/:id" element={<MySpaceDetailsPage />} />
-                <Route path="spaces" element={<AllSpacesPage />} />
-                <Route path="spaces/:id" element={<MySpaceDetailsPage />} />
-                <Route path="my-space" element={<Navigate to="/my-spaces" replace />} />
-                <Route path="my-bookings" element={<MyBookingsPage />} />
-                <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
-                <Route path="user-feedbacks/:id" element={<UserFeedbackDetailsPage />} />
-                <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route index element={<DashboardPage />} />
+                  <Route path="campaigns" element={<CampaignsPage />} />
+                  <Route path="campaigns/:id" element={<CampaignDetailsPage />} />
+                  <Route path="gamesystems" element={<GameSystemsPage />} />
+                  <Route path="gamesystems/:id" element={<GameSystemDetailsPage />} />
+                  <Route path="banners" element={<BannersPage />} />
+                  <Route path="classes" element={<ClassesPage />} />
+                  <Route path="races" element={<RacesPage />} />
+                  <Route path="users" element={<UsersPage />} />
+                  <Route path="users/:id" element={<UserDetailsPage />} />
+                  <Route path="images" element={<ImagesPage />} />
+                  <Route path="images/:id" element={<ImageDetailsPage />} />
+                  <Route path="logs" element={<LogsPage />} />
+                  <Route path="logs/:id" element={<LogDetailsPage />} />
+                  <Route path="request-history" element={<RequestHistoryPage />} />
+                  <Route
+                    path="request-history/:id"
+                    element={<RequestHistoryDetailsPage />}
+                  />
+                  <Route path="events" element={<EventsPage />} />
+                  <Route path="my-spaces" element={<MySpacesPage />} />
+                  <Route path="my-spaces/:id" element={<MySpaceDetailsPage />} />
+                  <Route path="spaces" element={<AllSpacesPage />} />
+                  <Route path="spaces/:id" element={<MySpaceDetailsPage />} />
+                  <Route path="my-space" element={<Navigate to="/my-spaces" replace />} />
+                  <Route path="my-bookings" element={<MyBookingsPage />} />
+                  <Route path="user-feedbacks" element={<UserFeedbacksPage />} />
+                  <Route path="user-feedbacks/:id" element={<UserFeedbackDetailsPage />} />
+                  <Route path="user-feedbacks/dashboard" element={<UserFeedbacksDashboardPage />} />
+                </Route>
               </Route>
-            </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
 
-          <GlobalModal />
-          <EnvFlag />
-          <ToastContainer />
-          <div id="root-portal" />
-        </BrowserRouter>
+            <GlobalModal />
+            <EnvFlag />
+            <ToastContainer />
+            <div id="root-portal" />
+          </BrowserRouter>
+        </SignalRProvider>
       </AuthProvider>
     </ErrorBoundary>
   );
