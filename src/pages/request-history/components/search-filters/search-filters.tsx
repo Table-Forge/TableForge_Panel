@@ -19,8 +19,11 @@ import type { IGetRequestHistory } from "@/src/features/request-history/hooks/ty
 import type { TSelectOptions } from "@/src/components/select/select.interfaces";
 import { useUsersSelect } from "@/src/features/users/hooks/use-users-select";
 import { useComponentStore } from "@/src/store";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { REQUEST_HISTORY_KEYS } from "@/src/features/request-history/hooks/query-key";
+import { useRequestHistoryLiveStore } from "@/src/features/request-history/store/use-request-history-live-store";
 
 const MIN_TOTAL_MS_SHORTCUTS = [500, 1000, 3000];
 
@@ -204,6 +207,9 @@ function AdvancedFiltersContent({ filters }: { filters: IGetRequestHistory }) {
 
 export function RequestHistorySearchFilters() {
   const { filters, onSearchChange } = useAllRequestHistory();
+  const pause = useRequestHistoryLiveStore((state) => state.pause);
+  const resume = useRequestHistoryLiveStore((state) => state.resume);
+  const queryClient = useQueryClient();
 
   const form = useForm<{ search: string }>({
     defaultValues: { search: String(filters.search ?? "") },
@@ -222,6 +228,26 @@ export function RequestHistorySearchFilters() {
     }
   }, [filters.search, form]);
 
+  const handleFilterOpenChange = useCallback(
+    (isOpen: boolean) => {
+      const { isPaused, pauseReason } = useRequestHistoryLiveStore.getState();
+
+      if (isOpen) {
+        if (!isPaused) {
+          pause("filter");
+        }
+      } else {
+        if (isPaused && pauseReason === "filter") {
+          resume();
+          queryClient.invalidateQueries({
+            queryKey: REQUEST_HISTORY_KEYS.lists(),
+          });
+        }
+      }
+    },
+    [pause, resume, queryClient],
+  );
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="w-full flex flex-row gap-3 items-center rounded-xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
@@ -233,6 +259,7 @@ export function RequestHistorySearchFilters() {
         <Filters
           filters={<AdvancedFiltersContent filters={filters} />}
           align="left"
+          onOpenChange={handleFilterOpenChange}
         />
       </div>
     </div>

@@ -1,5 +1,10 @@
-import { FileSearch } from "lucide-react";
+import { ArrowUp, FileSearch, Pause, Play } from "lucide-react";
+import { useCallback, useEffect, useRef, type UIEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/src/components/button/button";
 import { Tag } from "@/src/components/tag/tag";
+import { REQUEST_HISTORY_KEYS } from "@/src/features/request-history/hooks/query-key";
+import { useRequestHistoryLiveStore } from "@/src/features/request-history/store/use-request-history-live-store";
 import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
@@ -22,6 +27,82 @@ const getTotalMsClass = (totalMs?: number) => {
 export function RequestHistoryPage() {
   const { data, isLoading, isError, filters, setFilters } =
     useAllRequestHistory();
+
+  const isPaused = useRequestHistoryLiveStore((state) => state.isPaused);
+  const pauseReason = useRequestHistoryLiveStore((state) => state.pauseReason);
+  const pendingCount = useRequestHistoryLiveStore((state) => state.pendingCount);
+  const pause = useRequestHistoryLiveStore((state) => state.pause);
+  const resume = useRequestHistoryLiveStore((state) => state.resume);
+  const resetLiveStore = useRequestHistoryLiveStore((state) => state.reset);
+  const queryClient = useQueryClient();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const currentPage = filters.page ?? 1;
+
+  const handleResume = useCallback(() => {
+    resume();
+    queryClient.invalidateQueries({ queryKey: REQUEST_HISTORY_KEYS.lists() });
+  }, [queryClient, resume]);
+
+  const handleTogglePause = useCallback(() => {
+    if (isPaused) {
+      if ((filters.page ?? 1) > 1) {
+        setFilters({ ...filters, page: 1 });
+      }
+      handleResume();
+    } else {
+      pause("manual");
+    }
+  }, [filters, handleResume, isPaused, pause, setFilters]);
+
+  const handleScrollToTopAndResume = useCallback(() => {
+    tableRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    if ((filters.page ?? 1) > 1) {
+      setFilters({ ...filters, page: 1 });
+    }
+    handleResume();
+  }, [filters, handleResume, setFilters]);
+
+  const handleTableScroll = useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
+      const isScrolledDown = event.currentTarget.scrollTop > 60;
+      const { isPaused: currentPaused, pauseReason: currentReason } =
+        useRequestHistoryLiveStore.getState();
+
+      if (isScrolledDown) {
+        if (!currentPaused) {
+          pause("scroll");
+        }
+      } else {
+        if (currentPaused && currentReason === "scroll") {
+          handleResume();
+        }
+      }
+    },
+    [handleResume, pause],
+  );
+
+  useEffect(() => {
+    const { isPaused: currentPaused, pauseReason: currentReason } =
+      useRequestHistoryLiveStore.getState();
+
+    if (currentPage > 1) {
+      if (!currentPaused) {
+        pause("page");
+      }
+    } else {
+      if (currentPaused && currentReason === "page") {
+        handleResume();
+      }
+    }
+  }, [currentPage, handleResume, pause]);
+
+  useEffect(() => {
+    return () => {
+      resetLiveStore();
+    };
+  }, [resetLiveStore]);
 
   const tableContents: ITableColumn<IRequestHistoryItem>[] = [
     {
@@ -123,27 +204,88 @@ export function RequestHistoryPage() {
             <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
               Histórico de Requisições
             </h1>
-            <Tag label="Tempo Real" color="#10b981" />
+            {isPaused ? (
+              <Tag
+                label={
+                  pauseReason === "scroll"
+                    ? "Pausado por rolagem"
+                    : pauseReason === "filter"
+                      ? "Pausado (Filtrando)"
+                      : pauseReason === "page"
+                        ? `Pausado (Página ${currentPage})`
+                        : "Pausado"
+                }
+                color="#f59e0b"
+              />
+            ) : (
+              <Tag label="Tempo Real" color="#10b981" />
+            )}
           </div>
           <p className="text-sm text-grays-100">
-            Todas as requisições recebidas pela API, atualizadas automaticamente via SignalR.
+            {isPaused
+              ? pauseReason === "filter"
+                ? "Atualizações pausadas enquanto você ajusta os filtros."
+                : pauseReason === "page"
+                  ? `Atualizações pausadas na página ${currentPage}. Volte para a primeira página ou clique em retomar.`
+                  : "Atualizações em tempo real suspensas. Clique em retomar ou volte ao topo para reativar."
+              : "Todas as requisições recebidas pela API, atualizadas automaticamente via SignalR."}
           </p>
         </div>
+
+        <Button
+          type="button"
+          buttonStyle="soft"
+          size="sm"
+          onClick={handleTogglePause}
+          className="shrink-0"
+        >
+          {isPaused ? (
+            <>
+              <Play size={16} />
+              {pendingCount > 0 ? `Retomar (+${pendingCount})` : "Retomar"}
+            </>
+          ) : (
+            <>
+              <Pause size={16} />
+              Pausar
+            </>
+          )}
+        </Button>
       </header>
 
       <RequestHistorySearchFilters />
 
-      <Table
-        tableContents={tableContents}
-        bodyData={data?.items ?? []}
-        detailsLink="/request-history"
-        emptyMessage="Nenhuma requisição encontrada no período."
-        getRowColor={(row) =>
-          row.statusCode && row.statusCode >= 500
-            ? "var(--color-danger)"
-            : undefined
-        }
-      />
+      <div className="relative flex-1 min-h-0 flex flex-col">
+        <Table
+          tableContents={tableContents}
+          bodyData={data?.items ?? []}
+          bodyHeight="100%"
+          containerRef={tableRef}
+          onScroll={handleTableScroll}
+          detailsLink="/request-history"
+          emptyMessage="Nenhuma requisição encontrada no período."
+          getRowColor={(row) =>
+            row.statusCode && row.statusCode >= 500
+              ? "var(--color-danger)"
+              : undefined
+          }
+        />
+
+        {pendingCount > 0 && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 flex justify-center">
+            <button
+              type="button"
+              onClick={handleScrollToTopAndResume}
+              className="pointer-events-auto flex cursor-pointer items-center gap-2 rounded-full border border-accent/40 bg-primary px-4 py-2 text-xs font-bold text-accent shadow-2xl transition hover:bg-accent/10"
+            >
+              <ArrowUp size={14} />
+              {pendingCount === 1
+                ? "1 nova requisição • Voltar ao topo"
+                : `${pendingCount} novas requisições • Voltar ao topo`}
+            </button>
+          </div>
+        )}
+      </div>
 
       {data && data.items.length > 0 && (
         <Paginate

@@ -6,7 +6,11 @@ import { useDropdownPosition } from "@/src/hooks/utils/useDropdownPosition";
 import { FilterContext } from "./filters.context";
 import type { IFilters } from "./filters.interfaces";
 
-export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
+export const Filters: React.FC<IFilters> = ({
+  filters,
+  align = "left",
+  onOpenChange,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +31,8 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
   const close = useCallback(() => {
     resetDropdownPosition();
     setIsOpen(false);
-  }, [resetDropdownPosition]);
+    onOpenChange?.(false);
+  }, [onOpenChange, resetDropdownPosition]);
 
   const value = useMemo(() => ({ close }), [close]);
 
@@ -42,6 +47,7 @@ export const Filters: React.FC<IFilters> = ({ filters, align = "left" }) => {
     setIsOpen((prev) => {
       const next = !prev;
       if (!next) resetDropdownPosition();
+      onOpenChange?.(next);
       return next;
     });
   };

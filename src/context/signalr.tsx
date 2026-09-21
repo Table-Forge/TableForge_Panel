@@ -2,6 +2,7 @@ import { ENV } from "@/src/config/env";
 import { useAuth } from "@/src/context/use-auth";
 import { NOTIFICATION_KEYS } from "@/src/features/notifications/hooks/query-key";
 import { REQUEST_HISTORY_KEYS } from "@/src/features/request-history/hooks/query-key";
+import { useRequestHistoryLiveStore } from "@/src/features/request-history/store/use-request-history-live-store";
 import { USER_FEEDBACKS_KEYS } from "@/src/features/user-feedbacks/hooks/query-keys";
 import type {
   IUserFeedback,
@@ -55,6 +56,14 @@ export function SignalRProvider({ children }: PropsWithChildren) {
     });
 
     connection.on("ReceiveRequestHistoryUpdate", () => {
+      const { isPaused, incrementPending } =
+        useRequestHistoryLiveStore.getState();
+
+      if (isPaused) {
+        incrementPending();
+        return;
+      }
+
       queryClient.invalidateQueries({ queryKey: REQUEST_HISTORY_KEYS.lists() });
     });
 

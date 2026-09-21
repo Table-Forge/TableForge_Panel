@@ -29,9 +29,21 @@ export function Table<T extends { id?: number | string }>({
   getContextOptions,
   isDraggable,
   onReorder,
+  containerRef: externalContainerRef,
+  onScroll,
 }: ITable<T>) {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const setContainerRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      containerRef.current = node;
+      if (externalContainerRef) {
+        externalContainerRef.current = node;
+      }
+    },
+    [externalContainerRef],
+  );
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -218,8 +230,9 @@ export function Table<T extends { id?: number | string }>({
 
   return (
     <div
-      ref={containerRef}
+      ref={setContainerRef}
       aria-label="tabela"
+      onScroll={onScroll}
       onDragOver={handleContainerDragOver}
       className={`relative h-full min-h-0 w-full overflow-x-auto rounded-xl border border-white/10 bg-primary/40 shadow-2xl ${scrollable ? "max-w-full" : ""}`}
 

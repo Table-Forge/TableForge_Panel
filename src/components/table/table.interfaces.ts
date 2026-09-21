@@ -1,4 +1,4 @@
-import type { DragEvent, MouseEvent, ReactNode } from "react";
+import type { DragEvent, MouseEvent, ReactNode, RefObject, UIEvent } from "react";
 import type { IMoreOptions } from "@/src/interfaces/get-more-options.interface";
 
 interface ITableColumn<T> {
@@ -24,6 +24,8 @@ interface ITable<T extends { id?: number | string }> {
   getContextOptions?: (row: T) => IMoreOptions[];
   isDraggable?: boolean;
   onReorder?: (newData: T[], draggedItem: T, targetIndex: number) => void;
+  containerRef?: RefObject<HTMLDivElement | null>;
+  onScroll?: (event: UIEvent<HTMLDivElement>) => void;
 }
 
 interface TableRowProps<T extends { id?: number | string }> {
