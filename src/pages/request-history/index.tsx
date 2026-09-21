@@ -1,5 +1,5 @@
-import { FileSearch, RefreshCw } from "lucide-react";
-import { Button } from "@/src/components/button/button";
+import { FileSearch } from "lucide-react";
+import { Tag } from "@/src/components/tag/tag";
 import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
@@ -20,7 +20,7 @@ const getTotalMsClass = (totalMs?: number) => {
 };
 
 export function RequestHistoryPage() {
-  const { data, isLoading, isError, filters, setFilters, refetch, isFetching } =
+  const { data, isLoading, isError, filters, setFilters } =
     useAllRequestHistory();
 
   const tableContents: ITableColumn<IRequestHistoryItem>[] = [
@@ -119,25 +119,16 @@ export function RequestHistoryPage() {
     <>
       <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Histórico de Requisições
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
+              Histórico de Requisições
+            </h1>
+            <Tag label="Tempo Real" color="#10b981" />
+          </div>
           <p className="text-sm text-grays-100">
-            Todas as requisições recebidas pela API, com tempos por fase.
+            Todas as requisições recebidas pela API, atualizadas automaticamente via SignalR.
           </p>
         </div>
-
-        <Button
-          type="button"
-          buttonStyle="soft"
-          size="sm"
-          onClick={() => refetch()}
-          isLoading={isFetching}
-          className="shrink-0"
-        >
-          <RefreshCw size={16} />
-          Atualizar
-        </Button>
       </header>
 
       <RequestHistorySearchFilters />

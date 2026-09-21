@@ -1,6 +1,7 @@
 import { ENV } from "@/src/config/env";
 import { useAuth } from "@/src/context/use-auth";
 import { NOTIFICATION_KEYS } from "@/src/features/notifications/hooks/query-key";
+import { REQUEST_HISTORY_KEYS } from "@/src/features/request-history/hooks/query-key";
 import { USER_FEEDBACKS_KEYS } from "@/src/features/user-feedbacks/hooks/query-keys";
 import type {
   IUserFeedback,
@@ -51,6 +52,10 @@ export function SignalRProvider({ children }: PropsWithChildren) {
     connection.on("ReceiveNotification", () => {
       queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.lists() });
       queryClient.invalidateQueries({ queryKey: NOTIFICATION_KEYS.unreads() });
+    });
+
+    connection.on("ReceiveRequestHistoryUpdate", () => {
+      queryClient.invalidateQueries({ queryKey: REQUEST_HISTORY_KEYS.lists() });
     });
 
     const started = connection
