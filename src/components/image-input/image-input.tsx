@@ -51,7 +51,7 @@ export const ImageInput: React.FC<IImageInput> = ({
           });
         }}
       />,
-      "md",
+      "lg",
     );
   };
 

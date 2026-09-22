@@ -276,6 +276,7 @@ export const ModalEditSpace = ({ data }: { data?: ISpaceList | ISpace }) => {
           canChangeImage={true}
           maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
           disabled={isPending || isLoadingImage}
+          aspectRatio={16 / 9}
         />
       </InputGroup>
 

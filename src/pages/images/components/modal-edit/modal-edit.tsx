@@ -14,7 +14,41 @@ import { type IImage } from "@/src/features/images/schemas/image.schema";
 import { useBoundStore } from "@/src/store";
 import { toImageSource } from "@/src/utils/image";
 import { useEffect, useMemo, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+
+const getImageCropConfig = (type?: number | string) => {
+  if (type === undefined || type === null) {
+    return { aspectRatio: undefined, cropShape: "rect" as const };
+  }
+
+  const normalized = String(type).trim().toLowerCase();
+
+  if (
+    normalized === "2" ||
+    normalized === "5" ||
+    normalized === "userprofile" ||
+    normalized === "characteravatar" ||
+    normalized.includes("avatar") ||
+    normalized.includes("profile") ||
+    normalized.includes("perfil")
+  ) {
+    return { aspectRatio: 1, cropShape: "round" as const };
+  }
+
+  if (
+    normalized === "1" ||
+    normalized === "7" ||
+    normalized === "8" ||
+    normalized === "campaignbanner" ||
+    normalized === "eventbanner" ||
+    normalized === "spacebanner" ||
+    normalized.includes("banner")
+  ) {
+    return { aspectRatio: 16 / 9, cropShape: "rect" as const };
+  }
+
+  return { aspectRatio: undefined, cropShape: "rect" as const };
+};
 
 export const ModalEdit = ({ data }: { data?: IImage }) => {
   const closeModal = useBoundStore((state) => state.closeModal);
@@ -40,6 +74,17 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
     defaultValues,
     mode: "onChange",
   });
+
+  const selectedType = useWatch({
+    control: form.control,
+    name: "type",
+    defaultValue: defaultValues.type,
+  });
+
+  const { aspectRatio, cropShape } = useMemo(
+    () => getImageCropConfig(selectedType),
+    [selectedType],
+  );
 
   const {
     handleSubmit,
@@ -116,6 +161,8 @@ export const ModalEdit = ({ data }: { data?: IImage }) => {
           <ControlledImageInput
             hookForm={form}
             name="content"
+            aspectRatio={aspectRatio}
+            cropShape={cropShape}
             previewValue={toImageSource(dataEdit?.url ?? data?.url)}
             disabled={isSubmitting || isLoading}
             error={errors.content?.message}

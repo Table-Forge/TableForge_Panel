@@ -38,11 +38,16 @@ export async function createImage(url: string): Promise<HTMLImageElement> {
 }
 
 export async function getCroppedImg(
-  imageSrc: string,
+  imageSource: HTMLImageElement | string,
   pixelCrop: IArea,
-  mimeType = "image/jpeg",
+  mimeType = "image/webp",
+  isNaturalPixels = false,
 ): Promise<string> {
-  const image = await createImage(imageSrc);
+  const image =
+    typeof imageSource === "string"
+      ? await createImage(imageSource)
+      : imageSource;
+
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
@@ -50,19 +55,38 @@ export async function getCroppedImg(
     throw new Error("Não foi possível obter o contexto 2D do canvas");
   }
 
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
+  const scaleX =
+    isNaturalPixels || !image.width ? 1 : image.naturalWidth / image.width;
+  const scaleY =
+    isNaturalPixels || !image.height ? 1 : image.naturalHeight / image.height;
+
+  const sourceX = Math.max(0, Math.round(pixelCrop.x * scaleX));
+  const sourceY = Math.max(0, Math.round(pixelCrop.y * scaleY));
+  const sourceWidth = Math.min(
+    Math.round(pixelCrop.width * scaleX),
+    image.naturalWidth - sourceX,
+  );
+  const sourceHeight = Math.min(
+    Math.round(pixelCrop.height * scaleY),
+    image.naturalHeight - sourceY,
+  );
+
+  canvas.width = Math.max(1, sourceWidth);
+  canvas.height = Math.max(1, sourceHeight);
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
   ctx.drawImage(
     image,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
     0,
     0,
-    pixelCrop.width,
-    pixelCrop.height,
+    canvas.width,
+    canvas.height,
   );
 
   return canvas.toDataURL(mimeType, 0.92);

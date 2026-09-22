@@ -315,6 +315,7 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
           name="bannerContent"
           previewValue={selectedBannerSource}
           disabled={isSubmitting}
+          aspectRatio={16 / 9}
           onClearImage={() => {
             setValue("bannerId", undefined);
           }}

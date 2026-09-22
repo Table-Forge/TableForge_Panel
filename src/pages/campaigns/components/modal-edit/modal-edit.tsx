@@ -417,6 +417,7 @@ export const ModalEdit = ({ data }: { data?: ICampaign }) => {
           name="bannerContent"
           previewValue={selectedBannerSource}
           disabled={isLoading || isSubmitting}
+          aspectRatio={16 / 9}
           onClearImage={() => {
             setValue("bannerId", undefined, {
               shouldDirty: true,

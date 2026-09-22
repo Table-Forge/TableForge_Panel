@@ -164,6 +164,7 @@ export const ModalEdit = ({ data }: { data?: IBanner }) => {
           name="imageContent"
           previewValue={selectedImageSource}
           disabled={isPending || isLoadingImage}
+          aspectRatio={16 / 9}
           onClearImage={() => {
             setValue("imageId", undefined, {
               shouldDirty: true,
