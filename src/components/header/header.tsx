@@ -5,6 +5,7 @@ import { toImageSource } from "@/src/utils/image";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../button/button";
+import { Card } from "@/src/components/card/card";
 import { NotificationsBell } from "../notifications-bell/notifications-bell";
 import { ThemeToggle } from "../theme-toggle/theme-toggle";
 
@@ -66,7 +67,11 @@ export const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between rounded-xl border border-white/10 bg-primary/60 px-6 py-3.5 shadow-lg">
+    <Card
+      as="header"
+      padding="none"
+      className="flex items-center justify-between px-6 py-3.5"
+    >
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -86,7 +91,7 @@ export const Header = () => {
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background z-10" />
         </button>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-grays-200">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ember">
             Sessão ativa
           </p>
           <p className="text-sm font-bold text-white">
@@ -111,7 +116,7 @@ export const Header = () => {
           Sair
         </Button>
       </div>
-    </header>
+    </Card>
   );
 };
 

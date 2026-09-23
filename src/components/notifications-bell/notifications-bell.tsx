@@ -116,7 +116,7 @@ export const NotificationsBell = () => {
   const panel = (
     <div
       ref={panelRef}
-      className="absolute z-[9999] w-[360px] overflow-hidden rounded-xl border border-white/15 bg-primary shadow-2xl"
+      className="absolute z-[9999] w-[360px] overflow-hidden chamfer-md border border-white/15 bg-surface"
       style={{
         top: listStyle.top,
         left: listStyle.left,
@@ -124,8 +124,8 @@ export const NotificationsBell = () => {
         pointerEvents: isSettling ? "none" : "auto",
       }}
     >
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-grays-200">
+      <div className="flex items-center justify-between border-b border-white/10 bg-card px-4 py-3">
+        <p className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
           Notificações
         </p>
 
@@ -213,18 +213,18 @@ export const NotificationsBell = () => {
           className={`border ${
             isOpen
               ? "border-secondary/40 text-white"
-              : "border-white/10 bg-primary/80 hover:border-secondary/30 hover:text-white"
+              : "border-white/10 bg-white/5 hover:border-secondary/30 hover:text-white"
           }`}
         >
           <Bell size={18} />
-
-          {unreadCount > 0 ? (
-            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-white ring-2 ring-background">
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </span>
-          ) : null}
         </ButtonIcon>
       </div>
+
+      {unreadCount > 0 ? (
+        <span className="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-on-accent ring-2 ring-background">
+          {unreadCount > 99 ? "99+" : unreadCount}
+        </span>
+      ) : null}
 
       {typeof document !== "undefined"
         ? createPortal(isOpen ? panel : null, document.body)

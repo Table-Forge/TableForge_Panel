@@ -100,7 +100,7 @@ export function DevicePill({ userAgent, className = "" }: IDevicePill) {
   return (
     <span
       title={userAgent ?? undefined}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold tracking-wide whitespace-nowrap ${config.classes} ${className}`}
+      className={`inline-flex items-center gap-1.5 chamfer-sm border px-2.5 py-0.5 text-xs font-semibold tracking-wide whitespace-nowrap ${config.classes} ${className}`}
     >
       <Icon size={13} className="shrink-0" />
       <span>{label}</span>

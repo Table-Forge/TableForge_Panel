@@ -41,9 +41,9 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
           <button
             type="button"
             onClick={() => setActiveSeries("campaigns")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
+            className={`flex items-center gap-1.5 chamfer-sm px-3 py-1 text-xs font-bold transition ${
               activeSeries === "campaigns"
-                ? "bg-secondary text-white shadow-md shadow-secondary/20"
+                ? "bg-secondary text-on-accent shadow-forged"
                 : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -53,9 +53,9 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
           <button
             type="button"
             onClick={() => setActiveSeries("events")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
+            className={`flex items-center gap-1.5 chamfer-sm px-3 py-1 text-xs font-bold transition ${
               activeSeries === "events"
-                ? "bg-amber-500 text-white shadow-md shadow-amber-500/20"
+                ? "bg-amber-500 text-white shadow-forged"
                 : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -65,9 +65,9 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
           <button
             type="button"
             onClick={() => setActiveSeries("users")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
+            className={`flex items-center gap-1.5 chamfer-sm px-3 py-1 text-xs font-bold transition ${
               activeSeries === "users"
-                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                ? "bg-emerald-500 text-white shadow-forged"
                 : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -77,15 +77,15 @@ export default function ActivityLineChart({ trends = [], period = 7, onPeriodCha
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/40 p-1">
+          <div className="flex items-center gap-1 chamfer-sm border border-white/10 bg-background p-1">
             {([7, 30, 90] as const).map((days) => (
               <button
                 key={days}
                 type="button"
                 onClick={() => onPeriodChange?.(days)}
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase transition ${
+                className={`chamfer-sm px-2.5 py-0.5 text-[11px] font-bold uppercase transition ${
                   period === days
-                    ? "bg-white/20 text-white shadow-xs"
+                    ? "bg-white/20 text-white"
                     : "text-white/50 hover:text-white"
                 }`}
               >

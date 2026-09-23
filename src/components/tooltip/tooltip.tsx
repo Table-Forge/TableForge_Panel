@@ -115,7 +115,7 @@ export const Tooltip: React.FC<ITooltip> = ({
     <div
       ref={tooltipRef}
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
-      className={`fixed z-[9999] max-w-[280px] rounded-lg border border-white/10 bg-primary px-2 py-1 text-xs text-white shadow-lg ${
+      className={`fixed z-[9999] max-w-[280px] chamfer-sm border border-white/10 bg-surface px-2 py-1 text-xs text-white ${
         props.uppercase ? "uppercase" : "normal-case"
       }`}
       dangerouslySetInnerHTML={{ __html: String(text) }}

@@ -87,7 +87,7 @@ export const UserStatus = ({ value, options = [], className }: UserStatusProps) 
 
   return (
     <span
-      className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase ${style.classes} ${className ?? ""}`}
+      className={`inline-flex items-center chamfer-sm border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${style.classes} ${className ?? ""}`}
     >
       {label}
     </span>

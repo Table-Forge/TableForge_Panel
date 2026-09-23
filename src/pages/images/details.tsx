@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -42,17 +43,17 @@ export function ImageDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/images")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 {data.name || "Imagem"}
               </h1>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              <span className="chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
                 #{data.id}
               </span>
             </div>
@@ -69,7 +70,6 @@ export function ImageDetailsPage() {
             onClick={() =>
               openModal("Editar Imagem", <ModalEdit data={data} />, "md")
             }
-            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Imagem
@@ -78,26 +78,26 @@ export function ImageDetailsPage() {
       </header>
 
       {/* Hero Media Preview Bento Card */}
-      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center">
-        <div className="relative overflow-hidden rounded-lg border border-white/15 shadow-2xl p-2 bg-black/40 max-w-full flex items-center justify-center">
+      <Card padding="none" className="flex flex-col items-center justify-center p-6 text-center">
+        <div className="relative overflow-hidden chamfer-md border border-white/15 p-2 bg-black/40 max-w-full flex items-center justify-center">
           <Thumbnail
             image={data}
             width="auto"
             height="auto"
-            className="max-h-[460px] w-auto max-w-full rounded-lg object-contain"
+            className="max-h-[460px] w-auto max-w-full object-contain"
             alt={data.name || "Imagem"}
           />
         </div>
 
         {data.url && (
-          <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xs">
+          <div className="mt-4 flex w-full max-w-2xl items-center justify-between gap-3 chamfer-md border border-white/10 bg-white/5 px-4 py-2.5">
             <span className="truncate text-xs font-semibold text-white/80">
               {data.url}
             </span>
             <CopyButton text={data.url} />
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Image Metadata Grid */}
       <CardBox title="Informações do Arquivo">

@@ -138,7 +138,7 @@ export function TermsDetailsPage() {
       width: "80px",
       align: "center",
       render: (item) => (
-        <span className="shrink-0 whitespace-nowrap rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-bold text-secondary">
+        <span className="shrink-0 whitespace-nowrap chamfer-sm border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-bold text-secondary">
           v{item.version}
         </span>
       ),
@@ -161,7 +161,7 @@ export function TermsDetailsPage() {
             href={`https://www.google.com/maps?q=${item.latitude},${item.longitude}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-secondary/30 bg-secondary/10 px-2.5 py-1 text-xs font-bold text-secondary hover:bg-secondary/20 transition-all"
+            className="inline-flex items-center gap-1.5 chamfer-sm border border-secondary/30 bg-secondary/10 px-2.5 py-1 text-xs font-bold text-secondary hover:bg-secondary/20 transition-all"
             title="Ver no mapa"
           >
             <MapPin size={13} />
@@ -187,17 +187,17 @@ export function TermsDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/settings/terms")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
-              <h1 className="min-w-0 break-words text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="min-w-0 break-words font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 {data.title}
               </h1>
-              <span className="shrink-0 whitespace-nowrap rounded-full border border-secondary/30 bg-secondary/15 px-3 py-0.5 text-xs font-black text-secondary">
+              <span className="shrink-0 whitespace-nowrap chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
                 v{data.version}
               </span>
               <TermsStatusBadge className="shrink-0" value={data.status} options={statusEnum} />
@@ -340,12 +340,12 @@ export function TermsDetailsPage() {
 
       <CardBox title="Conteúdo do Contrato">
         {data.fileUrl ? (
-          <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-white/10 bg-primary/40 p-8 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary/15 text-secondary">
+          <div className="flex flex-col items-center justify-center gap-4 chamfer-md border border-white/10 bg-white/5 p-8 text-center">
+            <div className="flex h-16 w-16 items-center justify-center chamfer-sm bg-secondary/15 text-secondary">
               <FileText size={32} />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">
+              <h3 className="font-display text-base font-bold tracking-[0.06em] text-white">
                 {data.fileName || "Documento dos Termos (PDF)"}
               </h3>
               {data.fileSizeBytes ? (
@@ -358,21 +358,21 @@ export function TermsDetailsPage() {
               href={data.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg border border-secondary/40 bg-secondary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-secondary/90 transition-all"
+              className="inline-flex items-center gap-2 chamfer-sm border border-secondary/40 bg-secondary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-on-accent shadow-forged hover:brightness-110 transition-all"
             >
               <ExternalLink size={16} />
               Visualizar / Baixar Documento PDF
             </a>
           </div>
         ) : data.contentHtml ? (
-          <div className="rounded-xl border border-white/10 bg-primary/30 p-6">
+          <div className="chamfer-md border border-white/10 bg-white/5 p-6">
             <div
               className="tf-contract-content overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: data.contentHtml }}
             />
           </div>
         ) : (
-          <div className="rounded-xl border border-white/10 bg-primary/20 p-8 text-center text-sm text-grays-200">
+          <div className="chamfer-md border border-white/10 bg-white/5 p-8 text-center text-sm text-grays-200">
             Nenhum conteúdo em texto ou arquivo anexado.
           </div>
         )}

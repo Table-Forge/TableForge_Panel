@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, type UIEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/src/components/button/button";
 import { Tag } from "@/src/components/tag/tag";
+import { KeystoneIcon } from "@/src/components/icons/icons";
 import { REQUEST_HISTORY_KEYS } from "@/src/features/request-history/hooks/query-key";
 import { useRequestHistoryLiveStore } from "@/src/features/request-history/store/use-request-history-live-store";
 import { Paginate } from "@/src/components/paginate/paginate";
@@ -183,7 +184,7 @@ export function RequestHistoryPage() {
       align: "center",
       render: (request) =>
         request.hasDetails ? (
-          <FileSearch size={16} className="mx-auto text-secondary-light" />
+          <FileSearch size={16} className="mx-auto text-ember" />
         ) : (
           "-"
         ),
@@ -201,7 +202,8 @@ export function RequestHistoryPage() {
       <header className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
+            <KeystoneIcon className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+            <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
               Histórico de Requisições
             </h1>
             {isPaused ? (
@@ -276,7 +278,7 @@ export function RequestHistoryPage() {
             <button
               type="button"
               onClick={handleScrollToTopAndResume}
-              className="pointer-events-auto flex cursor-pointer items-center gap-2 rounded-full border border-accent/40 bg-primary px-4 py-2 text-xs font-bold text-accent shadow-2xl transition hover:bg-accent/10"
+              className="pointer-events-auto flex cursor-pointer items-center gap-2 chamfer-sm border border-accent/40 bg-surface px-4 py-2 text-xs font-bold text-accent transition hover:bg-accent/10"
             >
               <ArrowUp size={14} />
               {pendingCount === 1

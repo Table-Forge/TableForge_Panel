@@ -111,7 +111,7 @@ export function ModalBookingDetails({ booking }: IProps) {
       )}
 
       {booking.statusReason && (
-        <div className="rounded-md bg-secondary/50 p-3 border border-secondary">
+        <div className="chamfer-sm bg-secondary/50 p-3 border border-secondary">
           <CardLabel>Motivo do Status</CardLabel>
           <CardValue className="mt-1 text-white">
             {booking.statusReason}

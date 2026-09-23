@@ -1,3 +1,5 @@
+import { Card } from "@/src/components/card/card";
+import { ForgeKicker } from "@/src/components/forge-kicker/forge-kicker";
 import { useAuth } from "@/src/context/use-auth";
 import { useDashboardStats } from "@/src/features/dashboard/hooks/use-dashboard-stats";
 import {
@@ -7,7 +9,6 @@ import {
   ShieldUser,
   CalendarDays,
   ArrowUpRight,
-  Sparkles,
   Swords,
   TrendingUp,
   Activity,
@@ -37,7 +38,7 @@ const ModalityDonutChart = lazy(
 
 function ChartSkeleton() {
   return (
-    <div className="flex h-44 w-full animate-pulse flex-col justify-between rounded-xl bg-white/5 p-4">
+    <div className="flex h-44 w-full animate-pulse flex-col justify-between chamfer-md bg-white/5 p-4">
       <div className="flex items-center justify-between">
         <div className="h-4 w-32 rounded bg-white/10" />
         <div className="h-3 w-16 rounded bg-white/10" />
@@ -49,10 +50,10 @@ function ChartSkeleton() {
 
 function KpiSkeleton() {
   return (
-    <div className="flex h-32 w-full animate-pulse flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5">
+    <div className="flex h-32 w-full animate-pulse flex-col justify-between chamfer-md border border-white/10 bg-card p-5">
       <div className="flex items-center justify-between">
-        <div className="h-10 w-10 rounded-lg bg-white/10" />
-        <div className="h-7 w-7 rounded-full bg-white/10" />
+        <div className="h-10 w-10 chamfer-sm bg-white/10" />
+        <div className="h-7 w-7 chamfer-sm bg-white/10" />
       </div>
       <div className="mt-4 space-y-2">
         <div className="h-3 w-16 rounded bg-white/10" />
@@ -76,7 +77,7 @@ export function DashboardPage() {
         tag: "Total de Mesas",
         icon: ScrollText,
         to: "/campaigns",
-        accent: "border-secondary/40 bg-secondary/15 text-secondary-light",
+        accent: "border-secondary/40 bg-secondary/15 text-ember",
       },
       {
         title: "Eventos",
@@ -166,15 +167,17 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Top Welcome Banner Bento */}
-      <section className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-r from-primary/80 via-primary/60 to-secondary/15 p-6 lg:p-8 shadow-2xl">
+      <Card
+        as="section"
+        cut="lg"
+        padding="none"
+        className="overflow-hidden bg-gradient-to-r from-card via-card to-secondary/15 p-6 lg:p-8"
+      >
         <div className="absolute right-0 top-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-secondary/15 blur-3xl" />
         <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
-              <Sparkles size={12} className="text-secondary" />
-              Dashboard Analítico em Tempo Real
-            </div>
-            <h1 className="mt-3 text-2xl font-black uppercase tracking-tight text-white md:text-3xl">
+            <ForgeKicker>Dashboard Analítico em Tempo Real</ForgeKicker>
+            <h1 className="mt-3 font-display text-2xl font-bold uppercase tracking-[0.04em] text-white md:text-3xl">
               Boas-vindas, {user?.nickname ?? user?.username ?? "Aventureiro"}
             </h1>
             <p className="mt-1 max-w-xl text-xs text-grays-100 md:text-sm leading-relaxed">
@@ -183,7 +186,7 @@ export function DashboardPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="rounded-lg border border-white/10 bg-background/50 px-4 py-2.5 text-right shadow-md">
+            <div className="chamfer-sm border border-white/10 bg-background/50 px-4 py-2.5 text-right">
               <p className="text-[10px] font-bold uppercase tracking-widest text-grays-200">
                 Função de Acesso
               </p>
@@ -193,43 +196,45 @@ export function DashboardPage() {
             </div>
           </div>
         </div>
-      </section>
+      </Card>
 
       {/* Realtime KPI Bento Cards Row */}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <KpiSkeleton key={i} />)
           : kpis.map((kpi) => (
-              <Link
-                key={kpi.title}
-                to={kpi.to}
-                className="group relative overflow-hidden rounded-xl border border-white/10 bg-primary/60 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-secondary/50 hover:bg-primary/80 hover:shadow-[0_12px_30px_rgba(255,36,0,0.15)] flex flex-col justify-between"
-              >
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg border ${kpi.accent}`}
-                  >
-                    <kpi.icon size={20} />
-                  </div>
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-grays-100 transition-all duration-200 group-hover:border-secondary/40 group-hover:bg-secondary group-hover:text-white">
-                    <ArrowUpRight size={14} />
-                  </span>
-                </div>
-
-                <div className="mt-4">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-grays-200">
-                    {kpi.tag}
-                  </span>
-                  <div className="flex items-baseline justify-between mt-1">
-                    <p className="text-2xl font-extrabold text-white">
-                      {kpi.value}
-                    </p>
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-400">
-                      <TrendingUp size={12} />
-                      {kpi.growth}
+              <Link key={kpi.title} to={kpi.to} className="group flex">
+                <Card
+                  interactive
+                  padding="none"
+                  className="flex flex-1 flex-col justify-between p-5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center chamfer-sm border ${kpi.accent}`}
+                    >
+                      <kpi.icon size={20} />
+                    </div>
+                    <span className="flex h-7 w-7 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-grays-100 transition-all duration-200 group-hover:border-secondary/40 group-hover:bg-secondary group-hover:text-on-accent group-hover:shadow-forged">
+                      <ArrowUpRight size={14} />
                     </span>
                   </div>
-                </div>
+
+                  <div className="mt-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-grays-200">
+                      {kpi.tag}
+                    </span>
+                    <div className="flex items-baseline justify-between mt-1">
+                      <p className="font-display text-2xl font-bold text-white">
+                        {kpi.value}
+                      </p>
+                      <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-400">
+                        <TrendingUp size={12} />
+                        {kpi.growth}
+                      </span>
+                    </div>
+                  </div>
+                </Card>
               </Link>
             ))}
       </section>
@@ -237,13 +242,13 @@ export function DashboardPage() {
       {/* Dynamic Lazy-Loaded Charts Section */}
       <section className="grid gap-4 lg:grid-cols-3">
         {/* Left 2 Cols: Activity Line Chart */}
-        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between lg:col-span-2">
+        <Card padding="none" className="flex flex-col justify-between p-6 lg:col-span-2">
           <div className="mb-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary/20 text-secondary">
+              <div className="flex h-8 w-8 items-center justify-center chamfer-sm bg-secondary/20 text-secondary">
                 <Activity size={18} />
               </div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+              <h2 className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
                 Engajamento & Atividades do Ecossistema
               </h2>
             </div>
@@ -260,10 +265,10 @@ export function DashboardPage() {
               />
             </Suspense>
           )}
-        </div>
+        </Card>
 
         {/* Right Col: Systems Distribution Bar Chart */}
-        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
+        <Card padding="none" className="flex flex-col justify-between p-6">
           {isLoading ? (
             <ChartSkeleton />
           ) : (
@@ -271,18 +276,18 @@ export function DashboardPage() {
               <SystemsBarChart systems={stats.popularSystems} />
             </Suspense>
           )}
-        </div>
+        </Card>
       </section>
 
       {/* Community & Modality Donut Charts + Feedback Summary Row */}
       <section className="grid gap-4 lg:grid-cols-3">
         {/* Donut Chart: Community Profiles */}
-        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
+        <Card padding="none" className="flex flex-col justify-between p-6">
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+            <div className="flex h-8 w-8 items-center justify-center chamfer-sm bg-emerald-500/20 text-emerald-400">
               <Users size={18} />
             </div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+            <h2 className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
               Demografia da Comunidade
             </h2>
           </div>
@@ -297,15 +302,15 @@ export function DashboardPage() {
               />
             </Suspense>
           )}
-        </div>
+        </Card>
 
         {/* Donut Chart: Modality (Presencial vs Online) */}
-        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
+        <Card padding="none" className="flex flex-col justify-between p-6">
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/20 text-purple-400">
+            <div className="flex h-8 w-8 items-center justify-center chamfer-sm bg-purple-500/20 text-purple-400">
               <MapPin size={18} />
             </div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+            <h2 className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
               Modalidades de Jogo
             </h2>
           </div>
@@ -317,20 +322,20 @@ export function DashboardPage() {
               <ModalityDonutChart modalityBreakdown={stats.modalityBreakdown} />
             </Suspense>
           )}
-        </div>
+        </Card>
 
         {/* Satisfaction & Support Feedbacks Card */}
-        <div className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
+        <Card padding="none" className="flex flex-col justify-between p-6">
           {isLoading ? (
             <ChartSkeleton />
           ) : (
             <>
               <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400">
+                  <div className="flex h-8 w-8 items-center justify-center chamfer-sm bg-amber-500/20 text-amber-400">
                     <Star size={18} />
                   </div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-grays-200">
+                  <h2 className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
                     Satisfação & Qualidade
                   </h2>
                 </div>
@@ -340,9 +345,9 @@ export function DashboardPage() {
               </div>
 
               <div className="space-y-3 my-auto">
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between chamfer-sm border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
+                    <div className="flex h-9 w-9 items-center justify-center chamfer-sm bg-amber-500/15 text-amber-400">
                       <Star size={18} />
                     </div>
                     <div>
@@ -354,14 +359,14 @@ export function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-lg font-black text-amber-400">
+                  <span className="font-display text-lg font-bold text-amber-400">
                     {stats.averageUserRating ?? 0}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between chamfer-sm border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary/15 text-secondary">
+                    <div className="flex h-9 w-9 items-center justify-center chamfer-sm bg-secondary/15 text-secondary">
                       <MessageSquare size={18} />
                     </div>
                     <div>
@@ -373,20 +378,20 @@ export function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-lg font-black text-white">
+                  <span className="font-display text-lg font-bold text-white">
                     {stats.pendingUserFeedbacks ?? 0}
                   </span>
                 </div>
               </div>
             </>
           )}
-        </div>
+        </Card>
       </section>
 
       {/* Quick Action Shortcuts Grid */}
-      <section className="rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl flex flex-col justify-between">
+      <Card as="section" padding="none" className="flex flex-col justify-between p-6">
         <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-grays-200">
+          <h2 className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
             Atalhos Rápidos de Gestão
           </h2>
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/50">
@@ -399,11 +404,11 @@ export function DashboardPage() {
             <Link
               key={card.title}
               to={card.to}
-              className="group relative flex flex-col justify-between rounded-lg border border-white/10 bg-white/5 p-4 transition-all duration-200 hover:border-secondary/50 hover:bg-white/10 hover:shadow-lg"
+              className="group relative flex flex-col justify-between chamfer-sm border border-white/10 bg-white/5 p-4 transition-all duration-200 hover:border-secondary/50 hover:bg-white/10"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary/15 text-secondary group-hover:bg-secondary group-hover:text-white transition-colors">
+                  <div className="flex h-9 w-9 items-center justify-center chamfer-sm bg-secondary/15 text-secondary group-hover:bg-secondary group-hover:text-on-accent group-hover:shadow-forged transition-colors">
                     <card.icon size={18} />
                   </div>
                   <ArrowUpRight
@@ -412,7 +417,7 @@ export function DashboardPage() {
                   />
                 </div>
 
-                <h3 className="mt-3 text-xs font-extrabold uppercase tracking-wide text-white">
+                <h3 className="mt-3 font-display text-xs font-bold uppercase tracking-[0.06em] text-white">
                   {card.title}
                 </h3>
                 <p className="mt-1 text-[11px] text-grays-100 line-clamp-2 leading-relaxed">
@@ -422,7 +427,7 @@ export function DashboardPage() {
             </Link>
           ))}
         </div>
-      </section>
+      </Card>
     </div>
   );
 }

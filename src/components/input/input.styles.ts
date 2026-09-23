@@ -4,14 +4,14 @@ export const getInputClasses = (
   disabled?: boolean,
 ) => {
   const base =
-    "flex h-12 w-full min-w-[80px] items-center overflow-hidden rounded-lg border bg-primary/40 transition-all duration-200 shadow-sm";
+    "flex h-12 w-full min-w-[80px] items-center overflow-hidden rounded-lg border bg-background transition-all duration-200";
   const border = error
     ? "border-danger focus-within:ring-2 focus-within:ring-danger/25"
     : "border-white/15 focus-within:border-secondary/80 focus-within:ring-2 focus-within:ring-secondary/25";
   const state =
     disabled || isLoading
       ? "cursor-not-allowed bg-white/5 opacity-60"
-      : "hover:border-white/30 hover:bg-primary/60";
+      : "hover:border-white/30";
 
   return `${base} ${border} ${state}`;
 };
@@ -25,14 +25,14 @@ export const getTextareaClasses = (
   disabled?: boolean,
 ) => {
   const base =
-    "relative flex min-h-28 max-h-40 w-full min-w-[80px] items-start overflow-hidden rounded-lg border bg-primary/40 transition-all duration-200 shadow-sm";
+    "relative flex min-h-28 max-h-40 w-full min-w-[80px] items-start overflow-hidden rounded-lg border bg-background transition-all duration-200";
   const border = error
     ? "border-danger focus-within:ring-2 focus-within:ring-danger/25"
     : "border-white/15 focus-within:border-secondary/80 focus-within:ring-2 focus-within:ring-secondary/25";
   const state =
     disabled || isLoading
       ? "cursor-not-allowed bg-white/5 opacity-60"
-      : "hover:border-white/30 hover:bg-primary/60";
+      : "hover:border-white/30";
 
   return `${base} ${border} ${state}`;
 };

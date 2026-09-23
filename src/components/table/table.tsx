@@ -221,7 +221,7 @@ export function Table<T extends { id?: number | string }>({
   if (!bodyData?.length) {
     return (
       <div className="h-full">
-        <p className="rounded-xl border border-white/10 bg-primary/40 p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200">
+        <p className="chamfer-md border border-white/10 bg-card p-8 text-center text-xs font-semibold uppercase tracking-wider text-grays-200">
           {emptyMessage || "Nenhum registro encontrado."}
         </p>
       </div>
@@ -234,7 +234,7 @@ export function Table<T extends { id?: number | string }>({
       aria-label="tabela"
       onScroll={onScroll}
       onDragOver={handleContainerDragOver}
-      className={`relative h-full min-h-0 w-full overflow-x-auto rounded-xl border border-white/10 bg-primary/40 shadow-2xl ${scrollable ? "max-w-full" : ""}`}
+      className={`relative h-full min-h-0 w-full overflow-x-auto chamfer-md border border-white/10 bg-card ${scrollable ? "max-w-full" : ""}`}
 
       style={{
         height: bodyHeight,
@@ -246,7 +246,7 @@ export function Table<T extends { id?: number | string }>({
       <div className="flex min-w-max w-full flex-col">
         <div
           role="rowgroup"
-          className="sticky top-0 z-30 flex border-b border-white/10 bg-primary px-4 py-3.5 shadow-sm"
+          className="sticky top-0 z-30 flex border-b border-white/10 bg-surface px-4 py-3.5"
         >
           {canDrag ? (
             <div
@@ -270,7 +270,7 @@ export function Table<T extends { id?: number | string }>({
                   left: column.fixed ? columnOffsets[index] : undefined,
                   zIndex: column.fixed ? 35 : undefined,
                   backgroundColor: column.fixed
-                    ? "var(--color-primary)"
+                    ? "var(--color-surface)"
                     : undefined,
                 }}
                 className={`min-w-0 items-center px-2 text-[10px] font-extrabold uppercase tracking-widest text-grays-200 ${getColumnAlignmentClasses(
@@ -315,7 +315,7 @@ export function Table<T extends { id?: number | string }>({
       {contextMenu
         ? createPortal(
             <div
-              className="fixed z-[9999] min-w-[180px] overflow-hidden rounded-lg border border-white/15 bg-primary shadow-2xl"
+              className="fixed z-[9999] min-w-[180px] overflow-hidden chamfer-sm border border-white/15 bg-surface"
               style={{ top: contextMenu.y, left: contextMenu.x }}
               onClick={(event) => event.stopPropagation()}
             >
@@ -418,7 +418,7 @@ function TableRowComponent<T extends { id?: number | string }>({
               left: column.fixed ? columnOffsets[colIndex] : undefined,
               zIndex: column.fixed ? 25 : undefined,
               backgroundColor: column.fixed
-                ? "var(--color-primary)"
+                ? "var(--color-card)"
                 : undefined,
             }}
             className={`min-w-0 items-center px-2 text-sm ${getColumnAlignmentClasses(

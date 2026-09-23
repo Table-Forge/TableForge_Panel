@@ -32,11 +32,11 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <main className="flex min-h-screen items-center justify-center bg-background p-6 text-white">
-          <div className="flex max-w-md flex-col items-center rounded-xl border border-white/10 bg-primary/70 p-8 text-center backdrop-blur-md shadow-2xl">
-            <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-secondary/40 bg-secondary/15 text-secondary mb-4">
+          <div className="flex max-w-md flex-col items-center chamfer-md border border-white/10 bg-card p-8 text-center">
+            <div className="flex h-14 w-14 items-center justify-center chamfer-sm border border-secondary/40 bg-secondary/15 text-secondary mb-4">
               <AlertTriangle size={28} />
             </div>
-            <h1 className="text-lg font-black uppercase tracking-wide text-white">
+            <h1 className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
               Ocorreu um Erro Inesperado
             </h1>
             <p className="mt-2 text-xs text-grays-100 leading-relaxed">
@@ -44,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </p>
             <button
               onClick={this.handleReload}
-              className="mt-6 inline-flex items-center gap-2 rounded-lg border border-secondary/50 bg-secondary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all hover:bg-secondary-dark"
+              className="mt-6 inline-flex items-center gap-2 chamfer-sm border border-secondary/50 bg-secondary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-on-accent shadow-forged transition-all hover:brightness-110"
             >
               <RefreshCw size={14} /> Recarregar Página
             </button>

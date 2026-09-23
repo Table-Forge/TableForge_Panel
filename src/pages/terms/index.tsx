@@ -40,7 +40,7 @@ export function TermsPage() {
       width: "90px",
       align: "center",
       render: (item) => (
-        <span className="shrink-0 whitespace-nowrap rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-black text-secondary">
+        <span className="shrink-0 whitespace-nowrap chamfer-sm border border-white/10 bg-white/5 px-2 py-0.5 text-xs font-black text-secondary">
           v{item.version}
         </span>
       ),

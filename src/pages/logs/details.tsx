@@ -1,3 +1,4 @@
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -47,18 +48,18 @@ export function LogDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/logs")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 Log #{data.id}
               </h1>
               <span
-                className={`rounded-full border px-3 py-0.5 text-xs font-extrabold tracking-wide ${
+                className={`chamfer-sm border px-3 py-0.5 text-xs font-extrabold tracking-wide ${
                   isSuccessStatus
                     ? "border-emerald-500/30 bg-emerald-500/20 text-emerald-300"
                     : "border-red-500/30 bg-red-500/20 text-red-300"
@@ -76,12 +77,12 @@ export function LogDetailsPage() {
 
       {/* KPI Stat Cards Grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Status HTTP
           </span>
           <div
-            className={`mt-2 text-2xl font-extrabold ${
+            className={`mt-2 font-display text-2xl font-bold ${
               isSuccessStatus ? "text-emerald-400" : "text-red-400"
             }`}
           >
@@ -90,43 +91,43 @@ export function LogDetailsPage() {
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Resposta do Servidor
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Tipo de Log
           </span>
-          <div className="mt-2 text-xl font-extrabold text-white truncate">
+          <div className="mt-2 font-display text-xl font-bold text-white truncate">
             {data.type || "Geral"}
           </div>
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Categoria do Registro
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Endereço IP
           </span>
-          <div className="mt-2 text-lg font-extrabold text-white truncate">
+          <div className="mt-2 font-display text-lg font-bold text-white truncate">
             {data.ipAddress || "-"}
           </div>
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Origem da Requisição
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Data e Hora
           </span>
-          <div className="mt-2 text-sm font-extrabold text-white">
+          <div className="mt-2 font-display text-sm font-bold text-white">
             {createdOn ? formatDate(createdOn, true) : "-"}
           </div>
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Data de Registro
           </span>
-        </div>
+        </Card>
       </div>
 
       {/* Main Metadata Section */}
@@ -146,7 +147,7 @@ export function LogDetailsPage() {
           </InfoBox>
           <InfoBox className="lg:col-span-3">
             <CardLabel>Endpoint</CardLabel>
-            <CardValue className="break-all font-mono text-secondary-light">
+            <CardValue className="break-all font-mono text-ember">
               {data.endpoint ?? "-"}
             </CardValue>
           </InfoBox>
@@ -155,7 +156,7 @@ export function LogDetailsPage() {
 
       {/* Log Content Sections */}
       <CardBox title="Mensagem Principal">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-white/90">
+        <div className="chamfer-md border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-white/90">
           {structuredContent.message}
         </div>
       </CardBox>
@@ -168,7 +169,7 @@ export function LogDetailsPage() {
 
       {structuredContent.innerExceptionMessage !== "-" && (
         <CardBox title="Exceção Interna">
-          <div className="rounded-lg border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-red-300">
+          <div className="chamfer-md border border-white/10 bg-white/5 p-4 font-mono text-xs leading-relaxed text-red-300">
             {structuredContent.innerExceptionMessage}
           </div>
         </CardBox>

@@ -58,7 +58,7 @@ export const TermsStatusBadge = ({
 
   return (
     <span
-      className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 rounded-full border px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider ${presentation.classes} ${className}`}
+      className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 chamfer-sm border px-3 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] ${presentation.classes} ${className}`}
     >
       {label}
     </span>

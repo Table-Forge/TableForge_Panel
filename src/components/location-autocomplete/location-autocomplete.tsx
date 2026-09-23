@@ -245,7 +245,7 @@ export function LocationAutocomplete({
         </div>
 
         {showSuggestions ? (
-          <div className="absolute z-30 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-white/15 bg-primary shadow-xl">
+          <div className="absolute z-30 mt-2 max-h-60 w-full overflow-y-auto chamfer-md border border-white/15 bg-surface">
             {suggestions.map((suggestion) => (
               <button
                 key={suggestion.place_id}

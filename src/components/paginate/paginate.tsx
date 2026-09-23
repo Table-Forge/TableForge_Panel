@@ -76,7 +76,7 @@ export const Paginate: React.FC<IPaginateProps> = ({
 
   return (
     <footer
-      className={`flex flex-col gap-4 rounded-xl border border-white/10 bg-primary/40 p-4 shadow-lg md:flex-row md:items-center md:justify-between ${className}`}
+      className={`flex flex-col gap-4 chamfer-md border border-white/10 bg-card p-4 md:flex-row md:items-center md:justify-between ${className}`}
     >
       <p className="text-sm font-medium text-grays-100">
         Mostrando <span className="font-bold text-white">{itemStart}</span> a{" "}
@@ -94,7 +94,7 @@ export const Paginate: React.FC<IPaginateProps> = ({
             color="var(--color-secondary)"
             hasHoverEffect
             size="34px"
-            className="rounded-lg border border-white/15 bg-white/5 hover:border-secondary/50"
+            className="border border-white/15 bg-white/5 hover:border-secondary/50"
           >
             <ChevronLeft size={16} />
           </ButtonIcon>
@@ -111,9 +111,9 @@ export const Paginate: React.FC<IPaginateProps> = ({
                   onClick={() =>
                     !item.disabled ? handleChangePage(Number(item.value)) : null
                   }
-                  className={`inline-flex h-8 min-w-8 items-center justify-center rounded-lg px-2.5 text-xs font-bold transition-all duration-150 ${
+                  className={`inline-flex h-8 min-w-8 items-center justify-center chamfer-sm px-2.5 text-xs font-bold transition-all duration-150 ${
                     isSelected
-                      ? "bg-secondary text-white shadow-md shadow-secondary/20"
+                      ? "bg-secondary text-on-accent shadow-forged"
                       : "bg-white/5 text-white/90 hover:bg-white/15"
                   } disabled:cursor-default disabled:opacity-40 disabled:hover:bg-white/5`}
                 >
@@ -131,7 +131,7 @@ export const Paginate: React.FC<IPaginateProps> = ({
             color="var(--color-secondary)"
             hasHoverEffect
             size="34px"
-            className="rounded-lg border border-white/15 bg-white/5 hover:border-secondary/50"
+            className="border border-white/15 bg-white/5 hover:border-secondary/50"
           >
             <ChevronRight size={16} />
           </ButtonIcon>

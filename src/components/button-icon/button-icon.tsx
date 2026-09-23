@@ -38,12 +38,12 @@ export function ButtonIcon({
         }
       : {};
 
-  return (
+  const button = (
     <button
       type={type}
       disabled={disabled}
       className={[
-        "relative inline-flex shrink-0 items-center justify-center overflow-visible rounded-lg border-0 bg-transparent transition",
+        "relative inline-flex shrink-0 items-center justify-center overflow-visible chamfer-sm border-0 bg-transparent transition",
         isActive ? "text-secondary" : "text-grays-100",
         isHighlighted ? "bg-white/10" : "",
         hasHoverEffect
@@ -62,12 +62,17 @@ export function ButtonIcon({
       {...props}
     >
       {children}
-
-      {isNew ? (
-        <span className="pointer-events-none absolute -right-2 -top-1.5 inline-flex h-[13px] min-w-[22px] items-center justify-center rounded-full bg-tertiary px-1 text-[8px] font-bold uppercase leading-none text-white shadow">
-          Novo
-        </span>
-      ) : null}
     </button>
+  );
+
+  if (!isNew) return button;
+
+  return (
+    <span className="relative inline-flex shrink-0">
+      {button}
+      <span className="pointer-events-none absolute -right-2 -top-1.5 inline-flex h-[13px] min-w-[22px] items-center justify-center chamfer-sm bg-tertiary px-1 text-[8px] font-bold uppercase leading-none text-on-accent">
+        Novo
+      </span>
+    </span>
   );
 }

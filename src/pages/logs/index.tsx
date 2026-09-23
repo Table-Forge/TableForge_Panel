@@ -1,6 +1,7 @@
 import { Paginate } from "@/src/components/paginate/paginate";
 import { Table } from "@/src/components/table/table";
 import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
+import { KeystoneIcon } from "@/src/components/icons/icons";
 import { SkeletonTable } from "@/src/components/skeleton/skeleton-table";
 import { LogIcon } from "@/src/components/logs-icons/logs-icons";
 import type { ITableColumn } from "@/src/components/table/table.interfaces";
@@ -74,9 +75,12 @@ export function LogsPage() {
     <>
       <header className="flex flex-col items-start justify-between gap-4 sm:flex-row">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold uppercase tracking-tight text-white">
-            Logs
-          </h1>
+          <div className="flex items-center gap-3">
+            <KeystoneIcon className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+            <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
+              Logs
+            </h1>
+          </div>
           <p className="text-sm text-grays-100">
             Histórico de logs do sistema.
           </p>

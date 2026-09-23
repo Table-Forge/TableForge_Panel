@@ -31,7 +31,7 @@ export function Thumbnail({
   if (!source) return "-";
 
   const finalAlt = alt || imageName || "Imagem";
-  const roundedClass = rounded === "full" ? "rounded-full object-cover" : "rounded-lg object-contain";
+  const roundedClass = rounded === "full" ? "rounded-full object-cover" : "chamfer-sm object-contain";
 
   return (
     <img

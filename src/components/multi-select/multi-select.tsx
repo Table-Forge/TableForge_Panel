@@ -463,7 +463,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
           handleAddOption();
         }}
         size="48px"
-        className="border border-secondary bg-secondary text-white"
+        className="border border-secondary bg-secondary text-on-accent"
       >
         <Plus size={18} />
       </ButtonIcon>
@@ -507,7 +507,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
               <button
                 type="button"
                 data-option-index={index}
-                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition ${
+                className={`flex w-full items-center justify-between chamfer-sm px-3 py-2 text-left text-xs transition ${
                   isSelected
                     ? "bg-secondary/20 text-white"
                     : "text-white/85 hover:bg-white/10"
@@ -541,7 +541,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
           <div
             ref={listRef}
             data-portal="true"
-            className="absolute z-[1300] overflow-hidden rounded-xl border border-white/15 bg-primary shadow-xl"
+            className="absolute z-[1300] overflow-hidden chamfer-md border border-white/15 bg-surface"
             style={{
               top: `${listStyle.top}px`,
               left: `${listStyle.left}px`,
@@ -598,7 +598,7 @@ export function MultiSelect<TFieldValues extends FieldValues>({
               ? selectedItems.map((item) => (
                   <span
                     key={String(item.value)}
-                    className="inline-flex items-center gap-1 rounded-lg border border-secondary/30 bg-secondary/15 px-2 py-1"
+                    className="inline-flex items-center gap-1 chamfer-sm border border-secondary/30 bg-secondary/15 px-2 py-1"
                   >
                     {item.name}
                     <span

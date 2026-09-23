@@ -13,7 +13,7 @@ This document defines how we build, structure, and consume UI components in the 
 
 ## Where things live
 
-- **Shared components**: `src/components/` (36 directories, plus the legacy `ui/`). Highly reusable across domains (buttons, inputs, modals, table, toast).
+- **Shared components**: `src/components/` (46 directories). Highly reusable across domains (buttons, inputs, modals, table, toast).
 - **Page-specific components**: `src/pages/<page>/components/`. CRUD pages follow a fixed shape: `modal-edit/modal-edit.tsx` and `search-filters/search-filters.tsx` (e.g., `src/pages/users/components/`).
 - **Imports** always use the `@/src/...` alias (configured in `vite.config.ts` and `tsconfig.app.json`), even between sibling components.
 
@@ -23,6 +23,18 @@ This document defines how we build, structure, and consume UI components in the 
 - Variants are dot-suffixed files in the same directory: `input.masked.tsx`, `input.textarea.controlled.tsx`. React Hook Form-bound variants end in `.controlled.tsx` (legacy exception: `checkbox/checkbox-controlled.tsx`).
 - Sibling files share the base name: `*.interfaces.ts`, `*.styles.ts`, `*.constants.ts`, `*.context.ts` (see `input/input.styles.ts`, `filters/filters.context.ts`). Use `.interfaces.ts` for new files — `.interface.ts` (`modals/`, `paginate/`) and the misspelled `.intefaces.ts` (`button/`, `input/`) are legacy spellings that still exist.
 - Function name: `PascalCase`, exported as a named export.
+
+## Forge primitives
+
+The visual language (see [styling.md](./styling.md#the-forge-visual-language)) is built from shared primitives — use them instead of re-creating the recipe inline:
+
+- [card/card.tsx](../../src/components/card/card.tsx) — `Card`, the stone slab (chamfer, border, corner brackets) for every static card and panel.
+- [card-box/card-box.tsx](../../src/components/card-box/card-box.tsx) — `CardBox` (a titled `Card`) plus the `InfoBox` / `CardLabel` / `CardValue` field tiles.
+- [forge-kicker/forge-kicker.tsx](../../src/components/forge-kicker/forge-kicker.tsx) — `ForgeKicker`, the eyebrow above a title.
+- [icons/icons.tsx](../../src/components/icons/icons.tsx) — `KeystoneIcon` (title and kicker mark) and `D20Icon` (the loading glyph, spun with `animate-spin`).
+- [forge-sparks/forge-sparks.tsx](../../src/components/forge-sparks/forge-sparks.tsx) — `ForgeSparks`, the canvas ember effect of the login page.
+
+`ButtonIcon` is chamfered, so anything that must stick out of it (the unread counter of `NotificationsBell`, the `isNew` flag) is rendered as a sibling, outside the clipped button.
 
 ## Rules
 

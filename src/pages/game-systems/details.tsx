@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -41,17 +42,17 @@ export function GameSystemDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/gamesystems")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 {data.name || "Sistema de Jogo"}
               </h1>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              <span className="chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
                 #{data.id}
               </span>
             </div>
@@ -72,7 +73,6 @@ export function GameSystemDetailsPage() {
                 "md",
               )
             }
-            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Sistema
@@ -83,52 +83,52 @@ export function GameSystemDetailsPage() {
       {/* Hero Bento Box */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Image Preview Card */}
-        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center text-center lg:col-span-1">
+        <Card padding="none" className="flex flex-col items-center justify-center p-6 text-center lg:col-span-1">
           {data.imageUrl ? (
-            <div className="relative overflow-hidden rounded-lg border border-white/15 shadow-xl">
+            <div className="relative overflow-hidden chamfer-md border border-white/15">
               <Thumbnail
                 image={data.imageUrl}
                 width={140}
                 height={140}
                 alt={data.name || "Imagem"}
-                className="rounded-lg object-cover"
+                className="object-cover"
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full items-center justify-center chamfer-md border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               Sem Imagem
             </div>
           )}
-          <h2 className="mt-3 text-lg font-extrabold text-white">
+          <h2 className="mt-3 font-display text-lg font-bold text-white">
             {data.name}
           </h2>
-        </div>
+        </Card>
 
         {/* Right Stats */}
         <div className="grid grid-cols-1 gap-3 lg:col-span-2 sm:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Criado em
             </span>
-            <div className="mt-2 text-lg font-extrabold text-white">
+            <div className="mt-2 font-display text-lg font-bold text-white">
               {data.createdAt ? formatDate(data.createdAt, true) : "-"}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Data de Registro
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Última Atualização
             </span>
-            <div className="mt-2 text-lg font-extrabold text-white">
+            <div className="mt-2 font-display text-lg font-bold text-white">
               {data.updatedAt ? formatDate(data.updatedAt, true) : "-"}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Modificado em
             </span>
-          </div>
+          </Card>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ export function GameSystemDetailsPage() {
 
       {/* Description */}
       <CardBox title="Descrição do Sistema">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
+        <div className="chamfer-md border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
           {data.description || "Nenhuma descrição fornecida para este sistema."}
         </div>
       </CardBox>

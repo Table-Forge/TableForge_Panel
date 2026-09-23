@@ -2,6 +2,7 @@ import { InfoNotFound } from "@/src/components/page-handler/info-not-found";
 import { SkeletonDetails } from "@/src/components/skeleton/skeleton-details";
 import { useSpaceById } from "@/src/features/spaces/hooks/use-spaces-queries";
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import { MdArrowBack, MdModeEdit } from "react-icons/md";
 import { Store, Phone, Clock, CalendarDays } from "lucide-react";
 import { useBoundStore } from "@/src/store";
@@ -57,10 +58,10 @@ export function MySpaceDetailsPage() {
             Voltar para Meus Espaços
           </button>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+            <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
               {space.name}
             </h1>
-            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+            <span className="chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
               #{space.id}
             </span>
           </div>
@@ -76,7 +77,6 @@ export function MySpaceDetailsPage() {
             onClick={() =>
               openModal("Editar Espaço", <ModalEditSpace data={space} />, "md")
             }
-            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Espaço
@@ -87,9 +87,9 @@ export function MySpaceDetailsPage() {
       {/* Hero Bento Box & KPI Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Media / Identity Card */}
-        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
+        <Card padding="none" className="flex flex-col justify-between p-6 lg:col-span-1">
           {space.bannerUrl ? (
-            <div className="relative overflow-hidden rounded-lg border border-white/10 shadow-lg">
+            <div className="relative overflow-hidden chamfer-md border border-white/10">
               <Thumbnail
                 image={space.bannerUrl}
                 width="100%"
@@ -99,7 +99,7 @@ export function MySpaceDetailsPage() {
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full flex-col items-center justify-center gap-2 chamfer-md border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               <Store size={28} />
               Sem Banner
             </div>
@@ -111,33 +111,33 @@ export function MySpaceDetailsPage() {
             </span>
             <SpaceStatus value={space.status} />
           </div>
-        </div>
+        </Card>
 
         {/* Right: 4 Quick Stat KPIs */}
         <div className="grid grid-cols-2 gap-3 lg:col-span-2 sm:grid-cols-4">
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <div className="flex items-center gap-2 text-grays-200">
               <Phone size={16} className="text-secondary" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
                 Telefone
               </span>
             </div>
-            <div className="mt-2 text-sm font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-sm font-bold tracking-[0.04em] text-white truncate">
               {space.phoneNumber ?? "-"}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Contato Comercial
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <div className="flex items-center gap-2 text-grays-200">
               <Clock size={16} className="text-amber-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
                 Horários
               </span>
             </div>
-            <div className="mt-2 text-xs font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-xs font-bold tracking-[0.04em] text-white truncate">
               {space.openTime && space.closeTime
                 ? `${space.openTime} às ${space.closeTime}`
                 : space.openTime || "-"}
@@ -145,37 +145,37 @@ export function MySpaceDetailsPage() {
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Abertura & Fechamento
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <div className="flex items-center gap-2 text-grays-200">
               <CalendarDays size={16} className="text-purple-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
                 Funcionamento
               </span>
             </div>
-            <div className="mt-2 text-xs font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-xs font-bold tracking-[0.04em] text-white truncate">
               {space.workingDays ?? "-"}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Dias Abertos
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <div className="flex items-center gap-2 text-grays-200">
               <Store size={16} className="text-emerald-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-widest">
                 Identificador
               </span>
             </div>
-            <div className="mt-2 text-lg font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-lg font-bold tracking-[0.04em] text-white truncate">
               #{space.id}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               ID do Espaço
             </span>
-          </div>
+          </Card>
         </div>
       </div>
 

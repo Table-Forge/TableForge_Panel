@@ -69,7 +69,7 @@ Lives in `components/search-filters/search-filters.tsx`:
 - **Visual container**:
   ```tsx
   <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-    <div className="w-full flex flex-row gap-3 items-center rounded-xl border border-white/10 bg-primary/55 p-3 sm:flex-1">
+    <div className="w-full flex flex-row gap-3 items-center chamfer-md border border-white/10 bg-card p-3 sm:flex-1">
       <Input
         {...form.register("search")}
         placeholder="Buscar usuário por nome, apelido ou e-mail"
@@ -146,17 +146,17 @@ Navigation back button, entity title, ID pill, metadata subtitle, and action but
     <button
       type="button"
       onClick={() => navigate("/users")}
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+      className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
       title="Voltar para a lista"
     >
       <ArrowLeft size={18} />
     </button>
     <div>
       <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+        <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
           {data.nickname || data.username || "Usuário"}
         </h1>
-        <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+        <span className="chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
           #{data.id}
         </span>
       </div>
@@ -171,7 +171,6 @@ Navigation back button, entity title, ID pill, metadata subtitle, and action but
       buttonStyle="primary"
       size="sm"
       onClick={() => openModal("Editar Usuário", <ModalEdit data={data} />, "md")}
-      className="shadow-lg hover:shadow-secondary/20"
     >
       <MdModeEdit />
       Editar Usuário
@@ -181,9 +180,9 @@ Navigation back button, entity title, ID pill, metadata subtitle, and action but
 ```
 
 ### 4. Bento Box Hero Section
-A multi-column visual showcase composed of:
-- **Hero Identity Card (1 column)**: Avatar / banner via `Thumbnail`, display name, subtitle identifier, and status badge (`UserStatus` / `MatrixTag`).
-- **Key Metric Cards (2 columns)**: Grid of metric boxes with uppercase label (`text-xs font-bold uppercase tracking-wider text-grays-200`), primary value (`text-xl font-extrabold text-white`), and footnote tag (`text-[10px] font-bold text-white/60`).
+A multi-column visual showcase composed of `Card` slabs (`padding="none"` plus their own padding):
+- **Hero Identity Card (1 column)**: `<Card padding="none" className="flex flex-col items-center justify-center p-6 text-center lg:col-span-1">` with the avatar / banner via `Thumbnail`, display name (`font-display text-lg font-bold`), subtitle identifier, and status badge (`UserStatus` / `MatrixTag`).
+- **Key Metric Cards (2 columns)**: Grid of `<Card padding="none" className="flex flex-col justify-between p-5">` with uppercase label (`text-xs font-bold uppercase tracking-wider text-grays-200`), primary value (`font-display text-xl font-bold tracking-[0.04em] text-white`), and footnote tag (`text-[10px] font-bold text-white/60`).
 
 ### 5. Details Grid (`CardBox`)
 Structured field sections using the layout primitives from `@/src/components/card-box/card-box`:

@@ -150,7 +150,7 @@ export const EventForm = ({ data }: { data?: IEvent }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       {isCanceled && (
-        <div className="p-3 rounded bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium">
+        <div className="p-3 chamfer-sm bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium">
           Este evento foi cancelado e não pode ser editado.
         </div>
       )}

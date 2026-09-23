@@ -135,7 +135,7 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
   const menu = (
     <div
       ref={menuRef}
-      className="absolute z-[9999] min-w-max rounded-xl border border-white/15 bg-primary shadow-2xl"
+      className="absolute z-[9999] min-w-max"
       style={{
         top: menuCoords.top,
         left: menuCoords.left,
@@ -146,26 +146,28 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
       onClick={(event) => event.stopPropagation()}
     >
       <div
-        className="pointer-events-none absolute h-4 w-4 border-l border-t border-white/15 bg-primary -z-1"
+        className="pointer-events-none absolute h-4 w-4 border-l border-t border-white/15 bg-surface -z-1"
         style={arrowStyle}
       />
 
-      {options.map((opt, index) => (
-        <button
-          key={`${opt.label}-${index}`}
-          type="button"
-          onClick={() => {
-            opt.onClick();
-            setIsOpen(false);
-          }}
-          className="flex h-10 w-full items-center gap-1 px-4 text-left text-xs font-medium text-grays-100 opacity-80 transition hover:bg-white/10 hover:opacity-100"
-        >
-          {opt.icon ? (
-            <span className="flex h-4 w-4 items-center">{opt.icon}</span>
-          ) : null}
-          <span>{opt.label}</span>
-        </button>
-      ))}
+      <div className="chamfer-sm border border-white/15 bg-surface">
+        {options.map((opt, index) => (
+          <button
+            key={`${opt.label}-${index}`}
+            type="button"
+            onClick={() => {
+              opt.onClick();
+              setIsOpen(false);
+            }}
+            className="flex h-10 w-full items-center gap-1 px-4 text-left text-xs font-medium text-grays-100 opacity-80 transition hover:bg-white/10 hover:opacity-100"
+          >
+            {opt.icon ? (
+              <span className="flex h-4 w-4 items-center">{opt.icon}</span>
+            ) : null}
+            <span>{opt.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 
@@ -186,7 +188,7 @@ export const MoreInfo: React.FC<IMoreInfo> = ({
             className={`border ${
               isOpen
                 ? "border-secondary/40 text-white"
-                : "border-white/10 bg-primary/80 hover:border-secondary/30 hover:text-white"
+                : "border-white/10 bg-white/5 hover:border-secondary/30 hover:text-white"
             }`}
           >
             <Ellipsis size={18} />

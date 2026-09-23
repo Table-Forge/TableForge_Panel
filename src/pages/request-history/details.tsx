@@ -1,3 +1,4 @@
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -87,14 +88,14 @@ export function RequestHistoryDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/request-history")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 Requisição #{data.id}
               </h1>
               <StatusPill statusCode={data.statusCode} />
@@ -108,24 +109,24 @@ export function RequestHistoryDetailsPage() {
       </header>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Tempo total
           </span>
-          <div className="mt-2 text-2xl font-extrabold text-white">
+          <div className="mt-2 font-display text-2xl font-bold text-white">
             {formatMs(data.totalMs)}
           </div>
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Da entrada à resposta
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Banco
           </span>
           <div
-            className={`mt-2 text-2xl font-extrabold ${
+            className={`mt-2 font-display text-2xl font-bold ${
               data.dbFailedCommands ? "text-red-400" : "text-white"
             }`}
           >
@@ -137,25 +138,25 @@ export function RequestHistoryDetailsPage() {
               ? ` · ${data.dbFailedCommands} com falha`
               : ""}
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Status HTTP
           </span>
-          <div className="mt-2 text-2xl font-extrabold text-white">
+          <div className="mt-2 font-display text-2xl font-bold text-white">
             {data.statusCode ?? "-"}
           </div>
           <span className="mt-1 text-[10px] font-bold text-white/60">
             Resposta do Servidor
           </span>
-        </div>
+        </Card>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+        <Card padding="none" className="flex flex-col justify-between p-5">
           <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
             Uptime do processo
           </span>
-          <div className="mt-2 text-2xl font-extrabold text-white">
+          <div className="mt-2 font-display text-2xl font-bold text-white">
             {data.processUptimeSeconds !== undefined &&
             data.processUptimeSeconds !== null
               ? `${data.processUptimeSeconds}s`
@@ -164,7 +165,7 @@ export function RequestHistoryDetailsPage() {
           <span className="mt-1 text-[10px] font-bold text-white/60">
             {isColdStart ? "cold start" : "Tempo desde a subida da API"}
           </span>
-        </div>
+        </Card>
       </div>
 
       <CardBox title="Fases da requisição">
@@ -214,13 +215,13 @@ export function RequestHistoryDetailsPage() {
         <GridBox className="lg:grid-cols-3">
           <InfoBox>
             <CardLabel>Rota</CardLabel>
-            <CardValue className="break-all font-mono text-secondary-light">
+            <CardValue className="break-all font-mono text-ember">
               {data.route ?? "-"}
             </CardValue>
           </InfoBox>
           <InfoBox className="lg:col-span-2">
             <CardLabel>Caminho</CardLabel>
-            <CardValue className="break-all font-mono text-secondary-light">
+            <CardValue className="break-all font-mono text-ember">
               {data.path ?? "-"}
             </CardValue>
           </InfoBox>

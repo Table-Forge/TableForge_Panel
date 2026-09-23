@@ -38,7 +38,7 @@ export function ModalImageCarousel({ images, initialIndex = 0 }: IModalImageCaro
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-2">
-      <div className="relative flex items-center justify-center w-full max-h-[70vh] min-h-[300px] overflow-hidden rounded-lg bg-grays-900 border border-grays-700">
+      <div className="relative flex items-center justify-center w-full max-h-[70vh] min-h-[300px] overflow-hidden chamfer-md bg-grays-900 border border-grays-700">
         <img
           src={currentImage.url}
           alt={currentImage.alt || `Anexo ${currentIndex + 1}`}
@@ -80,7 +80,7 @@ export function ModalImageCarousel({ images, initialIndex = 0 }: IModalImageCaro
                 key={img.id ?? index}
                 type="button"
                 onClick={() => setCurrentIndex(index)}
-                className={`h-14 w-14 overflow-hidden rounded-md border-2 transition-all cursor-pointer ${
+                className={`h-14 w-14 overflow-hidden chamfer-sm border-2 transition-all cursor-pointer ${
                   index === currentIndex
                     ? "border-accent scale-105"
                     : "border-grays-700 opacity-60 hover:opacity-100"

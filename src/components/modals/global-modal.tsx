@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { memo, useEffect, useRef } from "react";
 import { ButtonIcon } from "@/src/components/button-icon/button-icon";
+import { KeystoneIcon } from "@/src/components/icons/icons";
 import type { IModalInstance } from "@/src/store/types";
 import type { TModalSize } from "@/src/components/modals/modal.interface";
 import { useBoundStore } from "@/src/store/use-bound-store";
@@ -123,7 +124,7 @@ const ModalItem = memo(
           role="dialog"
           aria-modal="true"
           tabIndex={-1}
-          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden rounded-xl border border-white/15 bg-primary shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)]"
+          className="relative flex max-h-[96vh] min-w-[300px] flex-col overflow-hidden chamfer-md border border-white/15 bg-surface"
           style={{
             width: SIZES[size],
             maxWidth: size === "full" ? "100vw" : "95vw",
@@ -131,9 +132,10 @@ const ModalItem = memo(
             transition: "opacity 0.2s ease, transform 0.2s ease",
           }}
         >
-          <header className="flex items-center justify-between border-b border-white/10 bg-primary/40 px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
-            <h3 className="truncate text-lg font-extrabold uppercase tracking-tight text-white">
-              {modal.title}
+          <header className="flex items-center justify-between gap-3 border-b border-white/10 bg-card px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
+            <h3 className="flex min-w-0 items-center gap-2.5 font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
+              <KeystoneIcon className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
+              <span className="truncate">{modal.title}</span>
             </h3>
 
             <ButtonIcon
@@ -153,7 +155,7 @@ const ModalItem = memo(
           </div>
 
           {modal.footer ? (
-            <footer className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-white/10 bg-primary px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
+            <footer className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-white/10 bg-card px-6 py-4 max-[992px]:px-4 max-[992px]:py-3">
               {modal.footer}
             </footer>
           ) : null}

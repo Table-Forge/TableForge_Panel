@@ -36,10 +36,10 @@ export function CheckboxControlled<TFieldValues extends FieldValues>({
         />
         <span
           className="
-            absolute inset-0 rounded-md border border-white/35 bg-background transition
+            absolute inset-0 rounded-sm border border-white/35 bg-background transition
             peer-checked:border-secondary peer-checked:bg-secondary
             after:absolute after:left-[6px] after:top-[2px] after:hidden after:h-[11px] after:w-[6px]
-            after:rotate-45 after:border-b-[2.5px] after:border-r-[2.5px] after:border-white
+            after:rotate-45 after:border-b-[2.5px] after:border-r-[2.5px] after:border-on-accent
             peer-checked:after:block
           "
         />

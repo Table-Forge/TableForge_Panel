@@ -60,7 +60,7 @@ export function ModalCropImage({
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="relative h-[420px] w-full overflow-hidden rounded-xl border border-white/10 bg-black/90">
+      <div className="relative h-[420px] w-full overflow-hidden chamfer-md border border-white/10 bg-black/90">
         <Cropper
           image={imageSrc}
           crop={crop}

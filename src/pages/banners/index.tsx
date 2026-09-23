@@ -126,7 +126,7 @@ export function BannersPage() {
       align: "center",
       render: (banner) => (
         banner.tag ? (
-          <span className="shrink-0 whitespace-nowrap rounded-md bg-white/10 px-2 py-1 text-xs font-semibold text-white">
+          <span className="shrink-0 whitespace-nowrap chamfer-sm bg-white/10 px-2 py-1 text-xs font-semibold text-white">
             {banner.tag}
           </span>
         ) : (

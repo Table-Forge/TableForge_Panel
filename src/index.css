@@ -1,15 +1,24 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/cinzel";
 @import "tailwindcss";
 
 @theme {
   --font-hud:
-    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+    "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-display: "Cinzel Variable", "Cinzel", Georgia, serif;
 
   --color-background: var(--tf-bg);
   --color-primary: var(--tf-primary);
-  --color-secondary: #ff2400;
-  --color-tertiary: #ff2400;
-  --color-danger: #ff2400;
+  --color-card: var(--tf-card);
+  --color-surface: var(--tf-surface);
+  --color-secondary: var(--tf-accent);
+  --color-tertiary: var(--tf-accent);
+  --color-danger: var(--tf-accent);
+  --color-accent: var(--tf-accent);
+  --color-ember: var(--tf-ember);
+  --color-gold: var(--tf-gold);
+  --color-on-accent: var(--tf-on-accent);
 
   --color-white: var(--tf-white);
   --color-black: var(--tf-black);
@@ -20,6 +29,8 @@
   --color-grays-400: var(--tf-grays-400);
   --color-grays-500: var(--tf-grays-500);
   --color-grays-600: var(--tf-grays-600);
+
+  --shadow-forged: inset 0 1px 0 rgb(250 243 224 / 0.22), inset 0 -1px 0 rgb(0 0 0 / 0.35);
 }
 
 @layer base {
@@ -28,6 +39,13 @@
     color-scheme: dark;
     --tf-bg: #000000;
     --tf-primary: #3a3a3a;
+    --tf-card: #121214;
+    --tf-surface: #18181c;
+    --tf-accent: #ff2400;
+    --tf-ember: #ff5a36;
+    --tf-gold: #ffb700;
+    --tf-on-accent: #faf3e0;
+    --tf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
     --tf-white: #faf3e0;
     --tf-black: #000000;
     --tf-grays-50: #f1f1f1;
@@ -47,23 +65,30 @@
 
   [data-theme="light"] {
     color-scheme: light;
-    --tf-bg: #f4f4f7;
-    --tf-primary: #ffffff;
-    --tf-white: #18181b;
-    --tf-black: #ffffff;
-    --tf-grays-50: #09090b;
-    --tf-grays-100: #18181b;
-    --tf-grays-200: #52525b;
-    --tf-grays-300: #71717a;
-    --tf-grays-400: #a1a1aa;
-    --tf-grays-500: #e4e4e7;
-    --tf-grays-600: #f4f4f5;
-    --tf-border-subtle: rgba(0, 0, 0, 0.08);
-    --tf-bg-gradient: radial-gradient(circle at 50% 0%, rgba(255, 36, 0, 0.05) 0%, rgba(244, 244, 247, 0) 65%);
+    --tf-bg: #eee6d3;
+    --tf-primary: #faf5e8;
+    --tf-card: #faf5e8;
+    --tf-surface: #f8f2e4;
+    --tf-accent: #b31a00;
+    --tf-ember: #a5391b;
+    --tf-gold: #7d5300;
+    --tf-on-accent: #faf5e8;
+    --tf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    --tf-white: #1e1611;
+    --tf-black: #faf5e8;
+    --tf-grays-50: #120d09;
+    --tf-grays-100: #1e1611;
+    --tf-grays-200: #5a4d41;
+    --tf-grays-300: #75675a;
+    --tf-grays-400: #a3968a;
+    --tf-grays-500: #ddd2bc;
+    --tf-grays-600: #e6dcc5;
+    --tf-border-subtle: rgba(30, 22, 17, 0.1);
+    --tf-bg-gradient: radial-gradient(circle at 50% 0%, rgba(179, 26, 0, 0.05) 0%, rgba(238, 230, 211, 0) 65%);
     --tf-picker-filter: invert(0);
-    --tf-chart-tooltip-bg: #ffffff;
-    --tf-chart-tooltip-border: rgba(0, 0, 0, 0.12);
-    --tf-chart-tooltip-text: #18181b;
+    --tf-chart-tooltip-bg: #faf5e8;
+    --tf-chart-tooltip-border: rgba(30, 22, 17, 0.14);
+    --tf-chart-tooltip-text: #1e1611;
   }
 
   * {
@@ -87,6 +112,17 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: var(--tf-grain);
+    background-size: 160px 160px;
   }
 
   @keyframes recovery-shake {
@@ -134,7 +170,7 @@
     caret-color: var(--color-white) !important;
     color: var(--color-white) !important;
     -webkit-text-fill-color: var(--color-white) !important;
-    -webkit-box-shadow: 0 0 0px 1000px var(--color-primary) inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-background) inset !important;
     transition: background-color 999999s ease-in-out 0s, color 999999s ease-in-out 0s;
   }
 
@@ -153,26 +189,22 @@
 
   .tf-datepicker-calendar-container {
     overflow: hidden;
-    border-radius: 1rem;
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
     border: 1px solid var(--tf-border-subtle);
-    background: var(--color-primary);
-    box-shadow:
-      0 10px 15px -3px rgb(0 0 0 / 0.1),
-      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background: var(--color-surface);
   }
 
   .tf-datepicker-calendar-container .react-datepicker {
-    border: 1px solid var(--tf-border-subtle);
-    border-radius: 14px;
-    background-color: var(--color-grays-600) !important;
+    border: 0;
+    border-radius: 0;
+    background-color: var(--color-surface) !important;
     background-image: none !important;
     color: var(--color-white) !important;
-    box-shadow: 0 12px 30px rgb(0 0 0 / 0.2);
     overflow: hidden;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__header {
-    background-color: var(--color-primary) !important;
+    background-color: var(--color-card) !important;
     background-image: none !important;
     border-bottom: 1px solid var(--tf-border-subtle);
     padding: 14px 12px 10px;
@@ -187,7 +219,7 @@
   .tf-datepicker-calendar-container .react-datepicker__month,
   .tf-datepicker-calendar-container .react-datepicker__week,
   .tf-datepicker-calendar-container .react-datepicker__day-names {
-    background-color: var(--color-grays-600);
+    background-color: var(--color-surface);
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day-names {
@@ -210,9 +242,11 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__current-month {
-    font-size: 18px;
-    font-weight: 800;
-    text-transform: lowercase;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     margin-bottom: 8px;
     line-height: 1.1;
   }
@@ -227,7 +261,8 @@
 
   .tf-datepicker-calendar-container .react-datepicker__day,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item {
-    border-radius: 10px;
+    border-radius: 0;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
     transition:
       background-color 120ms ease,
       color 120ms ease;
@@ -235,27 +270,27 @@
 
   .tf-datepicker-calendar-container .react-datepicker__day:hover,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item:hover {
-    background: rgb(255 36 0 / 0.32) !important;
-    color: #ffffff !important;
+    background: color-mix(in srgb, var(--color-accent) 32%, transparent) !important;
+    color: var(--color-white) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--keyboard-selected,
   .tf-datepicker-calendar-container .react-datepicker__day--selected,
   .tf-datepicker-calendar-container .react-datepicker__time-list-item--selected {
     background: var(--color-secondary) !important;
-    color: #ffffff !important;
+    color: var(--color-on-accent) !important;
     font-weight: 700;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--today {
-    outline: 1px solid rgb(255 36 0 / 0.5);
+    outline: 1px solid color-mix(in srgb, var(--color-accent) 50%, transparent);
     outline-offset: -1px;
     font-weight: 700;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__day--in-range,
   .tf-datepicker-calendar-container .react-datepicker__day--in-selecting-range {
-    background: rgb(255 36 0 / 0.18) !important;
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent) !important;
     color: var(--color-white) !important;
   }
 
@@ -281,7 +316,7 @@
     display: block;
     width: 100%;
     padding: 10px 12px;
-    background-color: var(--color-grays-600) !important;
+    background-color: var(--color-card) !important;
     border-top: 1px solid var(--tf-border-subtle);
     color: var(--color-white) !important;
     text-align: center;
@@ -295,7 +330,7 @@
   }
 
   .tf-datepicker-calendar-container .react-datepicker__today-button:hover {
-    background-color: var(--color-grays-500) !important;
+    background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-card)) !important;
   }
 
   .tf-datepicker-calendar-container .react-datepicker__time-container {
@@ -304,7 +339,7 @@
 
   .tf-datepicker-calendar-container .react-datepicker__time-box,
   .tf-datepicker-calendar-container .react-datepicker__time-list {
-    background-color: var(--color-grays-600);
+    background-color: var(--color-surface);
   }
 
   .tf-masonry-grid {
@@ -469,4 +504,16 @@
     background: var(--color-primary);
     border-radius: 12px;
   }
+}
+
+@utility chamfer-sm {
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+@utility chamfer-md {
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+@utility chamfer-lg {
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
 }

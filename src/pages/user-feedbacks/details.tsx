@@ -14,6 +14,7 @@ import {
 } from "react-icons/md";
 
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -167,17 +168,17 @@ export function UserFeedbackDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/user-feedbacks")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white cursor-pointer"
             title="Voltar para a fila"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="min-w-0 break-words text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="min-w-0 break-words font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 {feedback.title}
               </h1>
-              <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              <span className="shrink-0 whitespace-nowrap chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
                 #{feedback.id}
               </span>
               <Tag
@@ -225,7 +226,7 @@ export function UserFeedbackDetailsPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-3">
+            <div className="mt-4 flex items-center justify-between chamfer-sm border border-white/10 bg-white/5 p-3">
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-grays-300">
                   Situação Atual
@@ -256,7 +257,7 @@ export function UserFeedbackDetailsPage() {
             </div>
 
             {feedback.adminResponse && (
-              <div className="mt-3 rounded-lg border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
+              <div className="mt-3 chamfer-sm border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
                 <span className="font-semibold text-grays-100">Resposta da equipe: </span>
                 {feedback.adminResponse}
               </div>
@@ -297,7 +298,7 @@ export function UserFeedbackDetailsPage() {
             </div>
 
             {feedback.deviceInfo && (
-              <div className="mt-3 rounded-lg border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
+              <div className="mt-3 chamfer-sm border border-white/5 bg-white/5 p-3 text-xs text-grays-300">
                 <span className="font-semibold text-grays-100">Dispositivo: </span>
                 {feedback.deviceInfo}
               </div>
@@ -321,7 +322,7 @@ export function UserFeedbackDetailsPage() {
                         key={img.id}
                         type="button"
                         onClick={() => handleOpenImageModal(feedback.images, index)}
-                        className="h-20 w-20 overflow-hidden rounded-lg border border-white/10 hover:border-accent transition-all cursor-pointer shadow-md"
+                        className="h-20 w-20 overflow-hidden chamfer-sm border border-white/10 hover:border-accent transition-all cursor-pointer"
                       >
                         <img
                           src={img.url}
@@ -338,14 +339,14 @@ export function UserFeedbackDetailsPage() {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col lg:col-span-7">
-          <div className="flex h-full min-h-[600px] flex-col rounded-xl border border-white/10 bg-primary/40 backdrop-blur-md shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 bg-white/5 rounded-t-xl shrink-0">
+          <Card padding="none" className="flex h-full min-h-[600px] flex-col">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 bg-white/5 shrink-0">
               <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/20 text-accent border border-accent/30">
+                <div className="flex h-9 w-9 items-center justify-center chamfer-sm bg-accent/20 text-accent border border-accent/30">
                   <MdForum size={20} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Conversa com o Usuário</h3>
+                  <h3 className="font-display text-sm font-bold tracking-[0.06em] text-white">Conversa com o Usuário</h3>
                   <span className="text-xs text-grays-300 font-medium">
                     {feedback.messages?.length || 0} {feedback.messages?.length === 1 ? "mensagem trocada" : "mensagens trocadas"}
                   </span>
@@ -353,7 +354,7 @@ export function UserFeedbackDetailsPage() {
               </div>
 
               {feedback.reopensOnNewMessage && (
-                <span className="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">
+                <span className="chamfer-sm border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400">
                   Reabre com nova mensagem
                 </span>
               )}
@@ -367,7 +368,7 @@ export function UserFeedbackDetailsPage() {
               >
                 {(!feedback.messages || feedback.messages.length === 0) ? (
                   <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-grays-300 p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-grays-400">
+                    <div className="flex h-14 w-14 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-grays-400">
                       <MdForum size={28} />
                     </div>
                     <h4 className="text-base font-bold text-white">Nenhuma mensagem ainda</h4>
@@ -404,10 +405,10 @@ export function UserFeedbackDetailsPage() {
                         </div>
 
                         <div
-                          className={`rounded-2xl p-4 shadow-lg ${
+                          className={`chamfer-sm p-4 ${
                             isTeam
-                              ? "rounded-tr-sm border border-emerald-500/30 bg-emerald-950/40 text-white"
-                              : "rounded-tl-sm border border-orange-500/30 bg-orange-950/40 text-white"
+                              ? "border border-emerald-500/30 bg-emerald-950/40 text-white"
+                              : "border border-orange-500/30 bg-orange-950/40 text-white"
                           }`}
                         >
                           <p className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</p>
@@ -419,7 +420,7 @@ export function UserFeedbackDetailsPage() {
                                   key={img.id}
                                   type="button"
                                   onClick={() => handleOpenImageModal(msg.images, imgIdx)}
-                                  className="h-16 w-16 overflow-hidden rounded-lg border border-white/15 hover:border-accent transition-all cursor-pointer"
+                                  className="h-16 w-16 overflow-hidden chamfer-sm border border-white/15 hover:border-accent transition-all cursor-pointer"
                                 >
                                   <img
                                     src={img.url}
@@ -443,7 +444,7 @@ export function UserFeedbackDetailsPage() {
                   <button
                     type="button"
                     onClick={scrollToLatest}
-                    className="pointer-events-auto flex cursor-pointer items-center gap-1.5 rounded-full border border-accent/40 bg-primary px-3.5 py-2 text-xs font-bold text-accent shadow-2xl transition hover:bg-accent/10"
+                    className="pointer-events-auto flex cursor-pointer items-center gap-1.5 chamfer-sm border border-accent/40 bg-surface px-3.5 py-2 text-xs font-bold text-accent transition hover:bg-accent/10"
                   >
                     <ArrowDown size={14} />
                     {pendingCount === 1
@@ -454,7 +455,7 @@ export function UserFeedbackDetailsPage() {
               )}
             </div>
 
-            <div className="shrink-0 border-t border-white/10 bg-primary/40 p-4 rounded-b-xl flex flex-col gap-3">
+            <div className="shrink-0 border-t border-white/10 bg-white/5 p-4 flex flex-col gap-3">
               <Textarea
                 id="threadMessage"
                 value={threadMessage}
@@ -486,7 +487,7 @@ export function UserFeedbackDetailsPage() {
                 </Button>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ export function PasswordRequirements({ value }: { value?: string }) {
   const password = value ?? "";
 
   return (
-    <div className="absolute left-0 top-[calc(100%+4px)] z-50 hidden w-full rounded-md border border-white/10 bg-primary p-3 shadow-2xl group-focus-within:block">
+    <div className="absolute left-0 top-[calc(100%+4px)] z-50 hidden w-full chamfer-sm border border-white/10 bg-surface p-3 group-focus-within:block">
       <ul className="flex flex-col gap-1.5">
         {PASSWORD_RULES.map((rule) => {
           const isValid = rule.test(password);

@@ -16,6 +16,7 @@ import { MdAdd, MdDeleteForever, MdModeEdit, MdVisibility } from "react-icons/md
 import { Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import { ModalEditSpace } from "@/src/pages/my-spaces/components/modal-edit-space/modal-edit-space";
 
 export function AllSpacesPage() {
@@ -177,11 +178,11 @@ export function AllSpacesPage() {
           onActionClick={() => openModal("Criar Espaço", <ModalEditSpace />, "md")}
         />
 
-        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-white/10 bg-primary/40 p-8 text-center backdrop-blur-md">
-          <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-secondary">
+        <Card padding="none" className="flex min-h-[40vh] flex-col items-center justify-center gap-4 p-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-secondary">
             <Building2 size={32} />
           </div>
-          <h2 className="text-xl font-extrabold uppercase text-white">
+          <h2 className="font-display text-xl font-bold uppercase tracking-[0.04em] text-white">
             Nenhum Espaço Encontrado
           </h2>
           <p className="max-w-md text-xs font-semibold text-grays-100 leading-relaxed">
@@ -191,12 +192,12 @@ export function AllSpacesPage() {
             buttonStyle="primary"
             size="md"
             onClick={() => openModal("Criar Espaço", <ModalEditSpace />, "md")}
-            className="mt-2 shadow-lg hover:shadow-secondary/20"
+            className="mt-2"
           >
             <MdAdd />
             Cadastrar Espaço
           </Button>
-        </div>
+        </Card>
       </div>
     );
   }

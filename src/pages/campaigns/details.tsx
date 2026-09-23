@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import {
   CardBox,
   CardLabel,
@@ -59,17 +60,17 @@ export function CampaignDetailsPage() {
           <button
             type="button"
             onClick={() => navigate("/campaigns")}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-primary/60 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+            className="flex h-10 w-10 items-center justify-center chamfer-sm border border-white/10 bg-white/5 text-white/80 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
             title="Voltar para a lista"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-extrabold uppercase tracking-tight text-white">
+              <h1 className="font-display text-2xl font-bold uppercase tracking-[0.04em] text-white">
                 {data.title || "Campanha"}
               </h1>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-0.5 text-xs font-extrabold tracking-wide text-white/90">
+              <span className="chamfer-sm border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold tracking-[0.12em] text-ember">
                 #{data.id}
               </span>
             </div>
@@ -86,7 +87,6 @@ export function CampaignDetailsPage() {
             onClick={() =>
               openModal("Editar Campanha", <ModalEdit data={data} />, "md")
             }
-            className="shadow-lg hover:shadow-secondary/20"
           >
             <MdModeEdit />
             Editar Campanha
@@ -97,9 +97,9 @@ export function CampaignDetailsPage() {
       {/* Hero Bento Box & KPI Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Left: Media Banner / Identity */}
-        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-primary/50 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between lg:col-span-1">
+        <Card padding="none" className="flex flex-col justify-between p-6 lg:col-span-1">
           {data.bannerUrl ? (
-            <div className="relative overflow-hidden rounded-lg border border-white/10 shadow-lg">
+            <div className="relative overflow-hidden chamfer-md border border-white/10">
               <Thumbnail
                 image={data.bannerUrl}
                 width="100%"
@@ -109,7 +109,7 @@ export function CampaignDetailsPage() {
               />
             </div>
           ) : (
-            <div className="flex h-36 w-full items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
+            <div className="flex h-36 w-full items-center justify-center chamfer-md border border-white/10 bg-white/5 text-xs font-bold uppercase tracking-wider text-white/40">
               Sem Imagem
             </div>
           )}
@@ -118,61 +118,61 @@ export function CampaignDetailsPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Status Atual
             </span>
-            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/20 px-3 py-1 text-xs font-extrabold text-emerald-300 shadow-xs">
+            <span className="chamfer-sm border border-emerald-500/30 bg-emerald-500/20 px-3 py-1 text-xs font-extrabold text-emerald-300">
               {statusName}
             </span>
           </div>
-        </div>
+        </Card>
 
         {/* Right: 4 Quick Stat KPIs */}
         <div className="grid grid-cols-2 gap-3 lg:col-span-2 sm:grid-cols-4">
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Jogadores
             </span>
-            <div className="mt-2 text-2xl font-extrabold text-white">
+            <div className="mt-2 font-display text-2xl font-bold text-white">
               {data.membersCount ?? 0} / {data.playersLimit ?? 0}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Limite Configurado
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Dificuldade
             </span>
-            <div className="mt-2 text-xl font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-xl font-bold text-white truncate">
               {difficultyName}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Nível do Desafio
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Frequência
             </span>
-            <div className="mt-2 text-xl font-extrabold text-white truncate">
+            <div className="mt-2 font-display text-xl font-bold text-white truncate">
               {frequencyName}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Periodicidade
             </span>
-          </div>
+          </Card>
 
-          <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-primary/40 p-5 backdrop-blur-md shadow-xl">
+          <Card padding="none" className="flex flex-col justify-between p-5">
             <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
               Privacidade
             </span>
-            <div className="mt-2 text-xl font-extrabold text-white">
+            <div className="mt-2 font-display text-xl font-bold text-white">
               {data.isPrivate ? "Privada" : "Pública"}
             </div>
             <span className="mt-1 text-[10px] font-bold text-white/60">
               Visibilidade
             </span>
-          </div>
+          </Card>
         </div>
       </div>
 
@@ -223,7 +223,7 @@ export function CampaignDetailsPage() {
 
       {/* Description Section */}
       <CardBox title="Descrição da Campanha">
-        <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
+        <div className="chamfer-md border border-white/10 bg-white/5 p-4 text-sm font-medium leading-relaxed text-white/90">
           {data.description || "Nenhuma descrição fornecida para esta campanha."}
         </div>
       </CardBox>

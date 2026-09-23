@@ -22,7 +22,7 @@ export function AdminLayout() {
 
           <section
             id="main-wrapper"
-            className="flex gap-5 min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-xl border border-white/10 bg-primary/20 p-4 lg:p-6 shadow-2xl"
+            className="flex gap-5 min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden chamfer-lg border border-white/10 bg-card/40 p-4 lg:p-6"
           >
             <Outlet />
           </section>

@@ -21,7 +21,7 @@ export default function SystemsBarChart({ systems = [] }: Props) {
   return (
     <div className="flex flex-col gap-3.5">
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-grays-200">
+        <span className="font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
           Sistemas Mais Jogados
         </span>
         <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/50">

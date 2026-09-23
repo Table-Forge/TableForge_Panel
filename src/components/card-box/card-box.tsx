@@ -1,3 +1,5 @@
+import { Card } from "@/src/components/card/card";
+import { KeystoneIcon } from "@/src/components/icons/icons";
 import type { ICardBox } from "./card-box.interfaces";
 import Masonry from "react-masonry-css";
 
@@ -12,13 +14,12 @@ export const CardBox: React.FC<ICardBox> = ({
   className = "",
 }) => {
   return (
-    <section
-      className={`relative w-full rounded-xl border border-white/10 bg-primary/40 p-6 shadow-2xl transition-all duration-200 hover:border-white/20 ${className}`}
-    >
+    <Card as="section" className={`w-full ${className}`}>
       {title ? (
         <header className="mb-4 border-b border-white/10 pb-3.5 flex items-center justify-between">
           {typeof title === "string" ? (
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+            <h3 className="flex items-center gap-2.5 font-display text-sm font-bold uppercase tracking-[0.06em] text-white">
+              <KeystoneIcon className="h-3 w-3 shrink-0 text-accent" aria-hidden="true" />
               {title}
             </h3>
           ) : (
@@ -30,7 +31,7 @@ export const CardBox: React.FC<ICardBox> = ({
       <div className="text-sm text-white/90 flex flex-col gap-2">
         {children}
       </div>
-    </section>
+    </Card>
   );
 };
 
@@ -48,7 +49,7 @@ export const InfoBox: React.FC<TCardBoxComponentProps> = ({
   className = "",
 }) => (
   <div
-    className={`rounded-lg border border-white/10 bg-white/5 p-4 flex gap-1.5 flex-col transition-all duration-200 hover:border-white/20 hover:bg-white/10 shadow-xs ${className}`}
+    className={`chamfer-sm border border-white/10 bg-white/5 p-4 flex gap-1.5 flex-col transition-colors duration-200 hover:border-white/20 hover:bg-white/10 ${className}`}
   >
     {children}
   </div>
@@ -59,7 +60,7 @@ export const CardLabel: React.FC<TCardBoxComponentProps> = ({
   className = "",
 }) => (
   <span
-    className={`text-xs font-bold uppercase tracking-wider text-grays-200 ${className}`}
+    className={`text-[11px] font-semibold uppercase tracking-[0.2em] text-grays-200 ${className}`}
   >
     {children}
   </span>

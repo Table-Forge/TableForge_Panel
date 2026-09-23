@@ -15,7 +15,7 @@ export function InfoNotFound({ message }: InfoNotFoundProps = {}) {
         <CircleHelp size={58} />
       </div>
 
-      <h1 className="text-2xl font-bold uppercase text-white md:text-4xl">Conteúdo Não Encontrado</h1>
+      <h1 className="font-display text-2xl font-bold uppercase tracking-[0.02em] text-white md:text-4xl">Conteúdo Não Encontrado</h1>
 
       <p className="max-w-[520px] text-sm text-grays-100 md:text-base">
         {message || "O conteúdo que você tentou acessar nessa página não foi encontrado."}

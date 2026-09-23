@@ -9,7 +9,7 @@ export const ModalImage = ({ alt, src }: IModalImageProps) => {
       <img
         src={src}
         alt={alt}
-        className="max-h-[80vh] w-auto max-w-full rounded-md object-contain shadow-lg"
+        className="max-h-[80vh] w-auto max-w-full chamfer-md object-contain"
       />
     </div>
   );

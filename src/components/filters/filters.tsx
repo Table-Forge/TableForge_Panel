@@ -94,7 +94,7 @@ export const Filters: React.FC<IFilters> = ({
               <div
                 ref={filterRef}
                 data-portal="true"
-                className="absolute z-[1200] w-[min(92vw,640px)] overflow-visible rounded-xl border border-white/15 bg-primary shadow-2xl"
+                className="absolute z-[1200] w-[min(92vw,640px)] chamfer-md border border-white/15 bg-surface"
                 style={{
                   top: `${listStyle.top}px`,
                   left: `${listStyle.left}px`,

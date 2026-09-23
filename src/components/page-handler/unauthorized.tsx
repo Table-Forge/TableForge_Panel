@@ -32,7 +32,7 @@ export function Unauthorized({ onForceLogout, countdownSeconds = 60 }: Unauthori
         <ShieldBan size={58} />
       </div>
 
-      <h1 className="text-2xl font-bold uppercase text-white md:text-4xl">Página Bloqueada</h1>
+      <h1 className="font-display text-2xl font-bold uppercase tracking-[0.02em] text-white md:text-4xl">Página Bloqueada</h1>
 
       <p className="max-w-[560px] text-sm text-grays-100 md:text-base">
         Você não tem permissão para acessar esta página. Retornaremos ao login em{" "}

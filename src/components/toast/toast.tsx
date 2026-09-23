@@ -9,7 +9,7 @@ const typeConfigs = {
   success: {
     icon: <CheckCircle2 size={16} />,
     colorClass: "text-green-400",
-    bgClass: "bg-primary",
+    bgClass: "bg-surface",
     borderClass: "border-green-500/30",
     barClass: "bg-green-400",
     title: "Sucesso",
@@ -17,7 +17,7 @@ const typeConfigs = {
   error: {
     icon: <TriangleAlert size={16} />,
     colorClass: "text-danger",
-    bgClass: "bg-primary",
+    bgClass: "bg-surface",
     borderClass: "border-danger/40",
     barClass: "bg-danger",
     title: "Erro",
@@ -25,7 +25,7 @@ const typeConfigs = {
   info: {
     icon: <Info size={16} />,
     colorClass: "text-secondary",
-    bgClass: "bg-primary",
+    bgClass: "bg-surface",
     borderClass: "border-secondary/40",
     barClass: "bg-secondary",
     title: "Informação",
@@ -74,7 +74,7 @@ export const Toast: React.FC<ToastProps> = ({ id, type, message, onClose }) => {
     <div
       onMouseEnter={pauseTimer}
       onMouseLeave={startTimer}
-      className={`relative min-w-50 max-w-65 overflow-hidden rounded-lg z-9999 border p-2 shadow-xl ${config.bgClass} ${config.borderClass}`}
+      className={`relative min-w-50 max-w-65 overflow-hidden chamfer-sm z-9999 border p-2 ${config.bgClass} ${config.borderClass}`}
     >
       <div className="flex items-start gap-2">
         <div className={config.colorClass}>{config.icon}</div>

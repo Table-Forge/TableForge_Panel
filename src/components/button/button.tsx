@@ -1,10 +1,5 @@
+import { D20Icon } from "@/src/components/icons/icons";
 import type { IButton } from "./button.intefaces";
-
-function Loading() {
-  return (
-    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-  );
-}
 
 export const Button: React.FC<IButton> = ({
   children,
@@ -23,17 +18,20 @@ export const Button: React.FC<IButton> = ({
 
   const widthStyles = maxWidth ? "w-full" : "w-max";
   const sizeStyles: Record<NonNullable<IButton["size"]>, string> = {
-    xs: "h-7 px-2.5 text-xs rounded-md",
-    sm: "h-8 px-3 text-xs rounded-md",
-    md: "h-10 px-4 text-sm rounded-lg",
-    lg: "h-11 px-5 text-sm font-semibold rounded-lg",
-    xl: "h-12 px-6 text-base font-semibold rounded-xl",
+    xs: "h-7 px-2.5 text-xs chamfer-sm",
+    sm: "h-8 px-3 text-xs chamfer-sm",
+    md: "h-10 px-4 text-sm chamfer-sm",
+    lg: "h-11 px-5 text-sm font-semibold chamfer-sm",
+    xl: "h-12 px-6 text-base font-semibold chamfer-md",
   };
 
   const variants: Record<NonNullable<IButton["buttonStyle"]>, string> = {
-    primary: "bg-secondary border-secondary text-white hover:brightness-110",
-    secondary: "bg-tertiary border-tertiary text-white hover:brightness-110",
-    danger: "bg-danger border-danger text-white hover:brightness-110",
+    primary:
+      "bg-secondary border-secondary text-on-accent shadow-forged hover:brightness-110",
+    secondary:
+      "bg-tertiary border-tertiary text-on-accent shadow-forged hover:brightness-110",
+    danger:
+      "bg-danger border-danger text-on-accent shadow-forged hover:brightness-110",
     hollow:
       "bg-transparent border-secondary text-secondary hover:bg-secondary/10",
     soft:
@@ -71,7 +69,7 @@ export const Button: React.FC<IButton> = ({
     >
       {isLoading ? (
         <>
-          <Loading />
+          <D20Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           Carregando...
         </>
       ) : (

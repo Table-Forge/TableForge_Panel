@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/button/button";
+import { Card } from "@/src/components/card/card";
 import { InputGroup } from "@/src/components/input-group/input-group";
 import { ControlledInput } from "@/src/components/input/input.default.controlled";
 import { PasswordInput } from "@/src/components/input/input.password";
@@ -264,10 +265,10 @@ export function RecoverPasswordPage() {
     updateRecoveryPasswordMutation.isPending;
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,36,0,0.28),transparent_42%),radial-gradient(circle_at_80%_0%,rgba(255,36,0,0.24),transparent_46%)]" />
+    <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8 text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,var(--color-accent),transparent_65%)] opacity-20" />
 
-      <div className="relative w-full max-w-md rounded-xl border border-secondary/25 bg-primary/80 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur">
+      <Card variant="highlighted" className="w-full max-w-md">
         <header className="mb-6 flex flex-col items-center">
           <div className="mb-4 flex items-center justify-center ">
             <img
@@ -371,7 +372,7 @@ export function RecoverPasswordPage() {
                           event.clipboardData.getData("text"),
                         );
                       }}
-                      className={`h-14 w-12 rounded-xl border bg-background/50 text-center text-2xl font-bold outline-none transition ${isCodeInvalid
+                      className={`h-14 w-12 rounded-lg border bg-background text-center text-2xl font-bold outline-none transition ${isCodeInvalid
                         ? "border-danger text-danger"
                         : "border-white/20 text-white focus:border-secondary"
                         }`}
@@ -467,7 +468,7 @@ export function RecoverPasswordPage() {
             Voltar ao login
           </Link>
         </div>
-      </div>
+      </Card>
     </main>
   );
 }

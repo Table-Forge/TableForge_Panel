@@ -52,7 +52,7 @@ export function ChatBox({ bookingId }: IProps) {
   });
 
   return (
-    <div className="flex h-[400px] flex-col rounded-lg border border-white/10 bg-secondary/30">
+    <div className="flex h-[400px] flex-col chamfer-md border border-white/10 bg-card">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {isLoading ? (
@@ -71,10 +71,10 @@ export function ChatBox({ bookingId }: IProps) {
                   {msg.username} • {formatDate(msg.createdAt, true)}
                 </span>
                 <div
-                  className={`rounded-lg px-4 py-2 ${
+                  className={`chamfer-sm border px-4 py-2 ${
                     isMe
-                      ? "bg-primary text-white"
-                      : "bg-secondary text-grays-100"
+                      ? "border-white/10 bg-white/10 text-white"
+                      : "border-secondary bg-secondary text-on-accent"
                   }`}
                 >
                   <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
@@ -93,7 +93,7 @@ export function ChatBox({ bookingId }: IProps) {
       {/* Input Area */}
       <form
         onSubmit={onSubmit}
-        className="flex items-start gap-2 border-t border-white/10 bg-secondary p-3"
+        className="flex items-start gap-2 border-t border-white/10 bg-white/5 p-3"
       >
         <div className="flex-1">
           <ControlledInput

@@ -191,9 +191,9 @@ export function EventsPage() {
                 setStatusFilter([String(opt.value ?? "")]);
                 setPage(1);
               }}
-              className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
+              className={`chamfer-sm px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
                 isSelected
-                  ? "bg-secondary text-white"
+                  ? "bg-secondary text-on-accent shadow-forged"
                   : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
               }`}
             >

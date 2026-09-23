@@ -131,7 +131,7 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       {isNewVersionMode && (
-        <div className="flex items-start gap-3 rounded-lg border border-secondary/40 bg-secondary/10 p-3.5 text-xs text-white">
+        <div className="flex items-start gap-3 chamfer-md border border-secondary/40 bg-secondary/10 p-3.5 text-xs text-white">
           <AlertTriangle size={18} className="text-secondary shrink-0 mt-0.5" />
           <div className="space-y-1">
             <span className="font-bold block uppercase tracking-wider text-secondary">
@@ -146,7 +146,7 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
         </div>
       )}
 
-      <div className="flex items-start gap-2.5 rounded-lg border border-white/10 bg-primary/40 p-3 text-xs text-grays-100">
+      <div className="flex items-start gap-2.5 chamfer-md border border-white/10 bg-card p-3 text-xs text-grays-100">
         <Info size={16} className="text-secondary shrink-0 mt-0.5" />
         <p>
           A versão é atribuída automaticamente pelo servidor ao salvar. O novo contrato nasce como{" "}
@@ -158,7 +158,7 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
         <InputGroup>
           <Label htmlFor="audience" isRequired>Público</Label>
           {data && !isNewVersionMode ? (
-            <div className="rounded-lg border border-white/10 bg-primary/40 px-3.5 py-2.5 text-sm font-semibold text-white">
+            <div className="rounded-lg border border-white/15 bg-background px-3.5 py-2.5 text-sm font-semibold text-white">
               {data.audience === "Users" ? "Usuários do App" : data.audience}
             </div>
           ) : (
@@ -189,10 +189,10 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
           <button
             type="button"
             onClick={() => handleContentTypeChange("pdf")}
-            className={`flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`flex items-center justify-center gap-2 chamfer-sm border py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
               contentType === "pdf"
-                ? "border-secondary bg-secondary/20 text-white shadow-sm"
-                : "border-white/10 bg-primary/40 text-grays-100 hover:bg-white/5 hover:text-white"
+                ? "border-accent/60 bg-accent/15 text-white"
+                : "border-white/10 bg-white/5 text-grays-100 hover:bg-white/10 hover:text-white"
             }`}
           >
             <FileText size={16} />
@@ -201,10 +201,10 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
           <button
             type="button"
             onClick={() => handleContentTypeChange("html")}
-            className={`flex items-center justify-center gap-2 rounded-lg border py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`flex items-center justify-center gap-2 chamfer-sm border py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
               contentType === "html"
-                ? "border-secondary bg-secondary/20 text-white shadow-sm"
-                : "border-white/10 bg-primary/40 text-grays-100 hover:bg-white/5 hover:text-white"
+                ? "border-accent/60 bg-accent/15 text-white"
+                : "border-white/10 bg-white/5 text-grays-100 hover:bg-white/10 hover:text-white"
             }`}
           >
             <Code2 size={16} />
@@ -218,7 +218,7 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
           <Label htmlFor="file" isRequired={!data?.fileUrl}>
             Upload do Documento em PDF (Máx. 10 MB)
           </Label>
-          <div className="relative rounded-xl border border-dashed border-white/20 bg-primary/30 p-5 text-center transition-all hover:border-white/40">
+          <div className="relative chamfer-md border border-dashed border-white/20 bg-white/5 p-5 text-center transition-all hover:border-white/40">
             <input
               type="file"
               id="file"
@@ -227,7 +227,7 @@ export const ModalEdit = ({ data }: ModalEditProps) => {
               className="absolute inset-0 cursor-pointer opacity-0"
             />
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-secondary">
+              <div className="flex h-10 w-10 items-center justify-center chamfer-sm bg-white/5 text-secondary">
                 <FileUp size={20} />
               </div>
               {selectedFile ? (
