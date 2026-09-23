@@ -7,7 +7,7 @@ export function AdminLayout() {
   const isSidebarCollapsed = useBoundStore((state) => state.isSidebarCollapsed);
 
   return (
-    <div className="h-dvh overflow-hidden bg-background text-white p-3 lg:p-4">
+    <div className="h-dvh overflow-hidden text-white p-3 lg:p-4">
       <div
         className={`mx-auto grid h-full min-h-0 w-full grid-cols-1 gap-3 transition-all duration-300 ease-in-out lg:gap-4 ${
           isSidebarCollapsed
@@ -22,7 +22,7 @@ export function AdminLayout() {
 
           <section
             id="main-wrapper"
-            className="flex gap-5 min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden chamfer-lg border border-white/10 bg-card/40 p-4 lg:p-6"
+            className="flex gap-5 min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden chamfer-lg border border-white/10 p-4 lg:p-6"
           >
             <Outlet />
           </section>

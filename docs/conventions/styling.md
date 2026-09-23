@@ -44,11 +44,12 @@ The panel follows the visual language of the landing page and the institutional 
 
 - **Chamfers**: `chamfer-sm` (6px), `chamfer-md` (12px) and `chamfer-lg` (20px) are `@utility` classes in `index.css` that cut the top-left and bottom-right corners with `clip-path` (same polygons as the LP). Borders stay on the straight edges; the cut corners are open by design.
 - **Cards**: static slabs use `Card` (`components/card/card.tsx`) — `bg-card` + border + two corner brackets. Variants: `default`, `surface`, `highlighted` (ember border and brackets); `padding` (`none` / `sm` / `md`), `cut`, `brackets`, `interactive` (ember brackets on hover, for clickable cards) and `as` for the semantic element. `CardBox` is a titled `Card`.
-- **Scroll containers and floating layers** (main content area, sidebar, table container, modals, popovers, menus, tooltips, toasts) use the single-element recipe instead of `Card`: `chamfer-* border border-white/10 bg-card` (or `bg-surface` + `border-white/15` for floating layers).
+- **Scroll containers and floating layers** (sidebar, table container, modals, popovers, menus, tooltips, toasts) use the single-element recipe instead of `Card`: `chamfer-* border border-white/10 bg-card` (or `bg-surface` + `border-white/15` for floating layers). The main content frame (`#main-wrapper`) is the exception: a chamfered border with no fill, so the wall shows behind the page.
 - **Titles**: page, section, card and modal titles use `font-display font-bold uppercase` with `tracking-[0.04em]` (large) or `tracking-[0.06em]` (small). Listing page titles (`CrmPageHeader`), `CardBox` titles and modal titles lead with a `KeystoneIcon`; details pages lead with the back button instead. Big metric values use `font-display` too. Labels, tables, forms and body copy stay in the body font.
 - **Kickers**: eyebrows above titles use `ForgeKicker` (keystone, ember uppercase text, hairline) or the inline recipe `text-[10px] font-semibold uppercase tracking-[0.3em] text-ember`.
 - **Seals**: ID/count pills use `chamfer-sm border border-accent/40 bg-accent/15 text-ember`.
 - **Loading**: spinners are `D20Icon` with `animate-spin` (see `Button`), not a rounded border spinner.
+- **Wall**: the `body` background is the LP brick wall (`--tf-wall`, a 240×120 running-bond SVG) under a vignette (`--tf-wall-vignette`) and the ember glow (`--tf-bg-gradient`) — faint cream lines on stone, faint ink lines on parchment. Page roots (`AdminLayout`, the login and auth pages, the error boundary) stay transparent so the wall shows; never paint `bg-background` on a page root.
 - **Texture**: a 5% noise grain (`body::after`, tinted per theme through `--tf-grain`) lies over the whole panel.
 - **Sparks**: `ForgeSparks` (canvas particle system ported from the LP) is reserved for the login page. It reads its colors from the theme variables: additive light sparks on stone, dark embers on parchment. It does nothing when "reduce motion" is on.
 
@@ -65,7 +66,7 @@ The panel follows the visual language of the landing page and the institutional 
 
 ## Custom CSS
 
-Custom CSS lives only in `src/index.css`, and only for what utilities can't reach: the per-theme `--tf-*` variables, the `chamfer-*` `@utility` classes, the grain overlay (`body::after`), third-party overrides (react-datepicker → `.tf-datepicker-*`, react-masonry-css → `.tf-masonry-*`, contract HTML → `.tf-contract-content`), scrollbar/autofill pseudo-selectors, and keyframe animations (`.animate-recovery-shake`). Prefix project-specific classes with `tf-`.
+Custom CSS lives only in `src/index.css`, and only for what utilities can't reach: the per-theme `--tf-*` variables, the `chamfer-*` `@utility` classes, the wall background and the grain overlay (`body`, `body::after`), third-party overrides (react-datepicker → `.tf-datepicker-*`, react-masonry-css → `.tf-masonry-*`, contract HTML → `.tf-contract-content`), scrollbar/autofill pseudo-selectors, and keyframe animations (`.animate-recovery-shake`). Prefix project-specific classes with `tf-`.
 
 ## Rules
 

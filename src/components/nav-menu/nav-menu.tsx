@@ -26,6 +26,7 @@ import { useBoundStore } from "@/src/store";
 import { isAdminAuthType } from "@/src/features/auth/schemas/auth.schema";
 
 import { useLogo } from "@/src/constants/logos";
+import { KeystoneIcon } from "@/src/components/icons/icons";
 
 interface INavItem {
   to: string;
@@ -126,8 +127,43 @@ export function NavMenu() {
         </ButtonIcon>
       </div>
 
+      {/* Brand Header */}
+      <div className="relative hidden w-full flex-col items-center gap-3 lg:flex">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-0 h-20 w-44 -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,var(--color-accent),transparent_70%)] opacity-20 blur-2xl"
+        />
+        {isSidebarCollapsed ? (
+          <img
+            src={logo.minimal}
+            alt="TableForge Logo Simplificada"
+            width={40}
+            height={40}
+            className="relative h-10 w-10 object-contain"
+            title="TableForge"
+          />
+        ) : (
+          <img
+            src={logo.horizontal}
+            alt="TableForge Logo"
+            width={176}
+            height={64}
+            className="relative h-16 w-auto max-w-full object-contain"
+          />
+        )}
+
+        <div role="separator" className="relative flex w-full items-center gap-2.5">
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="flex items-center gap-2 font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-grays-200">
+            <KeystoneIcon className="h-2.5 w-2.5 shrink-0 text-accent" aria-hidden="true" />
+            {isSidebarCollapsed ? null : "Painel Administrativo"}
+          </span>
+          <span className="h-px flex-1 bg-white/10" />
+        </div>
+      </div>
+
       {/* Desktop Header & Toggle Button */}
-      <div className="hidden lg:flex lg:w-full lg:items-center lg:justify-between lg:mb-2">
+      <div className="hidden lg:mt-5 lg:mb-2 lg:flex lg:w-full lg:items-center lg:justify-between">
         {!isSidebarCollapsed && (
           <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ember pl-1">
             Navegação
@@ -149,42 +185,11 @@ export function NavMenu() {
         </button>
       </div>
 
-      {/* Brand Header */}
-      <div
-        className={`${
-          isMobileOpen ? "mt-3 block" : "hidden"
-        } chamfer-md border border-white/10 bg-background/50 p-3.5 text-center lg:mt-0 lg:block transition-all duration-300`}
-      >
-        {isSidebarCollapsed ? (
-          <img
-            src={logo.minimal}
-            alt="TableForge Logo Simplificada"
-            width={38}
-            height={38}
-            className="mx-auto h-9 w-9 object-contain"
-            title="TableForge"
-          />
-        ) : (
-          <>
-            <img
-              src={logo.vertical}
-              alt="TableForge Logo"
-              width={160}
-              height={160}
-              className="mx-auto object-contain"
-            />
-            <p className="mt-1 font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-grays-200">
-              Painel Administrativo
-            </p>
-          </>
-        )}
-      </div>
-
       {/* Navigation Items */}
       <nav
         className={`${
           isMobileOpen ? "mt-3 flex" : "hidden"
-        } flex-col gap-1.5 lg:mt-4 lg:flex`}
+        } flex-col gap-1.5 lg:mt-0 lg:flex`}
       >
         {mainNavItems.map(({ to, label, icon: Icon, end }) => (
           <NavLink

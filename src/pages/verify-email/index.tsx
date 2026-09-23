@@ -237,7 +237,7 @@ export default function VerifyEmailPage() {
     validateEmailCodeMutation.isPending;
 
   return (
-    <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-8 text-white">
+    <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,var(--color-accent),transparent_65%)] opacity-20" />
 
       <Card variant="highlighted" className="w-full max-w-md">
