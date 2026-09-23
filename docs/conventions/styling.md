@@ -51,7 +51,7 @@ The panel follows the visual language of the landing page and the institutional 
 - **Loading**: spinners are `D20Icon` with `animate-spin` (see `Button`), not a rounded border spinner.
 - **Wall**: the `body` background is the LP brick wall (`--tf-wall`, a 240×120 running-bond SVG) under a vignette (`--tf-wall-vignette`) and the ember glow (`--tf-bg-gradient`) — faint cream lines on stone, faint ink lines on parchment. Page roots (`AdminLayout`, the login and auth pages, the error boundary) stay transparent so the wall shows; never paint `bg-background` on a page root.
 - **Texture**: a 5% noise grain (`body::after`, tinted per theme through `--tf-grain`) lies over the whole panel.
-- **Sparks**: `ForgeSparks` (canvas particle system ported from the LP) is reserved for the login page. It reads its colors from the theme variables: additive light sparks on stone, dark embers on parchment. It does nothing when "reduce motion" is on.
+- **Sparks**: `ForgeSparks` (canvas particle system ported from the LP) is reserved for the login page. It reads its heat ramp and blend mode from `--tf-spark-ramp` / `--tf-spark-blend`: the LP forge colors (crimson, orange, gold, white-hot) with additive blending on stone; on parchment the white-hot end is dropped and the sparks are drawn with normal blending. It does nothing when "reduce motion" is on.
 
 ### Corner hierarchy
 

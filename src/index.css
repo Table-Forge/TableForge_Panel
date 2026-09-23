@@ -45,6 +45,8 @@
     --tf-ember: #ff5a36;
     --tf-gold: #ffb700;
     --tf-on-accent: #faf3e0;
+    --tf-spark-ramp: #ff2400, #ff8a1f, #ffb700, #fff1c2;
+    --tf-spark-blend: lighter;
     --tf-wall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120' viewBox='0 0 240 120'%3E%3Cpath d='M0 60H240M0 120H240M120 0V60M60 60V120M180 60V120' fill='none' stroke='%23faf3e0' stroke-opacity='0.05' stroke-width='2'/%3E%3C/svg%3E");
     --tf-wall-vignette: radial-gradient(ellipse at center, transparent 40%, rgb(0 0 0 / 0.7) 100%);
     --tf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
@@ -75,6 +77,8 @@
     --tf-ember: #a5391b;
     --tf-gold: #7d5300;
     --tf-on-accent: #faf5e8;
+    --tf-spark-ramp: #ff2400, #ff8a1f, #ffb700;
+    --tf-spark-blend: source-over;
     --tf-wall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120' viewBox='0 0 240 120'%3E%3Cpath d='M0 60H240M0 120H240M120 0V60M60 60V120M180 60V120' fill='none' stroke='%231e1611' stroke-opacity='0.07' stroke-width='2'/%3E%3C/svg%3E");
     --tf-wall-vignette: radial-gradient(ellipse at center, transparent 45%, rgb(30 22 17 / 0.1) 100%);
     --tf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");

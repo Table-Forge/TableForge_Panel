@@ -1,30 +1,20 @@
 import { useEffect, useRef } from "react";
 import { useBoundStore } from "@/src/store";
-import type { Theme } from "@/src/store/slices/theme-slice";
 import { createForgeSparksRenderer } from "./forge-sparks.renderer";
 import type { IForgeSparks, IForgeSparksPalette } from "./forge-sparks.interfaces";
 
 const MAX_PIXEL_RATIO = 2;
 const MAX_FRAME_SECONDS = 1 / 30;
 
-const readThemeColor = (name: string) =>
+const readThemeValue = (name: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-const resolvePalette = (theme: Theme): IForgeSparksPalette =>
-  theme === "light"
-    ? {
-        ramp: [readThemeColor("--tf-gold"), readThemeColor("--tf-ember"), readThemeColor("--tf-accent")],
-        blend: "source-over",
-      }
-    : {
-        ramp: [
-          readThemeColor("--tf-accent"),
-          readThemeColor("--tf-ember"),
-          readThemeColor("--tf-gold"),
-          readThemeColor("--tf-white"),
-        ],
-        blend: "lighter",
-      };
+const resolvePalette = (): IForgeSparksPalette => ({
+  ramp: readThemeValue("--tf-spark-ramp")
+    .split(",")
+    .map((color) => color.trim()),
+  blend: readThemeValue("--tf-spark-blend") as GlobalCompositeOperation,
+});
 
 export function ForgeSparks({ className = "" }: IForgeSparks) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,7 +24,7 @@ export function ForgeSparks({ className = "" }: IForgeSparks) {
     const canvas = canvasRef.current;
     if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const renderer = createForgeSparksRenderer(canvas, resolvePalette(theme));
+    const renderer = createForgeSparksRenderer(canvas, resolvePalette());
     if (!renderer) return;
 
     let frame = 0;
